@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Language — lexodus</title>
+<meta name="description" content="Coverage, sources and recipients of one language's words, from English Wiktionary.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400&family=IBM+Plex+Sans:ital,wght@0,400;0,600;1,400&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;0,7..72,700;1,7..72,400&display=swap">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="index.html">lexodus <span>words on the move</span></a>
+    <nav aria-label="Main">
+      <ul>
+        <li><a href="index.html">Network</a></li>
+        <li><a href="language.html" aria-current="page">Languages</a></li>
+        <li><span class="soon" title="Coming later">Words<small>soon</small></span></li>
+        <li><span class="soon" title="Coming later">Stories<small>soon</small></span></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <p id="loading" class="loading">Loading the data&hellip;</p>
+  <div id="app" class="stack" hidden>
+    <section class="lang-head">
+      <div class="jump"><label for="jump">Go to</label><select id="jump"></select></div>
+      <h1 id="lang-title"></h1>
+      <div id="lang-sub" class="sub"></div>
+    </section>
+
+    <section class="stack tight" aria-label="Coverage">
+      <dl id="facts" class="facts"></dl>
+      <p id="notice" class="notice"></p>
+    </section>
+
+    <div id="filters" class="filters"></div>
+
+    <div class="split">
+      <section id="from-block" aria-labelledby="from-title">
+        <h2 id="from-title">Took from</h2>
+        <p id="from-sum" class="sum"></p>
+        <div id="from-table" class="table-box"></div>
+        <button type="button" id="from-more" class="more" hidden></button>
+      </section>
+      <section id="to-block" aria-labelledby="to-title">
+        <h2 id="to-title">Gave to</h2>
+        <p id="to-sum" class="sum"></p>
+        <div id="to-table" class="table-box"></div>
+        <button type="button" id="to-more" class="more" hidden></button>
+      </section>
+    </div>
+  </div>
+</main>
+
+<footer><div class="wrap" id="site-footer"></div></footer>
+
+<script src="data/fonte.js"></script>
+<script src="data/lingue.js"></script>
+<script src="data/archi.js"></script>
+<script src="js/common.js"></script>
+<script src="js/language.js"></script>
+</body>
+</html>
