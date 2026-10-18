@@ -83,6 +83,14 @@
     var me = state.data.langs[state.code];
     el("took-sum").textContent = left.count ? L.n(left.total) + " words from " + left.count + (left.count === 1 ? " source" : " sources") : "nothing with these filters";
     el("gave-sum").textContent = right.count ? L.n(right.total) + " words to " + right.count + (right.count === 1 ? " language" : " languages") : "nothing with these filters";
+    // Same scale on both sides: say so when one side is less than a fifth of the other.
+    var big = Math.max(left.total, right.total), small = Math.min(left.total, right.total);
+    var note = el("scale-note");
+    if (big > 0 && small * 5 < big) {
+      var smallName = left.total < right.total ? "Took from" : "Gave to";
+      note.textContent = smallName + " is drawn to the same scale: " + L.n(small) + " words vs " + L.n(big) + ".";
+      note.hidden = false;
+    } else note.hidden = true;
 
     var box = el("flow");
     var W = Math.max(320, box.clientWidth || 900);
@@ -145,6 +153,7 @@
       var html = "<b>" + L.esc(head) + "</b>: " + L.n(g.total) + (g.total === 1 ? " word" : " words");
       var l = g.code && state.data.langs[g.code];
       if (l && !L.isLanguage(l.type)) html += " <i>(" + (L.TYPE_LABEL[l.type] || l.type) + ")</i>";
+      if (g.code === "la" && !state.filters.splitLatin) html += '<div class="ex">All Latin varieties together.</div>';
       catOrder.forEach(function (cat) { if (g.byCat[cat]) html += catLine(cat, g.byCat[cat]); });
       if (g.code && state.data.langs[g.code] && state.data.langs[g.code].target) html += '<div class="ex">Click to put it at the centre.</div>';
       else if (g.code) html += '<div class="ex">Click to open its page.</div>';

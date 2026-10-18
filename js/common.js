@@ -140,12 +140,22 @@
 
   function isLanguage(type) { return !type || type === "lingua"; }
 
+  // Latin varieties: merged into one "Latin" (code "la") unless the viewer splits them.
+  var OLD_LATIN_CODES = ["L.", "LL.", "VL.", "ML.", "NL.", "EL.", "itc-ola"];
+  function isLatin(code) { return code === "la" || /^la-/.test(code) || OLD_LATIN_CODES.indexOf(code) >= 0; }
+  function key(code, filters) { return filters && !filters.splitLatin && isLatin(code) ? "la" : code; }
+  function latinVarieties(langs) {
+    return Object.keys(langs).filter(function (c) { return c !== "la" && isLatin(c); })
+      .map(function (c) { return langs[c].name; }).sort();
+  }
+
   // Group arcs by the language on the other side, keeping one entry per category.
   function aggregate(arcs, side, filters, langs) {
     var by = {};
+    arcs = arcs.slice().sort(function (x, y) { return y.n - x.n; }); // examples from the biggest arcs first
     arcs.forEach(function (a) {
       if (filters.cats.indexOf(a.cat) < 0) return;
-      var code = side === "from" ? a.from : a.to;
+      var code = key(side === "from" ? a.from : a.to, filters);
       var l = langs[code];
       if (filters.hideOther && l && !isLanguage(l.type)) return;
       var g = by[code] || (by[code] = { code: code, total: 0, unc: 0, byCat: {} });
@@ -178,13 +188,15 @@
   }
 
   // Category chips + "hide families" switch. Calls onChange(filters).
-  var STORE = "lexodus.filters";
+  // Defaults chosen by Davide (18/10/2026): only borrowed, learned Latin and calque on; Latin merged.
+  var STORE = "lexodus.filters.v2";
   function readFilters() {
-    var f = { cats: CATS.map(function (c) { return c.id; }), hideOther: true };
+    var f = { cats: ["borrowed", "learned", "calque"], hideOther: true, splitLatin: false };
     try {
       var s = JSON.parse(localStorage.getItem(STORE) || "null");
       if (s && Array.isArray(s.cats)) f.cats = s.cats.filter(function (c) { return CAT_BY_KEY[c]; });
       if (s && typeof s.hideOther === "boolean") f.hideOther = s.hideOther;
+      if (s && typeof s.splitLatin === "boolean") f.splitLatin = s.splitLatin;
     } catch (e) { /* storage blocked: keep defaults */ }
     return f;
   }
@@ -197,7 +209,8 @@
       html += '<button type="button" class="chip" id="cat-' + c.id + '" data-cat="' + c.id + '" aria-pressed="' + (f.cats.indexOf(c.id) >= 0) + '" title="' + esc(c.hint) + '">' +
         '<span class="sw sw-' + c.id + '" aria-hidden="true"></span>' + c.label + "</button>";
     });
-    html += '</div><label class="switch"><input type="checkbox" id="hide-other"' + (f.hideOther ? " checked" : "") + '> Hide families, proto-languages and non-languages</label>';
+    html += '</div><label class="switch"><input type="checkbox" id="hide-other"' + (f.hideOther ? " checked" : "") + '> Hide families, proto-languages and non-languages</label>' +
+      '<label class="switch"><input type="checkbox" id="split-latin"' + (f.splitLatin ? " checked" : "") + '> Split Latin varieties</label>';
     el.innerHTML = html;
     el.addEventListener("click", function (e) {
       var b = e.target.closest("button[data-cat]");
@@ -209,6 +222,9 @@
     });
     el.querySelector("#hide-other").addEventListener("change", function (e) {
       f.hideOther = e.target.checked; saveFilters(f); onChange(f);
+    });
+    el.querySelector("#split-latin").addEventListener("change", function (e) {
+      f.splitLatin = e.target.checked; saveFilters(f); onChange(f);
     });
     return f;
   }
@@ -225,7 +241,7 @@
 
   window.Lex = {
     CATS: CATS, CAT_BY_KEY: CAT_BY_KEY, COVERAGE: COVERAGE, TYPE_LABEL: TYPE_LABEL, NOTES: NOTES,
-    load: load, aggregate: aggregate, isLanguage: isLanguage, n: n, esc: esc, param: param, setParam: setParam,
+    load: load, aggregate: aggregate, isLanguage: isLanguage, isLatin: isLatin, key: key, latinVarieties: latinVarieties, n: n, esc: esc, param: param, setParam: setParam,
     coverageBadge: coverageBadge, filterBar: filterBar, footer: footer
   };
 })();

@@ -129,6 +129,7 @@ select, .select {
 .flow-head strong { color: var(--fg); font-family: var(--font-head); font-size: 1.05rem; display: block; }
 .flow-head .right { text-align: right; }
 .flow { position: relative; }
+.scale-note { margin: 0; font-size: 0.85rem; color: var(--muted); font-style: italic; }
 .flow svg { display: block; width: 100%; height: auto; overflow: visible; }
 .flow .node-label { font: 400 12.5px var(--font-body); fill: var(--fg); cursor: pointer; }
 .flow .node-label tspan.num { fill: var(--muted); font-variant-numeric: tabular-nums; }

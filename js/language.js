@@ -5,18 +5,24 @@
   var state = { code: "it", data: null, filters: null, show: { from: 40, to: 40 } };
   function el(id) { return document.getElementById(id); }
 
+  // One row per (language on the other side, category); Latin varieties merged unless split.
   function rows(side) {
-    var me = state.code, out = [];
-    state.data.arcs.forEach(function (a) {
-      if (side === "from" ? a.to !== me : a.from !== me) return;
-      if (state.filters.cats.indexOf(a.cat) < 0) return;
-      var other = side === "from" ? a.from : a.to;
+    var f = state.filters, by = {};
+    var arcs = state.data.arcs.slice().sort(function (x, y) { return y.n - x.n; });
+    arcs.forEach(function (a) {
+      var mine = side === "from" ? a.to : a.from;
+      if (L.key(mine, f) !== state.code && mine !== state.code) return;
+      if (f.cats.indexOf(a.cat) < 0) return;
+      var other = L.key(side === "from" ? a.from : a.to, f);
       var l = state.data.langs[other];
-      if (state.filters.hideOther && l && !L.isLanguage(l.type)) return;
-      out.push({ other: other, a: a });
+      if (f.hideOther && l && !L.isLanguage(l.type)) return;
+      var k = other + "|" + a.cat;
+      var r = by[k] || (by[k] = { other: other, a: { cat: a.cat, n: 0, unc: 0, ex: [] } });
+      r.a.n += a.n; r.a.unc += a.unc;
+      a.ex.forEach(function (w) { if (r.a.ex.length < 12 && r.a.ex.indexOf(w) < 0) r.a.ex.push(w); });
     });
-    out.sort(function (x, y) { return y.a.n - x.a.n || x.other.localeCompare(y.other); });
-    return out;
+    return Object.keys(by).map(function (k) { return by[k]; })
+      .sort(function (x, y) { return y.a.n - x.a.n || x.other.localeCompare(y.other); });
   }
 
   function table(side) {
@@ -52,6 +58,8 @@
     var sub = '<span class="code">' + L.esc(l.code) + "</span>";
     if (l.nameIt) sub += "<span>Italian name: " + L.esc(l.nameIt) + "</span>";
     if (!L.isLanguage(l.type)) sub += "<span>" + (L.TYPE_LABEL[l.type] || l.type) + "</span>";
+    if (l.code === "la" && !state.filters.splitLatin) sub += "<span>All varieties together: " + L.esc(L.latinVarieties(state.data.langs).join(", ")) + "</span>";
+    else if (L.isLatin(l.code) && l.code !== "la" && !state.filters.splitLatin) sub += '<span>Counted inside <a href="language.html?code=la">Latin</a> in the network</span>';
     if (l.target) sub += L.coverageBadge(l.coverage) + '<a href="index.html?lang=' + encodeURIComponent(l.code) + '">See it in the network</a>';
     el("lang-sub").innerHTML = sub;
 

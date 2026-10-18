@@ -28,3 +28,9 @@
 3. Su telefono il passaggio del dito apre subito la lingua toccata: la finestrella con numeri ed esempi si vede bene solo col mouse. Sul telefono servono le tabelle della scheda lingua.
 4. I nomi molto lunghi nella rete sono tagliati con «…» (nome intero al passaggio del mouse).
 5. Non fatti: schede parola, storie (`storie.json` verrà copiato da `aggiorna_dati.py` ma non è ancora usato), file `parole/<codice>.json` (copiati ma non usati).
+
+## 2026-10-18 — risposte di Davide alle tre domande (applicate)
+1. Latino unito in una sola voce «Latin» (la, la-*, itc-ola Old Latin, codici vecchio stile L. LL. VL. ML. NL. EL.), con interruttore «Split Latin varieties»; la scheda `language.html?code=la` somma le varietà.
+2. Categorie accese all'apertura: borrowed, learned Latin, calque (chiave di memoria nuova `lexodus.filters.v2`, così valgono i nuovi default).
+3. Stessa scala sui due lati, con una nota quando un lato è meno di un quinto dell'altro (es. francese, romeno).
+Verificato nel browser integrato per italiano, francese e romeno, console pulita. Subito dopo è arrivata la richiesta di rifare il sito senza diagramma (sezione seguente): gli screenshot di questa versione non sono stati rifatti.
