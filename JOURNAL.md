@@ -195,3 +195,4 @@ Screenshot nuovi in `docs/screenshots/`: `explore-menu.png`, `hidden-bulgarian.p
 1. Doppioni: l'ordine «per numero di lingue» mette in testa coppie dialettali (*articiocco/carciofo*, *balla/palla*); *tulipano/turbante* è 103ª.
 2. Famiglie: *tè* 215ª, *riso* 341ª, *banca* 428ª, *limone* fuori dalle 600 (catene che si fermano in punti diversi; lo dice il JOURNAL di rete-prestiti).
 3. Alberi: 3.906 discendenti restano ambigui (ora segnati). Peso: `data/` 657 MB, ogni export rinnova centinaia di MB nella storia di git.
+- Online (GitHub Pages costruito sul commit 4fed0c6, versione `202610181757`): nel browser integrato, una volta, `hidden.html?lang=bg` → Arabic 5 / 104 / 95%, Ottoman Turkish 94; menu delle lingue senza il romeno, nota sul romeno con «Why». Console vuota.
