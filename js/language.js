@@ -32,32 +32,40 @@
       .sort(function (x, y) { return y.n - x.n || x.other.localeCompare(y.other); });
   }
 
-  // The step before the direct language. livello2.json has no category, so this covers all the
-  // words of the pair (arrival language, direct language), whatever their category.
+  // The step before the direct language, for the category of the row only (livello2.json, per_categoria;
+  // Davide, 18/10/2026). Merged Latin uses the export's LATINO entries; the varieties are used when split.
   function level2(row) {
-    var f = state.filters, d = state.data;
+    var f = state.filters, d = state.data, catKey = L.CAT_BY_KEY[row.cat].key;
     var arr = row.side === "from" ? state.code : row.other;
     var direct = row.side === "from" ? row.other : state.code;
-    var keys = (!f.splitLatin && direct === "la")
-      ? Object.keys(d.level2Totals).filter(function (k) { var p = k.split("|"); return p[0] === arr && L.isLatin(p[1]); })
+    var merged = !f.splitLatin && L.isLatin(direct);
+    var keys = merged
+      ? (d.level2[arr + "|LATINO"] ? [arr + "|LATINO"]
+        : Object.keys(d.level2).filter(function (k) { var p = k.split("|"); return p[0] === arr && L.isLatin(p[1]); }))
       : [arr + "|" + direct];
-    var by = {}, items = [], words = 0, reached = 0, sameLatin = 0, hidden = 0;
+    var by = {}, items = [], counted = 0, hidden = 0;
     keys.forEach(function (k) {
-      var t = d.level2Totals[k];
-      if (t) { words += t.parole; reached += t.con_livello_2; }
-      (d.level2[k] || []).forEach(function (it) {
-        var c = L.key(it.codice, f);
-        if (c === direct) { sameLatin += it.n; return; }
+      var list = d.level2[k] || [], seen = {};
+      var hasMerged = list.some(function (it) { return it.codice === "LATINO"; });
+      list.forEach(function (it) {
+        if (seen[it.codice]) return; // the same entry twice in a list (export of 18/10/2026: LATINO in en|it)
+        seen[it.codice] = 1;
+        if (it.codice === "LATINO" ? f.splitLatin || !hasMerged : !f.splitLatin && hasMerged && L.isLatin(it.codice)) return;
+        var v = it.per_categoria ? it.per_categoria[catKey] || 0 : it.n;
+        if (!v) return;
+        var c = it.codice === "LATINO" ? "la" : L.key(it.codice, f);
+        if (c === direct) return; // Latin to Latin: not a step between languages
         var l = d.langs[c];
-        if (f.hideOther && l && !L.isLanguage(l.type)) { hidden += it.n; return; }
+        counted += v;
+        if (f.hideOther && l && !L.isLanguage(l.type)) { hidden += v; return; }
         var m = by[c];
         if (!m) { m = by[c] = { code: c, n: 0, ex: [] }; items.push(m); }
-        m.n += it.n;
-        it.esempi.forEach(function (w) { if (m.ex.indexOf(w) < 0) m.ex.push(w); });
+        m.n += v;
+        (it.esempi || []).forEach(function (w) { if (m.ex.indexOf(w) < 0) m.ex.push(w); });
       });
     });
     items.sort(function (a, b) { return b.n - a.n; });
-    return { items: items, words: words, hidden: hidden, rest: Math.max(0, words - reached) + sameLatin, direct: direct, arr: arr };
+    return { items: items, words: row.n, hidden: hidden, rest: Math.max(0, row.n - counted), direct: direct, arr: arr, cat: row.cat };
   }
 
   // The number opens the list of the words of that pair (words.html), when its file exists.
@@ -69,12 +77,12 @@
   function subHtml(row) {
     var r = level2(row);
     if (!r.words) return '<p class="note">No chain recorded for these words.</p>';
-    var html = '<p class="sub-head">Before ' + L.esc(name(r.direct)) + ", the " + L.n(r.words) + " " + L.esc(name(r.arr)) + " words in this pair (all categories) came from:</p><ul>";
+    var html = '<p class="sub-head">Before ' + L.esc(name(r.direct)) + ", these " + L.n(r.words) + " " + L.esc(name(r.arr)) + " words came from:</p><ul>";
     r.items.forEach(function (it) {
       var l = state.data.langs[it.code];
       var typ = l && !L.isLanguage(l.type) ? ' <span class="note">' + (L.TYPE_LABEL[l.type] || l.type) + "</span>" : "";
       html += '<li><div class="line"><a class="name" href="language.html?code=' + encodeURIComponent(it.code) + '">' + L.esc(name(it.code)) + "</a>" + typ +
-        '<span class="num">' + numLink(it.n, r.arr, L.pairCode(r.direct, state.filters), L.pairCode(it.code, state.filters)) + "</span></div>" +
+        '<span class="num">' + numLink(it.n, r.arr, L.pairCode(r.direct, state.filters), L.pairCode(it.code, state.filters), r.cat) + "</span></div>" +
         '<div class="bar"><span style="width:' + Math.max(0.5, Math.min(100, 100 * it.n / r.words)).toFixed(2) + '%"></span></div>' +
         (it.ex.length ? '<p class="ex">' + five(it.ex).map(L.esc).join(", ") + "</p>" : "") + "</li>";
     });
