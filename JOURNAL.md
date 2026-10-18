@@ -202,3 +202,32 @@ Screenshot nuovi in `docs/screenshots/`: `explore-menu.png`, `hidden-bulgarian.p
 2. Romeno: resta selezionabile in Doublets, Round trips e Compare (invariato).
 3. **Note riscritte nel sito, corte** (al massimo 15 parole; non più quelle dell'export): Hidden donors, Most travelled words, Given and received, Bridge languages, Word families, e le note fisse di Hidden donors, Compare e della pagina lingua. Nota sul romeno in due frasi: «Romanian is left out of statistics and rankings. Its Wiktionary editors credit French with almost every learned word.» con il link «More» alla sezione dell'About; la stessa frase nel riquadro della pagina romena.
 Versione nuova; prove con Edge senza finestra rifatte: tutto come prima, console pulita, l'unico controllo che non passa è cifra/zero tra le prime 20.
+
+## 2026-10-18 sera — mandato 14: Compare arricchito, «What a language gave», Surprise me
+
+### Cosa è stato fatto
+- **Dati veri (export v5 del mandato 13), nessun campione.** L'export era già pronto e fermo (in `rete-prestiti/JOURNAL.md` c'è «Mandato 13 — esito»; `confronto/de__it.json` ha `cugine`, ci sono `dato_al_mondo/it.json` e `casuale.json`). `scripts/aggiorna_dati.py` copia anche `pseudo/`, `dato_al_mondo/` e `casuale.json` (626 MB in tutto, sotto il limite di 800). Cambiano solo i 528 file di `confronto/` più i nuovi.
+- **Compare** (`compare.html`): sotto i blocchi di prima, tre blocchi chiusi di default col titolo cliccabile e il totale nel titolo: **Round trips between the two** (due elenchi, uno per verso; catena in una riga con la lingua evidenziata due volte, parola → albero), **Cousin words** (le due parole affiancate con lingua, traslitterazione, significato, «from <lingua diretta>», link alla scheda e all'albero; la radice in mezzo con le frecce; su telefono una sotto l'altra), **False loans between the two** (due elenchi: parola → albero se c'è, significato, testo breve). «Show all» quando un elenco supera 20. Con le lingue in ordine inverso (it/de) i lati si scambiano.
+- **What a language gave** (`gave.html?lang=it`, nuova voce di Explore): menu delle 33 lingue (romeno compreso, come una lingua qualsiasi), 150 parole in classifica: n°, parola (→ albero), traslitterazione, significato, numero di lingue con «+»; la riga si apre su «Italian had it from Neapolitan *pizza*.» (quando c'è `origine_X`), «Directly: …» e «Through another language: …» con la forma locale e la traslitterazione (Russian пицца (picca)). Le parole con `senza_albero` sono in grassetto senza link (una frase lo dice). Casella di ricerca (parola, traslitterazione, significato e anche le forme locali, es. «Pizza»). 50 righe e «Show all 150».
+- **Surprise me**: tasto sotto il titolo della home e sotto la casella di Search; legge `data/casuale.json` solo al clic e apre l'albero di una riga a caso (link costruito da `file_albero`/`chiave_albero`, così la lettera del file è sempre giusta). Nell'albero, in alto a destra, «Another one» pesca un'altra parola (mai quella mostrata). Codice in `js/common.js` (`surprise`, `treeOf`), qualunque bottone con `data-surprise`.
+- **Menu Explore** con 7 voci in tutte le 16 pagine; su schermo largo in due colonne (4 + 3), su telefono in colonna come prima.
+- README e About aggiornati. Versione `202610181858`.
+
+### Verifica (Edge senza finestra, server locale, cache spenta; 56 controlli, 55 passati, console pulita in ogni pagina)
+- **Compare de/it**: titoli «Round trips between the two (5)», «Cousin words (4,478)», «False loans between the two (2)», chiusi all'apertura. Cugine: Gruppe/gruppo, Zirkon/giargone, Balkon/balcone, Bikini/bikini, Pastete/pasta, **Kaffee/caffè 6ª**, poi Café/caffè 17ª; «Show all 80» → 80 coppie. Giri: Schachtel, Strolch (tedesco via italiano), ussaro, cartello, kapò; in ogni catena la lingua evidenziata due volte. Falsi prestiti: *lecko mio*, *picobello*. Link di *Kaffee* → scheda; link di un giro → albero. it/de: lati scambiati (caffè/Kaffee).
+- **en/it**: giri con *magazine*, *mohair*, *sketch* (più barista, orc, moire, cameo…).
+- **gave.html**: italiano pizza 27, doccia 24, arcipelago 23, balcone 22, concerto 22, cartone 21, spaghetti 21, salone 20, ciao 19, fregata 19; *caffè* «Italian had it from Ottoman Turkish قهوه (kahve)». Arabo: زرافة (zarāfa) 21, «Arabic had it from Classical Syriac ܙܪܝܦܐ (zārīp̄ā)», forme con traslitterazione (Persian زرافه (zarâfe)). Romeno selezionabile.
+- **Surprise me** dalla home tre volte di seguito (es. *pidgin* inglese, مرد persiano, *plæne* danese), poi **Another one** tre volte (cambia sempre parola), poi da Search: sempre un albero, nessun errore. Controllo in Python: tutte le 5.000 righe di `casuale.json` e tutte le 2.292 righe con albero di `dato_al_mondo/` trovano la loro chiave nel file dell'albero.
+- **Telefono 375 px**: nessuno scorrimento di lato in compare (blocchi aperti), gave (righe aperte, italiano e arabo), home, search, albero.
+- Screenshot in `docs/screenshots/`: `compare-de-it-cousins.png`, `gave-italian.png`, `surprise.png`, più `compare-cousins-phone.png`, `gave-italian-phone.png` e `explore-menu.png` rifatto (due colonne).
+
+### Scelte fatte da me (da confermare con Davide)
+1. «Another one» c'è in ogni albero, non solo arrivando da Surprise me.
+2. Cugine: link alla scheda della parola (come chiesto) e in più un piccolo link «tree»; sotto ogni parola «from <lingua diretta>».
+3. In gave.html le lingue di una parola sono divise in «Directly» e «Through another language» (campo `livello`), in ordine alfabetico; la riga «had it from» sta dentro la riga aperta, non nella riga chiusa.
+4. «Show all» per blocco: nei giri e nei falsi prestiti mostra tutti e due i versi insieme.
+
+### Cosa manca / problemi
+1. **banca/Bank non è tra le cugine** e con la regola dell'export non può esserci (lo spiega «Mandato 13 — esito»: *Bank* «panca» si ferma al protogermanico, *Bank* «banca» è un prestito diretto dall'italiano). È l'unico controllo del mandato che non passa.
+2. Le cugine in testa includono coppie strane ma vere secondo i dati (*slawisch*/*ciao*, *Sklave*/*ciao*: radice greco bizantino Σκλάβος).
+3. `pseudo/` è copiato ma nessuna pagina lo usa ancora. Peso: `data/` circa 660 MB.

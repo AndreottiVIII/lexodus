@@ -1,6 +1,6 @@
-# Dati per il sito — esportazione JSON (mandati 05, 07, 09 e 11)
+# Dati per il sito — esportazione JSON (mandati 05, 07, 09, 11 e 13)
 
-Prodotti da `script/esporta_sito.py` (`python -I -X utf8 script/esporta_sito.py risultati`) a partire dai file di `risultati/`. Tutti i file sono UTF-8, JSON compatto. **Fonte di tutto**: Wiktionary inglese (`raw-wiktextract-data.jsonl.gz`, estrazione Wiktextract del dump del 2026-09-02, scaricato da kaikki.org il **18/10/2026**) passato da `script/estrai_lingue.py`. Versione dell'export: **4** (mandato 11, 18/10/2026). Novità della versione 4 nella sezione «Versione 4 (mandato 11)» qui sotto: il romeno è fuori dalle statistiche, `statistiche.json` rifatto, e nuovi `lingua_extra/`, `doppioni/`, `andate_tornate/`, `famiglie.json`, `confronto/`; gli alberi distinguono gli omografi.
+Prodotti da `script/esporta_sito.py` (`python -I -X utf8 script/esporta_sito.py risultati`) a partire dai file di `risultati/`. Tutti i file sono UTF-8, JSON compatto. **Fonte di tutto**: Wiktionary inglese (`raw-wiktextract-data.jsonl.gz`, estrazione Wiktextract del dump del 2026-09-02, scaricato da kaikki.org il **18/10/2026**) passato da `script/estrai_lingue.py`. Versione dell'export: **5** (mandato 13, 18/10/2026). Novità della versione 5 nella sezione «Versione 5 (mandato 13)» qui sotto: `confronto/<A>__<B>.json` ha tre blocchi in più (`andate_tornate_tra`, `cugine`, `falsi_prestiti_tra`) e ci sono le nuove cartelle `pseudo/` e `dato_al_mondo/` e il file `casuale.json`. Novità della versione 4 nella sezione «Versione 4 (mandato 11)»: il romeno è fuori dalle statistiche, `statistiche.json` rifatto, e nuovi `lingua_extra/`, `doppioni/`, `andate_tornate/`, `famiglie.json`, `confronto/`; gli alberi distinguono gli omografi.
 
 ## Cosa c'è
 
@@ -20,7 +20,10 @@ Prodotti da `script/esporta_sito.py` (`python -I -X utf8 script/esporta_sito.py 
 | `doppioni/<codice>.json` | **Mandato 11.** Per ciascuna delle 33 lingue: coppie di parole segnate da Wiktionary come doppioni. 12.657 coppie in 33 file, 10.4 MB. | `dati/filtrato/etim_extra.jsonl` |
 | `andate_tornate/<codice>.json` | **Mandato 11.** Per ciascuna delle 33 lingue: parole la cui catena torna alla lingua di partenza. 1.181 parole, 865 KB. | catene |
 | `famiglie.json` | **Mandato 11.** Le 600 famiglie di parole che arrivano in più lingue. 2.6 MB. | catene e alberi |
-| `confronto/<A>__<B>.json` | **Mandato 11.** Confronto tra due lingue: 528 file (tutte le coppie delle 33 lingue, A < B in ordine alfabetico), 6.7 MB. | catene |
+| `confronto/<A>__<B>.json` | **Mandato 11, arricchito nel mandato 13.** Confronto tra due lingue: 528 file (tutte le coppie delle 33 lingue, A < B in ordine alfabetico), 36.2 MB. Dal mandato 13 con tre blocchi in più: `andate_tornate_tra`, `cugine`, `falsi_prestiti_tra`. | catene, alberi, `rete_parole.csv` (avviso «pseudo-prestito») |
+| `pseudo/<codice>.json` | **Mandato 13.** Per ciascuna delle 33 lingue (romeno compreso): tutti i suoi pseudo-prestiti raggruppati per lingua imitata. 806 parole in 33 file, 326 KB. | `rete_parole.csv` (modello `pseudo-loan`) |
+| `dato_al_mondo/<codice>.json` | **Mandato 13.** Per ciascuna delle 33 lingue: le 150 sue parole prese dal maggior numero di lingue diverse (a tutti i livelli degli alberi). 33 file, 3.0 MB. | alberi (discendenti non ambigui) |
+| `casuale.json` | **Mandato 13.** 5.000 parole buone per il tasto «sorprendimi» (albero con almeno 4 lingue), già in ordine casuale (seme 2026). 889 KB. | catene e alberi |
 
 Dimensioni dei file delle parole (`parole/`, parole con legami, MB, numero di file):
 
@@ -342,6 +345,195 @@ Le prime 20 famiglie (radice, lingue, parole, esempio):
 - `origini_comuni`: le 10 **origini lontane** (radice come in `famiglie.json`: ultima tappa con termine, lingua + termine normalizzato, latino sommato) che hanno **tutte e due** le lingue, in ordine di `min(n_A, n_B)` poi `n_A + n_B`; `n_A`, `n_B` = parole di A e B con quella radice (qualunque categoria), 3 esempi per lingua. Tolte le radici che sono affissi (termine che inizia o finisce con «-») e le famiglie di lingue.
 - `passaggi.A_da_B`: parole che A ha preso da B e che B aveva a sua volta preso da altri (la catena ha una tappa 2): `n` e le **3 vie più frequenti** (`vie[]`: lingua della tappa 2 con `n` e 3 esempi con `catena_codici`); `passaggi.B_da_A` il contrario.
 - Il romeno compare qui come tutte le altre lingue (non è una classifica), con `nota_romeno`.
+- **Dal mandato 13** ogni file ha altri tre blocchi: `andate_tornate_tra`, `cugine`, `falsi_prestiti_tra` (vedi «Versione 5»).
+
+## Versione 5 (mandato 13)
+
+Valgono le stesse regole della versione 4: ogni parola è una `voce_parola` (`parola`, `traslitterazione` solo se c'è, `n_etimologia`, `significato`, `categoria`, `file_albero`, `chiave_albero`), le lingue citate (`voce_lingua`) hanno `codice`, `nome_it`, `nome_en`, il codice `LATINO` somma tutte le varietà del latino, l'ordine dei campi non è un contratto. Il romeno è una lingua come le altre nelle liste per parola (nei file ha `nota_romeno`, e `escluso_dalle_statistiche: true`).
+
+### `confronto/<A>__<B>.json`: i tre blocchi nuovi (parte A)
+
+`A` e `B` sono i due codici del nome del file (`A` < `B`). Le chiavi `A_via_B`, `B_via_A`, `A_imita_B`, `B_imita_A` sono **letterali** (come `A_da_B` nella versione 4). Per tutti i blocchi vale: «parola di A» = parola della lingua `A`, e così per `B`.
+```
+"andate_tornate_tra":{
+  "A_via_B":{"n":2,"parole":[{"lingua":"de","parola":"Schachtel","traslitterazione?":…,"n_etimologia":1,"significato":…,"categoria":…,"file_albero":…,"chiave_albero":…,
+            "catena":[{"codice","nome","termine","traslitterazione?","categoria"}…],"rientro_da":{voce_lingua},"uscita_verso":{voce_lingua},
+            "partenza":{voce_lingua + "termine" + "traslitterazione?"},"lunghezza_giro":3}×(al massimo 40)]},
+  "B_via_A":{"n":3,"parole":[… stesso formato, "lingua":"it" …]}},
+"cugine":{"n_totale":4478,"lista":[{"a":{voce_parola della lingua A (senza "lingua")},"b":{voce_parola della lingua B},
+          "radice":{"codice":"ar","nome_it","nome_en","tipo_lingua":"lingua","termine":"قَهْوَة","traslitterazione?":"qahwa"},
+          "lingua_diretta_a":{voce_lingua},"lingua_diretta_b":{voce_lingua},"parole_corte_e_comuni":true}×(al massimo 80)]},
+"falsi_prestiti_tra":{
+  "A_imita_B":{"n":2,"parole":[{"parola","traslitterazione?","n_etimologia","significato","categoria","lingua_diretta":{voce_lingua}|null,
+              "lingue_imitate":["it"],"testo":"…(200 caratteri)","file_albero?","chiave_albero?"}…]},
+  "B_imita_A":{"n":0,"parole":[]}}
+```
+- **`andate_tornate_tra.A_via_B`**: parole di `A` che sono «andate e tornate» (stessa definizione di `andate_tornate/<A>.json`, versione 4) e la cui catena passa per `B`: cioè A ← B ← … ← A. «Passa per B» vuol dire che il codice di `B`, **o di un suo stadio** (italiano antico, medio francese, antico francese…, tabella `script/stadi_lingua.csv`), compare nella catena **prima del ritorno ad A** (cioè nelle tappe da `rientro_da` fino a `uscita_verso`). `B_via_A` il contrario. Ogni voce ha gli stessi campi di `andate_tornate/<codice>.json` più `lingua` (la lingua della parola). Al massimo 40 per verso, in ordine di `lunghezza_giro` decrescente (poi alfabetico); `n` è il numero totale. Per `fr`+`it` e simili le parole come *mohair* (it ← fr ← en ← it ← ar) compaiono in tutte le coppie delle lingue che attraversa. 653 voci in tutto, in 74 file su 528 (2 file hanno più di 40 voci per un verso e sono tagliati).
+- **`cugine`**: coppie (parola di A, parola di B) che hanno la **stessa origine lontana**, qualunque strada abbiano fatto. La radice è quella di `famiglie.json`: ultima tappa della catena che è una **lingua attestata** (niente protolingue), con termine; lingua + termine normalizzato (latino sommato), con l'unione delle radici «solo tappa» come nelle famiglie. Quindi *Kaffee* (de ← fr *café* ← it *caffè* ← turco ottomano ← arabo) e *caffè* (it ← turco ottomano ← arabo) sono cugine con radice l'arabo *qahwa*. **Si tolgono le coppie in cui una delle due parole è un prestito diretto dall'altra lingua** (la lingua diretta di `a` è `B`, o quella di `b` è `A`: sono già in `A_da_B` / `B_da_A`): 35.154 coppie tolte in tutto l'export. `lingua_diretta_a` / `lingua_diretta_b` = la prima tappa delle due catene. Qualunque categoria (anche `ereditato`: due parole ereditate dallo stesso latino sono cugine). Parole con alternative (etimologia dubbia) escluse, perché non hanno una catena sola.
+  - **Ordine**: prima le coppie in cui **tutte e due** le parole sono «corte e comuni» (`parole_corte_e_comuni: true`: al massimo 9 lettere, solo lettere — niente trattini, spazi, apostrofi, cifre —, `significato` presente), poi le altre; dentro ciascun gruppo, prima le coppie le cui due parole toccano più lingue (lingue vere della catena oltre alla propria + lingue dei discendenti, a tutti i livelli), poi quelle con più discendenti diretti, poi le più corte, poi alfabetico. Al massimo 80 coppie; `n_totale` = tutte le coppie trovate (prima del taglio), 874.577 in tutto l'export, 528 file con almeno una cugina, 518 file tagliati a 80.
+  - Una parola può comparire in più coppie (*Pastete* con *pasta* e con *pasticcio*).
+- **`falsi_prestiti_tra`**: pseudo-prestiti, cioè parole che sembrano prese da un'altra lingua ma lì non esistono con quel senso. Fonte: il modello `pseudo-loan` di Wiktionary (lo stesso di `risultati/spunti/pseudo_prestiti.csv`; la lingua imitata è il secondo argomento del modello). `A_imita_B` = parole di A che imitano B (es. *picobello* tedesco imita l'italiano), `B_imita_A` il contrario. Una parola che imita due lingue (`fr|en`) compare in tutte e due le liste. `lingue_imitate` = tutte le lingue imitate dalla parola (`en-US` è contato come `en`); `lingua_diretta` = la lingua da cui la parola è arrivata davvero; `testo` = i primi 200 caratteri dell'etimologia. Ordine alfabetico, nessun taglio. 679 voci in tutto, in 52 file.
+
+### `pseudo/<codice>.json`
+```
+{"lingua":"it","nome_it":"italiano","nome_en":"Italian","escluso_dalle_statistiche":false,"nota":"…","n_parole":70,"n_lingue_imitate":4,
+ "per_lingua_imitata":[{"codice":"en","nome_it":"inglese","nome_en":"English","n":66,"stessa_lingua_della_parola?":true,
+                        "parole":[{"parola":"aerobox","traslitterazione?":…,"n_etimologia":1,"significato":"aerobic boxing","categoria":"prestito",
+                                   "lingua_diretta":{voce_lingua}|null,"lingue_imitate":["en"],"testo":"Pseudo-anglicism. Compare Polish aeroboks.",
+                                   "file_albero?":"alberi/it/a.json","chiave_albero?":"aerobox|1"}…]}…],
+ "nota_romeno":"…"   (solo in ro.json)}
+```
+- Tutti gli pseudo-prestiti della lingua (parole con avviso «pseudo-prestito» in `rete_parole.csv`), anche quelli che non hanno un albero nell'export (`file_albero` e `chiave_albero` ci sono solo se la parola è nell'export). I gruppi sono in ordine di `n` decrescente (poi codice); le parole di ogni gruppo in ordine alfabetico. La lingua imitata può essere una delle 33 o un'altra (`la`, `ja`, `fa-cls`, `ang`…): `nome_it`/`nome_en` sono vuoti se il codice non ha un nome noto. Una parola con due lingue imitate sta in tutte e due i gruppi (`n_parole` conta le parole una volta). **Attenzione ai gruppi con `stessa_lingua_della_parola: true`** (la lingua imitata è la lingua del file, per esempio `en` dentro `pseudo/en.json`): non sono pseudo-prestiti di quella lingua, sono parole **tornate indietro**: la parola ha nell'etimologia una parola di un'altra lingua descritta come pseudo-anglicismo (o pseudo-gallicismo…) che a sua volta imitava la lingua della parola (es. inglese *dancing* «locale da ballo», dal francese *dancing*, pseudo-anglicismo). Il sito conviene che li mostri a parte o non li mostri; nei blocchi `falsi_prestiti_tra` non entrano mai (lì la lingua imitata è sempre l'altra lingua). 0 parole senza significato. Tutte e 33 le lingue hanno il file (tre hanno 0 parole).
+
+| Lingua | Parole | Lingue imitate (parole) |
+|---|---|---|
+| italiano (`it`) | 70 | `en` 66, `fr` 2, `es` 1, `la` 1 |
+| francese (`fr`) | 98 | `en` 95, `fr` 1, `ja` 1, `la` 1 |
+| spagnolo (`es`) | 78 | `en` 59, `la` 15, `it` 2, `da` 1 |
+| portoghese (`pt`) | 49 | `en` 41, `la` 6, `it` 1, `ja` 1 |
+| catalano (`ca`) | 12 | `en` 11, `la` 1 |
+| romeno (`ro`) | 22 | `en` 22 |
+| inglese (`en`) | 101 | `la` 33, `en` 28, `fr` 21, `es` 6 |
+| tedesco (`de`) | 58 | `en` 40, `la` 8, `fr` 7, `it` 2 |
+| olandese (`nl`) | 36 | `en` 31, `la` 3, `de` 1, `fr` 1 |
+| svedese (`sv`) | 32 | `en` 28, `de` 1, `fr` 1, `ja` 1 |
+| danese (`da`) | 17 | `en` 17 |
+| norvegese (bokmål) (`nb`) | 45 | `en` 37, `la` 4, `ja` 2, `da` 1 |
+| islandese (`is`) | 2 | `en` 2 |
+| polacco (`pl`) | 37 | `en` 33, `de` 1, `fr` 1, `ja` 1 |
+| ceco (`cs`) | 13 | `en` 11, `fr` 1, `la` 1 |
+| slovacco (`sk`) | 11 | `en` 11 |
+| russo (`ru`) | 14 | `en` 10, `la` 2, `fr` 1, `ja` 1 |
+| ucraino (`uk`) | 6 | `en` 3, `fr` 1, `ja` 1, `la` 1 |
+| bulgaro (`bg`) | 6 | `en` 6, `fr` 1 |
+| serbo-croato (`sh`) | 14 | `en` 11, `de` 2, `la` 1 |
+| sloveno (`sl`) | 2 | `en` 2 |
+| greco moderno (`el`) | 4 | `en` 4 |
+| ungherese (`hu`) | 7 | `en` 6, `la` 1 |
+| finlandese (`fi`) | 13 | `en` 11, `ja` 1, `la` 1 |
+| estone (`et`) | 0 | - |
+| lituano (`lt`) | 1 | `en` 1 |
+| lettone (`lv`) | 3 | `en` 2, `la` 1 |
+| albanese (`sq`) | 0 | - |
+| maltese (`mt`) | 1 | `en` 1 |
+| turco (`tr`) | 16 | `ar` 7, `en` 7, `fa-cls` 1, `fr` 1 |
+| arabo (`ar`) | 0 | - |
+| persiano (`fa`) | 37 | `ar` 35, `fr` 2, `en` 1 |
+| ebraico (`he`) | 1 | `la` 1 |
+
+### `dato_al_mondo/<codice>.json` (parte B)
+```
+{"lingua":"it","nome_it","nome_en","escluso_dalle_statistiche":false,"nota":"…","n_parole_con_discendenti":6651,"n_senza_albero":3964,"n_in_elenco":150,
+ "parole":[{"parola":"pizza","traslitterazione?":…,"n_etimologia":1,"significato":"pizza (Italian dish)","categoria":"prestito",
+            "n_lingue":27,"n_lingue_con_ambigui":27,"n_parole_discendenti":30,
+            "lingue":[{"codice":"ar","nome_it":"arabo","nome_en":"Arabic","parola":"بيتزا","traslitterazione?":"bītzā","livello":1,"n_parole":1}×n_lingue],
+            "origine_X":{voce_lingua + "termine" + "traslitterazione?"},        (solo se la parola è un prestito)
+            "file_albero":"alberi/it/p.json","chiave_albero":"pizza|1",
+            "senza_albero":true}                                            (solo per le «orfane»: vedi sotto)
+          ×150],
+ "nota_romeno":"…"   (solo in ro.json)}
+```
+- **Che cosa conta**: per ogni parola di X (X = la lingua del file) si prendono **tutti i suoi discendenti negli alberi, a tutti i livelli**, seguendo solo i **collegamenti non ambigui** (`ambiguo` falso, cioè senza omografi incerti), e si contano le lingue diverse da X. `n_lingue` = quelle lingue; `n_lingue_con_ambigui` = le lingue contando anche i discendenti ambigui (sempre ≥ `n_lingue`: se è molto più alto, il numero sicuro è `n_lingue`); `n_parole_discendenti` = le parole discendenti non ambigue (in tutte le lingue). I discendenti sono le parole **delle 33 lingue di arrivo**: Wiktionary non dà l'albero di altre lingue, quindi «il mondo» qui sono le 33 lingue (romeno compreso, che conta come una lingua qualsiasi).
+- `lingue` = **una voce per lingua**, ordinata per `livello` (1 = ha preso la parola direttamente da X, 2 = tramite un'altra lingua…) poi per codice. `parola` = la parola di quella lingua di livello più basso (a parità la stessa grafia normalizzata di quella di X, poi l'alfabeto); `n_parole` = quante parole di quella lingua discendono da quella di X.
+- `origine_X` = da dove X l'aveva presa: la prima tappa della catena, solo se la categoria della parola è `prestito`, `latinismo_dotto` o `calco`. Le parole ereditate o «non precisato» non l'hanno (si legge la catena nell'albero).
+- **Ordine**: `n_lingue` decrescente; a parità, prima le parole «corte e comuni» (al massimo 9 lettere, solo lettere, con significato), poi le più corte, poi quelle con più parole discendenti, poi alfabetico. Le prime 150. `n_parole_con_discendenti` = tutte le parole di X che hanno almeno un discendente in un'altra lingua (85.370 in tutto l'export).
+- **Parole «orfane»** (`senza_albero: true`): molti antenati importanti non hanno una voce nell'export perché Wiktionary non dà loro un legame (per esempio composti come *Kindergarten*, parole il cui articolo non ha un legame con un'altra lingua, come *spaghetti* o *concerto*). Le altre parole le citano come origine, quindi si conoscono i discendenti e si possono contare le lingue. Per queste: `n_etimologia` e `categoria` sono `null`, **non c'è albero** (`file_albero` e `chiave_albero` mancano; non sono nemmeno nell'indice di ricerca), il `significato` è la prima glossa della prima etimologia della voce con quella grafia (può essere di un omografo, o mancare) e la grafia è quella più frequente tra le catene che le citano. Non sono contate quelle che sono affissi (iniziano o finiscono con «-»). Sono 59.921 in tutto l'export, tutte con discendenti in altre lingue; 1.639 sono entrate nelle 33 liste da 150. Le orfane non hanno informazione sugli omografi: `n_lingue_con_ambigui` per loro è uguale a `n_lingue`.
+- Le parole con omografi (*piano*, *banca*) contano solo i discendenti non ambigui: per questo possono stare più in basso di quanto ci si aspetti (`n_lingue_con_ambigui` dice quanto sarebbe il numero senza questa cautela).
+
+Le prime 10 di sei lingue (parola, numero di lingue):
+
+- **italiano** (`it`): pizza (27), doccia (24), arcipelago (23), balcone (22), concerto (22), cartone (21), spaghetti (21), salone (20), ciao (19), fregata (19)
+- **inglese** (`en`): video (27), film (26), sandwich (26), homophobia (26), blog (25), tennis (25), football (25), jazz (24), sport (24), dollar (24)
+- **francese** (`fr`): platine (30), garage (26), hôtel (25), chauffeur (25), crème (24), douche (23), menu (22), béton (22), cliché (22), étiquette (22)
+- **tedesco** (`de`): Zink (23), Benzin (22), Wolfram (22), Allergie (21), Bikini (20), Quark (19), Quarz (18), Walzer (18), Vampir (18), Föhn (17)
+- **arabo** (`ar`): زرافة [zarāfa] (21), جِهَاد [jihād] (21), زرقون [zarqūn] (20), شَيْخ [šayḵ] (20), مَسْجِد [masjid] (20), مَوْسِم [mawsim] (20), صفة [ṣuffa] (19), قيثارة [qīṯāra] (19), سورة [sūra] (18), غُرْفَة [ḡurfa] (18)
+- **turco** (`tr`): havyar (11), kebap (8), yoğurt (8), karakulak (8), pala (6), baklava (6), paşa (5), sultan (5), bey (4), baba (4)
+
+Per tutte le lingue (quante parole hanno discendenti altrove, quante sono orfane, la prima):
+
+| Lingua | Parole con discendenti in altre lingue | di cui senza albero (orfane) | Prima della lista |
+|---|---|---|---|
+| italiano (`it`) | 6.651 | 3.964 | pizza (27 lingue) |
+| francese (`fr`) | 34.531 | 25.726 | platine (30 lingue) |
+| spagnolo (`es`) | 2.885 | 1.655 | platina (30 lingue) |
+| portoghese (`pt`) | 535 | 263 | jaguar (28 lingue) |
+| catalano (`ca`) | 241 | 117 | català (10 lingue) |
+| romeno (`ro`) | 134 | 40 | leu (11 lingue) |
+| inglese (`en`) | 9.949 | 6.996 | video (27 lingue) |
+| tedesco (`de`) | 9.749 | 6.743 | Zink (23 lingue) |
+| olandese (`nl`) | 804 | 508 | daalder (24 lingue) |
+| svedese (`sv`) | 2.689 | 1.564 | ombudsman (13 lingue) |
+| danese (`da`) | 787 | 304 | hygge (5 lingue) |
+| norvegese (bokmål) (`nb`) | 25 | 16 | løype (3 lingue) |
+| islandese (`is`) | 54 | 30 | Geysir (8 lingue) |
+| polacco (`pl`) | 1.028 | 486 | wódka (22 lingue) |
+| ceco (`cs`) | 229 | 142 | robot (23 lingue) |
+| slovacco (`sk`) | 62 | 41 | Slovák (9 lingue) |
+| russo (`ru`) | 2.736 | 1.600 | водка (21 lingue) |
+| ucraino (`uk`) | 498 | 328 | козак (6 lingue) |
+| bulgaro (`bg`) | 442 | 305 | лев (8 lingue) |
+| serbo-croato (`sh`) | 366 | 227 | vampir (21 lingue) |
+| sloveno (`sl`) | 20 | 12 | Slovenec (10 lingue) |
+| greco moderno (`el`) | 1.186 | 1.010 | πίτα (14 lingue) |
+| ungherese (`hu`) | 940 | 621 | paprika (17 lingue) |
+| finlandese (`fi`) | 151 | 81 | sauna (18 lingue) |
+| estone (`et`) | 37 | 22 | sai (3 lingue) |
+| lituano (`lt`) | 44 | 33 | litas (7 lingue) |
+| lettone (`lv`) | 17 | 10 | latvis (9 lingue) |
+| albanese (`sq`) | 78 | 37 | lek (6 lingue) |
+| maltese (`mt`) | 10 | 3 | luzzu (1 lingue) |
+| turco (`tr`) | 279 | 131 | havyar (11 lingue) |
+| arabo (`ar`) | 6.878 | 5.972 | زرافة (21 lingue) |
+| persiano (`fa`) | 667 | 358 | جامه (15 lingue) |
+| ebraico (`he`) | 668 | 576 | שקל (12 lingue) |
+
+### `casuale.json` (parte C)
+```
+{"fonte":…,"data_scarico":"2026-10-18","seme":2026,"nota":"…","soglia_lingue":4,"n_candidate":23601,"n_righe":5000,
+ "n_per_lingua":{"it":277,"fr":1168,…},
+ "parole":[{"lingua":"fr","parola":"valet","n_etimologia":1,"traslitterazione?":…,"significato":"a male attendant of a knight or a lord","n_lingue":13,
+            "file_albero":"alberi/fr/v.json","chiave_albero":"valet|1"}×5.000]}
+```
+- **Quali parole**: tutte le parole delle 33 lingue **con una voce nell'export** (le orfane no: non hanno albero) il cui albero, `su` + `giu` senza ambigui, tocca **almeno 4 lingue diverse**. `n_lingue` = lingue distinte tra: la lingua della parola, le lingue vere della sua catena (protolingue, famiglie e non-lingue non contano; latino sommato in una) e le lingue dei discendenti non ambigui a tutti i livelli. Le parole di una sola lettera (le lettere dell'alfabeto) sono escluse. 23.601 parole candidate.
+- **Quante**: le candidate sono più di 5.000, quindi: prima, per ogni lingua, le sue 100 con più lingue (o tutte, se ne ha meno di 100); poi si riempie fino a 5.000 con le altre di più lingue (a parità: «corte e comuni» prima). Risultato: 5.000 righe. Il francese ne ha molte di più delle altre perché le sue catene toccano più lingue.
+- **Ordine**: già mescolato (generatore `random.Random(2026).shuffle` di Python, sull'elenco delle parole scelte messe prima in ordine alfabetico), quindi il sito può prendere una riga a caso senza caricare altro (anche la prima, ogni volta la stessa). `file_albero` / `chiave_albero` come in `voce_parola`.
+- Distribuzione delle righe per numero di lingue: 4 lingue: 641, 5 lingue: 987, 6 lingue: 474, 7 lingue: 829, 8 lingue: 493, 9 lingue: 390, 10 lingue: 258, 11 lingue: 199, …, massimo 31 lingue.
+
+| Lingua | Candidate | Nel file |
+|---|---|---|
+| italiano (`it`) | 1.251 | 280 |
+| francese (`fr`) | 4.884 | 1.173 |
+| spagnolo (`es`) | 955 | 114 |
+| portoghese (`pt`) | 537 | 100 |
+| catalano (`ca`) | 206 | 100 |
+| romeno (`ro`) | 669 | 100 |
+| inglese (`en`) | 4.888 | 552 |
+| tedesco (`de`) | 1.808 | 287 |
+| olandese (`nl`) | 778 | 100 |
+| svedese (`sv`) | 507 | 100 |
+| danese (`da`) | 468 | 100 |
+| norvegese (bokmål) (`nb`) | 419 | 100 |
+| islandese (`is`) | 145 | 100 |
+| polacco (`pl`) | 1.008 | 100 |
+| ceco (`cs`) | 196 | 100 |
+| slovacco (`sk`) | 75 | 75 |
+| russo (`ru`) | 730 | 100 |
+| ucraino (`uk`) | 375 | 100 |
+| bulgaro (`bg`) | 328 | 100 |
+| serbo-croato (`sh`) | 354 | 100 |
+| sloveno (`sl`) | 26 | 26 |
+| greco moderno (`el`) | 194 | 100 |
+| ungherese (`hu`) | 524 | 100 |
+| finlandese (`fi`) | 398 | 100 |
+| estone (`et`) | 58 | 58 |
+| lituano (`lt`) | 74 | 74 |
+| lettone (`lv`) | 52 | 52 |
+| albanese (`sq`) | 79 | 79 |
+| maltese (`mt`) | 273 | 100 |
+| turco (`tr`) | 271 | 100 |
+| arabo (`ar`) | 667 | 130 |
+| persiano (`fa`) | 299 | 100 |
+| ebraico (`he`) | 105 | 100 |
 
 ### Omografi negli alberi (parte G): numeri
 
@@ -352,7 +544,7 @@ Le prime 20 famiglie (radice, lingue, parole, esempio):
 - Voci di albero con `n_omografi_antenato` (almeno un altro omografo nell'export): **20.527** su 385.453.
 - Controllo: *café* francese (una sola etimologia): nessun discendente ambiguo, e *café* spagnolo («brown» è la prima glossa della voce aggettivo; il sostantivo «coffee» ha la stessa etimologia) è un discendente vero; *καφέ* greco: le due etimologie (colore, locale) hanno ciascuna il proprio albero e `radici_altre` l'altra, e discendono tutte e due da *café* francese; *piano* inglese: `piano|1` (pianoforte) e `piano|2` («softly», da *piano* italiano) con `n_omografi_antenato` = 1; *piano* italiano ha due voci con legami e i suoi discendenti sono distribuiti con `ambiguo` (salvo *πιάνο* greco 1 e 2, scelti con la glossa).
 
-### Dimensioni (mandato 11)
+### Dimensioni (mandati 11 e 13)
 
 | Cartella o file | File | MB |
 |---|---|---|
@@ -363,7 +555,9 @@ Le prime 20 famiglie (radice, lingue, parole, esempio):
 | `lingua_extra/` | 33 | 2.1 |
 | `doppioni/` | 33 | 10.4 |
 | `andate_tornate/` | 33 | 0.9 |
-| `confronto/` | 528 | 6.7 |
+| `confronto/` | 528 | 36.2 |
+| `pseudo/` | 33 | 0.3 |
+| `dato_al_mondo/` | 33 | 3.0 |
 | `lingue.json` | 1 | 0.1 |
 | `archi.json` | 1 | 1.1 |
 | `livello2.json` | 1 | 3.7 |
@@ -371,8 +565,9 @@ Le prime 20 famiglie (radice, lingue, parole, esempio):
 | `griglia.json` | 1 | 0.1 |
 | `statistiche.json` | 1 | 0.7 |
 | `famiglie.json` | 1 | 2.6 |
-| **Tutto `export/`** (senza il README) | **24.247** | **777.7** |
-| **Stima di ciò che copia il sito** (senza `parole/` e `dati_a/`; `dati_a/` non è in `export/`) | 24.162 | **622.4** |
+| `casuale.json` | 1 | 0.9 |
+| **Tutto `export/`** (senza il README) | **24.314** | **811.5** |
+| **Stima di ciò che copia il sito** (senza `parole/` e `dati_a/`; `dati_a/` non è in `export/`) | 24.229 | **656.3** |
 
 ## Avvertenze da mostrare sul sito
 
@@ -391,3 +586,5 @@ Le prime 20 famiglie (radice, lingue, parole, esempio):
 13. **Discendenti negli alberi**: sono letti dal primo termine di origine delle parole (confronto di forme normalizzate): una grafia uguale in due significati può dare discendenti che appartengono a un'altra parola. Dal mandato 11 si usano l'`id` e la glossa del modello, e quelli che restano incerti hanno `ambiguo: true` (vedi «Ambiguità»); i prestiti che Wiktionary non lega alla parola con un modello non compaiono.
 14. **Romeno**: visibile ovunque ma fuori da statistiche e classifiche come lingua di arrivo (`escluse: ["ro"]`, `nota_esclusione`). Nella griglia i toni di colore conviene calcolarli sul 95° percentile delle caselle perché il romeno non schiacci la scala.
 15. **Termini puliti**: 197 termini delle catene portavano ancora un modificatore del modello (`sugar<t:money>`); l'export li toglie (i CSV di `risultati/` no).
+16. **Cugine** (versione 5): sono parole con la stessa radice «lingua attestata» (come nelle famiglie). Due parole che risalgono alla stessa protolingua ma i cui rami si fermano a lingue attestate diverse non sono cugine in questo senso (*banca* italiano si ferma al longobardo *bank*, *Bank* «panca» tedesco al protogermanico; *Bank* «istituto di credito» ha come origine l'italiano *banco* e *banca* ed è quindi un prestito, non una cugina). Il tetto di 80 per coppia e l'ordine «corte e comuni» danno le coppie più note, non tutte.
+17. **Orfane** (versione 5): in `dato_al_mondo/` ci sono parole senza albero e senza categoria (`senza_albero: true`); il loro significato può essere quello di un omografo.

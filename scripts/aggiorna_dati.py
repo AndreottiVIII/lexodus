@@ -8,7 +8,8 @@
 It copies lingue.json, archi.json, livello2.json, storie.json, griglia.json, the folder coppie/
 (one file per pair of languages, mandate 07; with __via_*.json and __altre.json, mandate 09), the search
 index indice/, the trees alberi/, statistiche.json (mandate 09), the files of the Explore pages and of the
-language page (mandate 11: lingua_extra/, doppioni/, andate_tornate/, confronto/, famiglie.json) and the
+language page (mandate 11: lingua_extra/, doppioni/, andate_tornate/, confronto/, famiglie.json), the files of
+mandate 13 (pseudo/, dato_al_mondo/ for gave.html, casuale.json for "Surprise me") and the
 export README (as data/README_export.md),
 and writes the .js twins of the small files so the home and the language pages also open from a
 local file (browsers block fetch() on file://). Then it builds one index from data/coppie/:
@@ -38,8 +39,8 @@ EXPORT = os.path.normpath(os.path.join(QUI, "..", "..", "rete-prestiti", "risult
 FILES = ("lingue", "archi", "livello2", "storie", "griglia")
 MAX_PAROLE = 100 * 1024 * 1024
 MAX_TOTALE = 800 * 1024 * 1024
-FOLDERS = ("indice", "alberi", "lingua_extra", "doppioni", "andate_tornate", "confronto")
-SINGLE = ("statistiche", "famiglie")
+FOLDERS = ("indice", "alberi", "lingua_extra", "doppioni", "andate_tornate", "confronto", "pseudo", "dato_al_mondo")
+SINGLE = ("statistiche", "famiglie", "casuale")
 NOT_COPIED = ("parole", "dati_a")
 
 
@@ -129,7 +130,7 @@ def main(export, con_parole):
         shutil.rmtree(dest)
     shutil.copytree(os.path.join(export, "coppie"), dest)
     print("copied coppie/ (%.0f MB)" % mb_coppie)
-    # mandates 09 and 11: search index, trees, Explore pages, language page (copied when they are in the export)
+    # mandates 09, 11 and 13: search index, trees, Explore pages, language page (copied when they are in the export)
     for cartella in FOLDERS:
         src, d = os.path.join(export, cartella), os.path.join(DATA, cartella)
         if os.path.isdir(src):

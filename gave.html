@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What a language gave — lexodus</title>
+<meta name="description" content="The words of one language that the most other languages took, with their local forms, from English Wiktionary.">
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="css/style.css?v=202610181858">
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="index.html">lexodus</a>
+  <nav aria-label="Main" class="menu">
+    <a href="languages.html">Languages</a>
+    <a href="search.html">Search</a>
+    <details class="explore">
+      <summary class="current">Explore</summary>
+      <ul>
+        <li><a href="hidden.html">Hidden donors</a></li>
+        <li><a href="travelled.html">Most travelled words</a></li>
+        <li><a href="doublets.html">Doublets</a></li>
+        <li><a href="roundtrips.html">Round trips</a></li>
+        <li><a href="families.html">Word families</a></li>
+        <li><a href="compare.html">Compare two languages</a></li>
+        <li><a href="gave.html" aria-current="page">What a language gave</a></li>
+      </ul>
+    </details>
+    <a href="stats.html">Statistics</a>
+    <a href="about.html">About</a>
+  </nav>
+</header>
+
+<main>
+  <div class="head">
+    <h1 id="title">What a language gave to the world</h1>
+    <label><span class="note">Language </span><select id="lang"></select></label>
+  </div>
+  <p class="lead">The words of one language that the most other languages took, directly or through another language, like Italian <i>pizza</i>: English <i>pizza</i>, German <i>Pizza</i>, Russian <i>пицца</i>&hellip; Click a row for the languages and their forms; the word itself opens its tree.</p>
+  <p id="loading">Loading&hellip;</p>
+  <div id="app" hidden>
+    <label class="search"><span class="visually-hidden">Find a word</span><input type="search" id="q" placeholder="Find a word" autocomplete="off"></label>
+    <p id="count" class="note"></p>
+    <ol id="list" class="families gave"></ol>
+    <button type="button" id="more" class="more" hidden></button>
+  </div>
+</main>
+
+<footer id="site-footer"></footer>
+
+<script src="data/lingue.js?v=202610181858"></script>
+<script src="js/common.js?v=202610181858"></script>
+<script src="js/gave.js?v=202610181858"></script>
+</body>
+</html>

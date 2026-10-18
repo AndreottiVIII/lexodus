@@ -3,7 +3,7 @@
   "use strict";
   // Version of the site, added to every file read with fetch() so browsers do not keep old copies.
   // Set together with the "?v=" in the pages by scripts/versione.py (also run by aggiorna_dati.py).
-  var VERSION = "202610181803";
+  var VERSION = "202610181858";
   function withVersion(path) { return path + (path.indexOf("?") < 0 ? "?" : "&") + "v=" + VERSION; }
 
   var CATS = [
@@ -337,8 +337,45 @@
   // A word of the export ({lingua|l, parola|p, n_etimologia|ne, traslitterazione|t}) as a link to its tree.
   function wordTree(w, lang) {
     var l = w.lingua || w.l || lang, p = w.parola || w.p, t = w.traslitterazione || w.t || "";
-    return '<a class="w" href="' + esc(treeUrl(l, p, w.n_etimologia || w.ne || 1, t)) + '">' + esc(p) + "</a>" + tr(t, p);
+    var href = w.file_albero ? treeOf(w, lang) : treeUrl(l, p, w.n_etimologia || w.ne || 1, t);
+    return '<a class="w" href="' + esc(href) + '">' + esc(p) + "</a>" + tr(t, p);
   }
+  // The tree of a word of the export that has file_albero ("alberi/it/p.json") and chiave_albero ("pizza|1"),
+  // mandate 13: the letter of the file is taken from file_albero, so no guessing.
+  function treeOf(w, lang) {
+    var l = w.lingua || w.l || lang, p = w.parola || w.p, ne = w.n_etimologia || w.ne || 1, f = "";
+    var k = w.chiave_albero, i = k ? k.lastIndexOf("|") : -1;
+    if (i > 0) { p = k.slice(0, i); ne = +k.slice(i + 1) || ne; }
+    var m = /^alberi\/([^/]+)\/([^/]+)\.json$/.exec(w.file_albero || "");
+    if (m) { l = l || m[1]; f = m[2]; }
+    return treeUrl(l, p, ne, w.traslitterazione || w.t || "", f);
+  }
+
+  // "Surprise me" (mandate 14): any button with data-surprise opens the tree of a random word of
+  // data/casuale.json (5,000 words whose tree touches at least 4 languages; the file is read only on the click).
+  // On a tree page the word shown is left out, so "Another one" always changes word.
+  function surprise(btn) {
+    var msg = btn.parentNode.querySelector(".surprise-msg");
+    btn.disabled = true;
+    fetchJson("data/casuale.json").then(function (d) {
+      var rows = (d && d.parole) || [];
+      var here = /tree\.html$/.test(location.pathname) ? [param("lang"), param("w"), String(param("n") || 1)].join("|") : "";
+      var pool = rows.filter(function (r) { return r.parola && r.lingua && [r.lingua, r.parola, String(r.n_etimologia || 1)].join("|") !== here; });
+      if (!pool.length) throw new Error("data/casuale.json: no words");
+      var r = pool[Math.floor(Math.random() * pool.length)];
+      location.assign(treeOf(r, r.lingua));
+    }).catch(function (e) {
+      btn.disabled = false;
+      if (msg) msg.textContent = fetchFail(e);
+    });
+  }
+  Array.prototype.forEach.call(document.querySelectorAll("[data-surprise]"), function (b) {
+    b.addEventListener("click", function () { surprise(b); });
+  });
+  // Coming back with the browser's Back button, the page may be restored as it was: enable the buttons again.
+  window.addEventListener("pageshow", function () {
+    Array.prototype.forEach.call(document.querySelectorAll("[data-surprise]"), function (b) { b.disabled = false; });
+  });
   function wordPage(w, lang) {
     var l = w.lingua || w.l || lang, p = w.parola || w.p, t = w.traslitterazione || w.t || "";
     return '<a class="w" href="' + esc(wordUrl(l, p, w.n_etimologia || w.ne || 1)) + '">' + esc(p) + "</a>" + tr(t, p);
@@ -374,7 +411,7 @@
   window.Lex = {
     EXCLUDED: EXCLUDED, RO_NOTE: RO_NOTE, RO_LINK: RO_LINK, firstSentence: firstSentence, exclusionNote: exclusionNote, noteText: noteText,
     targetCodes: targetCodes, langOptions: langOptions, setParams: setParams, langName: langName, langLink: langLink,
-    wordTree: wordTree, wordPage: wordPage, chainLine: chainLine, pct: pct, listOf: listOf, codeOf: codeOf,
+    wordTree: wordTree, treeOf: treeOf, surprise: surprise, wordPage: wordPage, chainLine: chainLine, pct: pct, listOf: listOf, codeOf: codeOf,
     CATS: CATS, CAT_BY_KEY: CAT_BY_KEY, TYPE_LABEL: TYPE_LABEL, NOTES: NOTES,
     load: load, isLanguage: isLanguage, isLatin: isLatin, key: key, latinVarieties: latinVarieties,
     fileCode: fileCode, pairCode: pairCode, pairPath: pairPath, hasPair: hasPair, wordsUrl: wordsUrl, wordUrl: wordUrl,
