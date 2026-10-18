@@ -32,55 +32,44 @@
       .sort(function (x, y) { return y.n - x.n || x.other.localeCompare(y.other); });
   }
 
-  // The step before the direct language, for the words of one row.
+  // The step before the direct language. livello2.json has no category, so this covers all the
+  // words of the pair (arrival language, direct language), whatever their category.
   function level2(row) {
     var f = state.filters, d = state.data;
     var arr = row.side === "from" ? state.code : row.other;
     var direct = row.side === "from" ? row.other : state.code;
-    var list = null;
-    if (!f.splitLatin && d.level2Merged) list = d.level2Merged[arr + "|" + direct] || null;
-    if (!list && d.level2) {
-      var keys = (!f.splitLatin && direct === "la")
-        ? Object.keys(d.level2).filter(function (k) { var p = k.split("|"); return p[0] === arr && L.isLatin(p[1]); })
-        : [arr + "|" + direct];
-      var merged = {};
-      list = [];
-      keys.forEach(function (k) {
-        (d.level2[k] || []).forEach(function (it) {
-          var c = L.key(it.code, f);
-          if (c === direct) return;
-          var mk = c + "|" + it.cat;
-          var m = merged[mk];
-          if (!m) { m = merged[mk] = { code: c, cat: it.cat, n: 0, ex: [] }; list.push(m); }
-          m.n += it.n;
-          it.ex.forEach(function (w) { if (m.ex.indexOf(w) < 0) m.ex.push(w); });
-        });
+    var keys = (!f.splitLatin && direct === "la")
+      ? Object.keys(d.level2Totals).filter(function (k) { var p = k.split("|"); return p[0] === arr && L.isLatin(p[1]); })
+      : [arr + "|" + direct];
+    var by = {}, items = [], words = 0, reached = 0, sameLatin = 0, hidden = 0;
+    keys.forEach(function (k) {
+      var t = d.level2Totals[k];
+      if (t) { words += t.parole; reached += t.con_livello_2; }
+      (d.level2[k] || []).forEach(function (it) {
+        var c = L.key(it.codice, f);
+        if (c === direct) { sameLatin += it.n; return; }
+        var l = d.langs[c];
+        if (f.hideOther && l && !L.isLanguage(l.type)) { hidden += it.n; return; }
+        var m = by[c];
+        if (!m) { m = by[c] = { code: c, n: 0, ex: [] }; items.push(m); }
+        m.n += it.n;
+        it.esempi.forEach(function (w) { if (m.ex.indexOf(w) < 0) m.ex.push(w); });
       });
-    }
-    if (!list) return null;
-    var withCat = list.some(function (it) { return it.cat; });
-    var shown = [], hidden = 0;
-    list.forEach(function (it) {
-      if (withCat && it.cat !== row.cat) return;
-      var l = d.langs[it.code];
-      if (f.hideOther && l && !L.isLanguage(l.type)) { hidden += it.n; return; }
-      shown.push(it);
     });
-    shown.sort(function (a, b) { return b.n - a.n; });
-    var total = shown.reduce(function (s, it) { return s + it.n; }, 0);
-    return { items: shown, hidden: hidden, rest: Math.max(0, row.n - total - hidden), allCats: !withCat, direct: direct };
+    items.sort(function (a, b) { return b.n - a.n; });
+    return { items: items, words: words, hidden: hidden, rest: Math.max(0, words - reached) + sameLatin, direct: direct, arr: arr };
   }
 
   function subHtml(row) {
     var r = level2(row);
-    if (!r) return '<p class="sub-head">The step before is not in the data yet.</p>';
-    var html = '<p class="sub-head">Before ' + L.esc(name(r.direct)) + ", these words came from" + (r.allCats ? " (all categories)" : "") + ":</p><ul>";
+    if (!r.words) return '<p class="note">No chain recorded for these words.</p>';
+    var html = '<p class="sub-head">Before ' + L.esc(name(r.direct)) + ", the " + L.n(r.words) + " " + L.esc(name(r.arr)) + " words in this pair (all categories) came from:</p><ul>";
     r.items.forEach(function (it) {
       var l = state.data.langs[it.code];
       var typ = l && !L.isLanguage(l.type) ? ' <span class="note">' + (L.TYPE_LABEL[l.type] || l.type) + "</span>" : "";
       html += '<li><div class="line"><a class="name" href="language.html?code=' + encodeURIComponent(it.code) + '">' + L.esc(name(it.code)) + "</a>" + typ +
         '<span class="num">' + L.n(it.n) + "</span></div>" +
-        '<div class="bar"><span style="width:' + Math.max(0.5, Math.min(100, 100 * it.n / row.n)).toFixed(2) + '%"></span></div>' +
+        '<div class="bar"><span style="width:' + Math.max(0.5, Math.min(100, 100 * it.n / r.words)).toFixed(2) + '%"></span></div>' +
         (it.ex.length ? '<p class="ex">' + five(it.ex).map(L.esc).join(", ") + "</p>" : "") + "</li>";
     });
     html += "</ul>";
@@ -88,7 +77,6 @@
     if (r.hidden) notes.push(L.n(r.hidden) + " go back to families, proto-languages or non-languages (hidden by the option above)");
     if (r.rest) notes.push(L.n(r.rest) + (r.rest === 1 ? " word has" : " words have") + " no earlier step in Wiktionary");
     if (notes.length) html += '<p class="note">' + notes.join("; ") + ".</p>";
-    if (!r.items.length && !notes.length) html += '<p class="note">No earlier step in Wiktionary.</p>';
     return html;
   }
 

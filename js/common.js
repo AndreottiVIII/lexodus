@@ -11,16 +11,8 @@
   ];
   var CAT_BY_KEY = {};
   CATS.forEach(function (c) { CAT_BY_KEY[c.key] = c; CAT_BY_KEY[c.id] = c; });
-  // Other spellings the export might use.
-  Object.assign(CAT_BY_KEY, {
-    borrowing: CAT_BY_KEY.prestito, loan: CAT_BY_KEY.prestito, bor: CAT_BY_KEY.prestito,
-    learned_latin: CAT_BY_KEY.latinismo_dotto, latinismo: CAT_BY_KEY.latinismo_dotto,
-    inh: CAT_BY_KEY.ereditato, cal: CAT_BY_KEY.calco, non_specificato: CAT_BY_KEY.non_precisato,
-    der: CAT_BY_KEY.non_precisato, derived: CAT_BY_KEY.non_precisato
-  });
-  function catOf(v) { return CAT_BY_KEY[String(v || "").toLowerCase()] || null; }
 
-  var COVERAGE_ALIAS = { buona: "good", media: "fair", scarsa: "poor", good: "good", fair: "fair", medium: "fair", poor: "poor" };
+  var COVERAGE = { buona: "good", media: "fair", scarsa: "poor" };
   var TYPE_LABEL = {
     lingua: "language", protolingua: "proto-language", famiglia: "language family",
     "non lingua": "not a language", non_lingua: "not a language", sostrato: "substrate"
@@ -35,127 +27,49 @@
     mul: "“Translingual” is not a language: these are scientific names of plants and animals."
   };
 
-  function pick(o, keys) {
-    for (var i = 0; i < keys.length; i++) {
-      var v = o[keys[i]];
-      if (v !== undefined && v !== null && v !== "") return v;
-    }
-    return undefined;
-  }
-  function num(v) { var n = Number(v); return isFinite(n) ? n : 0; }
-  function numOrNull(v) { return v === undefined ? null : num(v); }
-  function asList(raw) {
-    if (Array.isArray(raw)) return raw;
-    var out = [];
-    if (raw && typeof raw === "object") Object.keys(raw).forEach(function (k) { if (Array.isArray(raw[k])) out = out.concat(raw[k]); });
-    return out;
-  }
-  function exList(v) {
-    if (!v) return [];
-    if (typeof v === "string") return v.split(/[|;,]\s*/).filter(Boolean);
-    return v.slice();
-  }
-
-  function normLanguage(o) {
-    var code = pick(o, ["codice", "code", "lingua", "lang", "id"]);
-    if (!code) return null;
-    var lemmas = pick(o, ["lemmi", "lemmas", "n_lemmi"]);
-    var pct = numOrNull(pick(o, ["percentuale", "percentuale_con_etimologia", "pct", "percent"]));
-    var cov = pick(o, ["copertura", "giudizio", "giudizio_copertura", "coverage"]);
-    if (!cov && pct !== null) cov = pct >= 70 ? "good" : pct >= 30 ? "fair" : "poor";
-    var target = pick(o, ["arrivo", "di_arrivo", "lingua_arrivo", "target", "is_target"]);
-    if (target === undefined) target = lemmas !== undefined;
-    if (target === "sì" || target === "si" || target === "true") target = true;
-    if (target === "no" || target === "false") target = false;
+  // Field names: rete-prestiti/risultati/export/README.md (copied to data/README_export.md).
+  function language(o, target) {
     return {
-      code: String(code),
-      name: String(pick(o, ["nome_en", "nome_inglese", "name_en", "nome_eng", "name", "nome"]) || code),
-      nameIt: pick(o, ["nome_it", "nome_italiano", "name_it"]) || "",
-      target: !!target,
-      type: pick(o, ["tipo_lingua", "tipo", "type"]) || "lingua",
-      lemmas: numOrNull(lemmas),
-      withEty: numOrNull(pick(o, ["lemmi_con_etimologia", "con_etimologia", "lemmas_with_etymology"])),
-      pct: pct,
-      coverage: COVERAGE_ALIAS[String(cov || "").toLowerCase()] || null
+      code: o.codice, name: o.nome_en || o.codice, nameIt: o.nome_it || "", target: target,
+      type: o.tipo_lingua || "lingua",
+      lemmas: target ? o.lemmi : null, withEty: target ? o.lemmi_con_etimologia : null,
+      pct: target ? o.percentuale_con_etimologia : null,
+      coverage: target ? COVERAGE[o.copertura] || null : null
     };
   }
 
-  function normArc(o) {
-    var from = pick(o, ["origine", "lingua_origine", "origine_codice", "lingua_origine_codice", "da", "from", "source"]);
-    var to = pick(o, ["arrivo", "lingua_arrivo", "arrivo_codice", "lingua_arrivo_codice", "a", "to", "target"]);
-    var cat = catOf(pick(o, ["categoria", "category", "cat"]));
-    if (!from || !to || !cat) return null;
-    return {
-      from: String(from), to: String(to), cat: cat.id,
-      n: num(pick(o, ["n_parole", "parole_n", "n", "count", "words"])),
-      unc: num(pick(o, ["n_incerte", "incerte", "uncertain"])),
-      type: pick(o, ["tipo_lingua_origine", "tipo_origine", "source_type"]) || null,
-      ex: exList(pick(o, ["esempi", "parole_esempio", "esempio", "parole", "examples"]))
-    };
-  }
-
-  // Second level: {"arrivo|diretta": [{codice, n, esempi, categoria?, nome?, tipo_lingua?}]}
-  function normLevel2(raw) {
-    if (!raw || typeof raw !== "object") return null;
-    var out = {};
-    Object.keys(raw).forEach(function (k) {
-      out[k] = asList(raw[k]).map(function (o) {
-        var c = pick(o, ["codice", "code", "lingua", "lingua_codice"]);
-        if (!c) return null;
-        var cat = catOf(pick(o, ["categoria", "category"]));
-        return {
-          code: String(c), n: num(pick(o, ["n", "n_parole", "count"])),
-          ex: exList(pick(o, ["esempi", "examples", "parole"])),
-          cat: cat ? cat.id : null,
-          name: pick(o, ["nome", "nome_en", "name"]) || null,
-          type: pick(o, ["tipo_lingua", "tipo", "type"]) || null
-        };
-      }).filter(Boolean);
-    });
-    return out;
-  }
-
-  function getRaw(name, optional) {
+  function getRaw(name) {
     var g = window.LEXODUS || {};
     if (g[name] !== undefined) return Promise.resolve(g[name]);
     return fetch("data/" + name + ".json").then(function (r) {
       if (!r.ok) throw new Error("data/" + name + ".json: " + r.status);
       return r.json();
-    }).catch(function (e) { if (optional) return null; throw e; });
+    });
   }
 
   var cache = null;
   function load() {
     if (cache) return cache;
-    cache = Promise.all([getRaw("lingue"), getRaw("archi"), getRaw("fonte", true), getRaw("livello2", true), getRaw("livello2_latino_unito", true)])
+    cache = Promise.all([getRaw("lingue"), getRaw("archi"), getRaw("livello2"), getRaw("fonte").catch(function () { return {}; })])
       .then(function (res) {
         var langs = {};
-        asList(res[0]).forEach(function (o) {
-          var l = normLanguage(o);
-          if (l && (!langs[l.code] || l.target)) langs[l.code] = l;
-        });
-        function ensure(code, type, name) {
-          if (!langs[code]) langs[code] = { code: code, name: name || code, nameIt: "", target: false, type: type || "lingua" };
-          return langs[code];
-        }
+        res[0].altre_lingue_origine.forEach(function (o) { langs[o.codice] = language(o, false); });
+        res[0].lingue_di_arrivo.forEach(function (o) { langs[o.codice] = language(o, true); });
+        if (!langs.la) langs.la = { code: "la", name: "Latin", nameIt: "latino", target: false, type: "lingua" };
         var arcs = [];
-        asList(res[1]).forEach(function (o) {
-          var a = normArc(o);
-          if (!a || a.n <= 0) return;
-          arcs.push(a);
-          var l = ensure(a.from, a.type);
-          if (a.type && !l.target) l.type = a.type;
-          ensure(a.to).target = true;
+        res[1].archi.forEach(function (o) {
+          var cat = CAT_BY_KEY[o.categoria];
+          if (!cat || !(o.n_parole > 0)) return;
+          arcs.push({ from: o.origine, to: o.arrivo, cat: cat.id, n: o.n_parole, unc: o.n_incerte || 0, ex: o.esempi || [] });
+          if (!langs[o.origine]) langs[o.origine] = { code: o.origine, name: o.origine, nameIt: "", target: false, type: o.tipo_lingua_origine || "lingua" };
         });
-        var l2 = normLevel2(res[3]), l2m = normLevel2(res[4]);
-        [l2, l2m].forEach(function (d) {
-          if (d) Object.keys(d).forEach(function (k) { d[k].forEach(function (it) { ensure(it.code, it.type, it.name); }); });
-        });
-        ensure("la", "lingua", "Latin");
         var targets = Object.keys(langs).map(function (k) { return langs[k]; })
           .filter(function (l) { return l.target; })
           .sort(function (a, b) { return a.name.localeCompare(b.name, "en"); });
-        return { langs: langs, arcs: arcs, targets: targets, source: res[2] || {}, level2: l2, level2Merged: l2m };
+        return {
+          langs: langs, arcs: arcs, targets: targets, source: res[3] || {},
+          level2: res[2].da_chi_ha_preso || {}, level2Totals: res[2].totali || {}
+        };
       });
     return cache;
   }
@@ -224,10 +138,9 @@
   function footer(source) {
     var el = document.getElementById("site-footer");
     if (!el) return;
-    var sample = source && source.tipo === "campione";
     el.innerHTML = 'Data: English Wiktionary, extracted by <a href="https://kaikki.org/">Wiktextract / kaikki.org</a>, downloaded 18 October 2026, ' +
       'licence <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>.' +
-      (sample ? " This version uses a sample built from the project tables." : "") + ' <a href="about.html">How it was made</a>.';
+ ' <a href="about.html">How it was made</a>.';
   }
 
   window.Lex = {

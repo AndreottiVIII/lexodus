@@ -1,1 +1,1 @@
-window.LEXODUS=window.LEXODUS||{};window.LEXODUS["fonte"]={"tipo":"campione","scarico":"2026-10-18"};
+window.LEXODUS=window.LEXODUS||{};window.LEXODUS["fonte"]={"tipo": "export", "da": "rete-prestiti/risultati/export", "scarico": "2026-10-18"};

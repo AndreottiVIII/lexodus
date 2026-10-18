@@ -68,3 +68,20 @@ Davide ha visto il prototipo: il diagramma a flussi non gli piace e non mostra i
 ## 2026-10-18 — esempi più corti, pubblicazione
 - Davide: restano 20 righe prima di «Show all»; esempi = le 5 parole più corte (almeno 3 lettere, senza trattini, maiuscole o numeri), mostrate in ordine alfabetico. Applicato in `scripts/campione_da_csv.py` e `scripts/livello2_da_csv.py` (a parità di lunghezza: sicure prima, poi testo etimologico più lungo / già esempio di un arco) e nel sito (`five()` in `js/language.js`, così vale anche per l'export ufficiale). Dati rigenerati: ora *caffè* compare tra gli esempi di italiano ← turco ottomano → arabo.
 - Repo online: https://github.com/AndreottiVIII/lexodus, Pages su https://andreottiviii.github.io/lexodus/. Verifica fatta con Edge senza finestra (file locale), non con il browser integrato.
+
+## 2026-10-18 — dati veri dall'export ufficiale
+- Letto `rete-prestiti/risultati/export/README.md` (copiato in `data/README_export.md`). Lanciato `scripts/aggiorna_dati.py`: copiati `lingue.json`, `archi.json` (6.719 archi), `livello2.json`, `storie.json` e i gemelli `.js`. `fonte.json` ora dice «export»; tolta dal piè di pagina la frase sul campione.
+- **`parole/` non copiata**: pesa 127 MB, sopra il limite di 100 MB. Serve alle pagine parola future. Per copiarla più avanti, quando sarà più leggera: `python -I -X utf8 scripts/aggiorna_dati.py --parole` (lo script la copia solo se resta sotto 100 MB). Alternative da decidere allora: caricare dal sito solo il file della lingua aperta, oppure alleggerire i file (testo dell'etimologia più corto, solo le 33 lingue senza l'inglese diviso).
+- Sito adattato ai nomi veri dei campi (tolti i nomi alternativi): `lingue.json` → `lingue_di_arrivo` / `altre_lingue_origine` con `percentuale_con_etimologia` e `copertura` buona/media/scarsa; `archi.json` → `archi`; `livello2.json` → `da_chi_ha_preso` (chiave `arrivo|diretta`) e `totali`. La sezione `da_dove_la_origine_l_aveva_presa` non serve: sono gli stessi dati con la chiave rovesciata, e per «Gave to» il sito usa `da_chi_ha_preso` con chiave `altra lingua|lingua al centro`.
+- **Il secondo livello ufficiale non ha la categoria**: la sotto-lista conta tutte le parole della coppia di lingue, qualunque categoria (es. italiano ← turco ottomano: riga «borrowed 27», sotto «the 31 Italian words in this pair (all categories)»). Quante non hanno un passo precedente viene da `totali` (parole − con_livello_2). Se si vuole il secondo livello per categoria, va aggiunto il campo all'export.
+- Latino unito: il sito somma le chiavi delle varietà (`it|la`, `it|la-lat`…) e unisce le varietà anche tra le lingue del secondo livello.
+- Tolti `scripts/campione_da_csv.py`, `scripts/livello2_da_csv.py` e `data/livello2_latino_unito.*` (servivano solo al campione; restano nella storia di git).
+- Regola degli esempi corti: la applica già l'export; il sito sceglie comunque le 5 più corte e le mette in ordine alfabetico.
+
+### Numeri di controllo, italiano (export = CSV)
+- Copertura: 136.968 lemmi, 69.425 con etimologia, 50,7% («media» → «fair») in `rete_copertura.csv` e in `lingue.json`.
+- Latinismi dotti dal latino unito: 4.377 in `rete_archi.csv` e in `archi.json`; sul sito «Latin · learned Latin · 4,377».
+- Prestiti dall'inglese: 982 in entrambi; sul sito «English · borrowed · 982».
+- Totale preso (prestiti + latinismi + calchi) 8.304 e dato 9.358 in entrambi. Sul sito «Took from» mostra 8.101 perché l'interruttore acceso nasconde le non-lingue (Translingual) e le famiglie (203 parole); «Gave to» 9.358.
+- Sotto «Ottoman Turkish» si apre l'arabo con 7 parole tra cui *caffè* (poi persiano 5, persiano classico 4, una protolingua nascosta, 14 parole senza passo precedente su 31).
+- Verifica con Edge senza finestra (file locale) per italiano e francese, nessun errore; screenshot `index.png`, `language-french.png`, `language-italian-phone.png` rifatti. Gli `.jpg` del browser integrato sono della versione con il campione (stessa grafica, esempi diversi).

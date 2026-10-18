@@ -16,15 +16,21 @@ No build step and no libraries: plain HTML, CSS and JavaScript with system fonts
 - Licence: Wiktionary content is available under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/). The tables in `data/` are derived from it and are shared under the same licence, with attribution to the Wiktionary contributors.
 - The numbers are a snapshot of Wiktionary, not a measure of the vocabulary: each page shows how many entries of the language have an etymology at all. No dates are used.
 
-### What is in `data/` now
+### What is in `data/`
 
-**A sample**, not the final export. It was built on 18/10/2026 by `scripts/campione_da_csv.py` from `rete-prestiti/risultati/rete_archi.csv`, `rete_copertura.csv`, `lingue_codici.csv` and `rete_parole.csv` (read only), because `rete-prestiti/risultati/export/` did not exist yet. It contains all 6,719 direct arcs (all categories except steps inside the same language) and up to 12 example words per arc. The sample does not yet include the clean-up of mandate 05 (e.g. rejected hypotheses read as steps, `oc-pro` as proto-language).
+The official export of `rete-prestiti` (mandate 05, part B), copied on 18/10/2026 by `scripts/aggiorna_dati.py`. Field names are described in `data/README_export.md` (a copy of the export README).
 
-Files: `lingue.json` (33 target languages with coverage, plus every source language), `archi.json` (direct arcs with examples), `livello2.json` (second level, from `rete_relazioni.csv` by `scripts/livello2_da_csv.py`: key `arrivo|diretta`, e.g. `it|ota`, then a list of `{codice, nome, tipo_lingua, categoria, n, esempi}` for the next step of the chain of the same words; `categoria` is the category of the direct link), `livello2_latino_unito.json` (the same with all Latin varieties merged into `la`), `fonte.json` (sample or export), and the same content as `.js` files.
+- `lingue.json`: `lingue_di_arrivo` (the 33 languages, with `lemmi`, `lemmi_con_etimologia`, `percentuale_con_etimologia`, `copertura` = buona / media / scarsa) and `altre_lingue_origine` (every other source language, with `tipo_lingua`).
+- `archi.json`: `archi`, 6,719 direct arcs (`origine`, `arrivo`, `categoria`, `n_parole`, `n_incerte`, `tipo_lingua_origine`, up to 12 shortest `esempi`).
+- `livello2.json`: `da_chi_ha_preso` (key `arrivo|diretta`, e.g. `it|ota` → list of `{codice, n, esempi}`: where the direct language had those words from) and `totali` (per key: words with a chain, and how many reach the second step). It has no category, so the second level on the site covers all categories of a language pair. Latin varieties are merged by the site.
+- `storie.json`: the 10 stories (not used yet).
+- `fonte.json`: says the data is the export. Every file also exists as `.js`.
+
+`parole/<codice>.json` (127 MB in all) is **not** copied: it is for the future word pages. To copy it later (only if under 100 MB): `python -I -X utf8 scripts/aggiorna_dati.py --parole`.
 
 ### How to update the data
 
-When the export of mandate 05 (part B) is ready in `rete-prestiti/risultati/export/`:
+When the export changes:
 
 ```
 cd lexodus
@@ -32,11 +38,9 @@ python -I -X utf8 scripts/aggiorna_dati.py
 git add data && git commit -m "Update data from export" && git push
 ```
 
-The script copies `lingue.json`, `archi.json`, `storie.json`, `livello2.json` (and `livello2_latino_unito.json` if the export has it), `README.md` and `parole/` into `data/` and writes the `.js` twins. Without a merged-Latin file the site merges Latin itself from `livello2.json`. The site reads field names flexibly (`js/common.js`, functions `normLanguage` and `normArc`): if the export uses different names, add them to the lists there. After the copy the footer no longer says "sample".
-
 ## Publish on GitHub Pages
 
-`gh` was not logged in when the site was created (18/10/2026), so the repository is **not online yet**. The local repository is ready with a first commit. To publish:
+The repository is online at https://github.com/AndreottiVIII/lexodus and GitHub Pages serves it from `main` (root) at https://andreottiviii.github.io/lexodus/. It was set up with:
 
 ```
 gh auth login
@@ -45,7 +49,7 @@ gh repo create lexodus --public --source=. --remote=origin --push
 gh api -X POST repos/AndreottiVIII/lexodus/pages -f "source[branch]=main" -f "source[path]=/"
 ```
 
-The site will then be at https://andreottiviii.github.io/lexodus/ (it takes a minute or two the first time).
+After that, every `git push` to `main` updates the site within a minute or two.
 
 ## Work locally
 
@@ -60,6 +64,6 @@ then http://localhost:8790. Or just open `index.html`.
 - `index.html`, `language.html`, `about.html` — pages.
 - `css/style.css` — the only stylesheet: black on white, one dark blue for bars and links.
 - `js/common.js` — data loading and normalisation, categories, Latin merging, filters, footer. `js/language.js` — language page.
-- `scripts/aggiorna_dati.py` — copy the real export. `scripts/campione_da_csv.py` and `scripts/livello2_da_csv.py` — rebuild the sample from the CSV tables (run `campione_da_csv.py` first: `livello2_da_csv.py` uses its examples).
+- `scripts/aggiorna_dati.py` — copy the export into `data/`. (The scripts that built the first sample from the CSV tables were removed; they are in the git history.)
 - `docs/screenshots/` — screenshots from the check of 18/10/2026.
 - `JOURNAL.md` — choices made and what is missing.
