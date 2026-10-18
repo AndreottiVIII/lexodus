@@ -64,3 +64,7 @@ Davide ha visto il prototipo: il diagramma a flussi non gli piace e non mostra i
 1. Export ufficiale (lingue, archi, livello2) non ancora arrivato: il sito usa il campione.
 2. Pubblicazione su GitHub Pages: comandi nel README, da lanciare quando `gh` è collegato.
 3. Gli esempi del campione sono parole a volte poco note (*agiorita, alieutica*): l'export avrà le sue regole.
+
+## 2026-10-18 — esempi più corti, pubblicazione
+- Davide: restano 20 righe prima di «Show all»; esempi = le 5 parole più corte (almeno 3 lettere, senza trattini, maiuscole o numeri), mostrate in ordine alfabetico. Applicato in `scripts/campione_da_csv.py` e `scripts/livello2_da_csv.py` (a parità di lunghezza: sicure prima, poi testo etimologico più lungo / già esempio di un arco) e nel sito (`five()` in `js/language.js`, così vale anche per l'export ufficiale). Dati rigenerati: ora *caffè* compare tra gli esempi di italiano ← turco ottomano → arabo.
+- Repo online: https://github.com/AndreottiVIII/lexodus, Pages su https://andreottiviii.github.io/lexodus/. Verifica fatta con Edge senza finestra (file locale), non con il browser integrato.
