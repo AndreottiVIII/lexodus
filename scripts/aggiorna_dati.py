@@ -3,8 +3,8 @@
     python -I -X utf8 scripts/aggiorna_dati.py
     python -I -X utf8 scripts/aggiorna_dati.py C:/path/to/rete-prestiti/risultati/export
 
-It copies lingue.json, archi.json, storie.json, README.md and the parole/ folder, and
-writes the .js twins (lingue.js, archi.js, storie.js, fonte.js) so the site also opens
+It copies lingue.json, archi.json, storie.json, livello2.json (and livello2_latino_unito.json if
+present), README.md and the parole/ folder, and writes the .js twins so the site also opens
 from a local file (browsers block fetch() on file://). Nothing in rete-prestiti is changed.
 """
 import json
@@ -29,7 +29,7 @@ def main(export):
     if mancanti:
         sys.exit("Missing in export: %s. Nothing copied." % ", ".join(mancanti))
     os.makedirs(DATA, exist_ok=True)
-    for nome in ("lingue", "archi", "storie"):
+    for nome in ("lingue", "archi", "storie", "livello2", "livello2_latino_unito"):
         src = os.path.join(export, nome + ".json")
         if not os.path.isfile(src):
             print("skip", nome + ".json (not in export)")
@@ -40,6 +40,14 @@ def main(export):
         shutil.copyfile(src, os.path.join(DATA, nome + ".json"))
         gemello_js(nome, testo)
         print("copied", nome + ".json", len(testo) // 1024, "KB")
+    # The merged-Latin second level is optional: without it the site derives it from livello2.
+    # If the export has a new livello2.json but no merged file, drop the old merged sample.
+    if os.path.isfile(os.path.join(export, "livello2.json")) and not os.path.isfile(os.path.join(export, "livello2_latino_unito.json")):
+        vecchio = os.path.join(DATA, "livello2_latino_unito.json")
+        if os.path.isfile(vecchio):
+            os.remove(vecchio)
+        gemello_js("livello2_latino_unito", "null")
+        print("no livello2_latino_unito.json in export: the site merges Latin from livello2.json")
     if os.path.isfile(os.path.join(export, "README.md")):
         shutil.copyfile(os.path.join(export, "README.md"), os.path.join(DATA, "README_export.md"))
     parole = os.path.join(export, "parole")

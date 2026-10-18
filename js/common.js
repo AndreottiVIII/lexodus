@@ -1,14 +1,13 @@
-/* lexodus — shared code: data loading, normalisation, categories, small UI helpers. */
+/* lexodus — shared code: data loading and normalisation, categories, Latin merging, filters. */
 (function () {
   "use strict";
 
-  // One colour per category, defined in css/style.css as --cat-<id>.
   var CATS = [
-    { id: "borrowed", key: "prestito", label: "Borrowed", hint: "taken from another language" },
-    { id: "learned", key: "latinismo_dotto", label: "Learned Latin", hint: "taken from written Latin" },
-    { id: "inherited", key: "ereditato", label: "Inherited", hint: "passed down from an older form of the language" },
-    { id: "calque", key: "calco", label: "Calque", hint: "translated piece by piece" },
-    { id: "unspecified", key: "non_precisato", label: "Unspecified", hint: "“from X”, without saying how" }
+    { id: "borrowed", key: "prestito", label: "borrowed" },
+    { id: "learned", key: "latinismo_dotto", label: "learned Latin" },
+    { id: "inherited", key: "ereditato", label: "inherited" },
+    { id: "calque", key: "calco", label: "calque" },
+    { id: "unspecified", key: "non_precisato", label: "unspecified" }
   ];
   var CAT_BY_KEY = {};
   CATS.forEach(function (c) { CAT_BY_KEY[c.key] = c; CAT_BY_KEY[c.id] = c; });
@@ -19,69 +18,64 @@
     inh: CAT_BY_KEY.ereditato, cal: CAT_BY_KEY.calco, non_specificato: CAT_BY_KEY.non_precisato,
     der: CAT_BY_KEY.non_precisato, derived: CAT_BY_KEY.non_precisato
   });
+  function catOf(v) { return CAT_BY_KEY[String(v || "").toLowerCase()] || null; }
 
-  var COVERAGE = {
-    good: { label: "good", dots: 3, text: "70% or more of its entries have an etymology" },
-    fair: { label: "fair", dots: 2, text: "30–70% of its entries have an etymology" },
-    poor: { label: "poor", dots: 1, text: "less than 30% of its entries have an etymology" }
-  };
   var COVERAGE_ALIAS = { buona: "good", media: "fair", scarsa: "poor", good: "good", fair: "fair", medium: "fair", poor: "poor" };
-
   var TYPE_LABEL = {
     lingua: "language", protolingua: "proto-language", famiglia: "language family",
-    "non lingua": "not a language", sostrato: "substrate", "non_lingua": "not a language"
+    "non lingua": "not a language", non_lingua: "not a language", sostrato: "substrate"
   };
 
-  // Short notes for languages whose numbers need a word of caution (from COSE_INTERESSANTI.md, sec. 5-6).
+  // Short cautions for some languages (from COSE_INTERESSANTI.md, sections 5-6).
   var NOTES = {
-    ro: "Romanian Wiktionary editors almost always write “borrowed” and rarely “from X”, so its borrowed counts look larger than in other languages.",
-    mt: "Maltese is the least covered language here: only about 1 entry in 10 has an etymology. Real numbers are probably much higher.",
-    ar: "Arabic is poorly covered: only about 1 entry in 5 has an etymology.",
-    en: "English Wiktionary documents English best of all, especially recent loans.",
-    fi: "Finnish is the best covered language, but most of its etymologies are word formation inside Finnish.",
+    ro: "Romanian editors almost always write “borrowed” and rarely “from”, so its borrowings look larger than elsewhere.",
+    mt: "Only about 1 Maltese entry in 10 has an etymology: real numbers are probably much higher.",
+    ar: "Only about 1 Arabic entry in 5 has an etymology.",
+    en: "Wiktionary documents English best of all, especially recent loans.",
     mul: "“Translingual” is not a language: these are scientific names of plants and animals."
   };
 
   function pick(o, keys) {
     for (var i = 0; i < keys.length; i++) {
-      if (o[keys[i]] !== undefined && o[keys[i]] !== null && o[keys[i]] !== "") return o[keys[i]];
+      var v = o[keys[i]];
+      if (v !== undefined && v !== null && v !== "") return v;
     }
     return undefined;
   }
   function num(v) { var n = Number(v); return isFinite(n) ? n : 0; }
+  function numOrNull(v) { return v === undefined ? null : num(v); }
   function asList(raw) {
     if (Array.isArray(raw)) return raw;
-    if (raw && typeof raw === "object") {
-      var out = [];
-      Object.keys(raw).forEach(function (k) { if (Array.isArray(raw[k])) out = out.concat(raw[k]); });
-      return out;
-    }
-    return [];
+    var out = [];
+    if (raw && typeof raw === "object") Object.keys(raw).forEach(function (k) { if (Array.isArray(raw[k])) out = out.concat(raw[k]); });
+    return out;
+  }
+  function exList(v) {
+    if (!v) return [];
+    if (typeof v === "string") return v.split(/[|;,]\s*/).filter(Boolean);
+    return v.slice();
   }
 
   function normLanguage(o) {
     var code = pick(o, ["codice", "code", "lingua", "lang", "id"]);
     if (!code) return null;
-    var pct = pick(o, ["percentuale", "percentuale_con_etimologia", "pct", "percent"]);
     var lemmas = pick(o, ["lemmi", "lemmas", "n_lemmi"]);
+    var pct = numOrNull(pick(o, ["percentuale", "percentuale_con_etimologia", "pct", "percent"]));
     var cov = pick(o, ["copertura", "giudizio", "giudizio_copertura", "coverage"]);
+    if (!cov && pct !== null) cov = pct >= 70 ? "good" : pct >= 30 ? "fair" : "poor";
     var target = pick(o, ["arrivo", "di_arrivo", "lingua_arrivo", "target", "is_target"]);
     if (target === undefined) target = lemmas !== undefined;
     if (target === "sì" || target === "si" || target === "true") target = true;
     if (target === "no" || target === "false") target = false;
-    var p = pct === undefined ? null : num(pct);
-    if (!cov && p !== null) cov = p >= 70 ? "good" : p >= 30 ? "fair" : "poor";
     return {
       code: String(code),
       name: String(pick(o, ["nome_en", "nome_inglese", "name_en", "nome_eng", "name", "nome"]) || code),
       nameIt: pick(o, ["nome_it", "nome_italiano", "name_it"]) || "",
       target: !!target,
       type: pick(o, ["tipo_lingua", "tipo", "type"]) || "lingua",
-      lemmas: lemmas === undefined ? null : num(lemmas),
-      withEty: pick(o, ["lemmi_con_etimologia", "con_etimologia", "lemmas_with_etymology"]) !== undefined
-        ? num(pick(o, ["lemmi_con_etimologia", "con_etimologia", "lemmas_with_etymology"])) : null,
-      pct: p,
-      linked: pick(o, ["parole_con_legami", "words_with_links"]) !== undefined ? num(pick(o, ["parole_con_legami", "words_with_links"])) : null,
+      lemmas: numOrNull(lemmas),
+      withEty: numOrNull(pick(o, ["lemmi_con_etimologia", "con_etimologia", "lemmas_with_etymology"])),
+      pct: pct,
       coverage: COVERAGE_ALIAS[String(cov || "").toLowerCase()] || null
     };
   }
@@ -89,58 +83,86 @@
   function normArc(o) {
     var from = pick(o, ["origine", "lingua_origine", "origine_codice", "lingua_origine_codice", "da", "from", "source"]);
     var to = pick(o, ["arrivo", "lingua_arrivo", "arrivo_codice", "lingua_arrivo_codice", "a", "to", "target"]);
-    var cat = CAT_BY_KEY[String(pick(o, ["categoria", "category", "cat"]) || "").toLowerCase()];
+    var cat = catOf(pick(o, ["categoria", "category", "cat"]));
     if (!from || !to || !cat) return null;
-    var ex = pick(o, ["esempi", "parole_esempio", "esempio", "parole", "examples"]) || [];
-    if (typeof ex === "string") ex = ex.split(/[|;,]\s*/).filter(Boolean);
     return {
       from: String(from), to: String(to), cat: cat.id,
       n: num(pick(o, ["n_parole", "parole_n", "n", "count", "words"])),
       unc: num(pick(o, ["n_incerte", "incerte", "uncertain"])),
       type: pick(o, ["tipo_lingua_origine", "tipo_origine", "source_type"]) || null,
-      ex: ex.slice(0, 12)
+      ex: exList(pick(o, ["esempi", "parole_esempio", "esempio", "parole", "examples"]))
     };
   }
 
-  function getRaw(name) {
+  // Second level: {"arrivo|diretta": [{codice, n, esempi, categoria?, nome?, tipo_lingua?}]}
+  function normLevel2(raw) {
+    if (!raw || typeof raw !== "object") return null;
+    var out = {};
+    Object.keys(raw).forEach(function (k) {
+      out[k] = asList(raw[k]).map(function (o) {
+        var c = pick(o, ["codice", "code", "lingua", "lingua_codice"]);
+        if (!c) return null;
+        var cat = catOf(pick(o, ["categoria", "category"]));
+        return {
+          code: String(c), n: num(pick(o, ["n", "n_parole", "count"])),
+          ex: exList(pick(o, ["esempi", "examples", "parole"])),
+          cat: cat ? cat.id : null,
+          name: pick(o, ["nome", "nome_en", "name"]) || null,
+          type: pick(o, ["tipo_lingua", "tipo", "type"]) || null
+        };
+      }).filter(Boolean);
+    });
+    return out;
+  }
+
+  function getRaw(name, optional) {
     var g = window.LEXODUS || {};
     if (g[name] !== undefined) return Promise.resolve(g[name]);
     return fetch("data/" + name + ".json").then(function (r) {
       if (!r.ok) throw new Error("data/" + name + ".json: " + r.status);
       return r.json();
-    });
+    }).catch(function (e) { if (optional) return null; throw e; });
   }
 
   var cache = null;
   function load() {
     if (cache) return cache;
-    cache = Promise.all([getRaw("lingue"), getRaw("archi"), getRaw("fonte").catch(function () { return {}; })])
+    cache = Promise.all([getRaw("lingue"), getRaw("archi"), getRaw("fonte", true), getRaw("livello2", true), getRaw("livello2_latino_unito", true)])
       .then(function (res) {
         var langs = {};
         asList(res[0]).forEach(function (o) {
           var l = normLanguage(o);
           if (l && (!langs[l.code] || l.target)) langs[l.code] = l;
         });
+        function ensure(code, type, name) {
+          if (!langs[code]) langs[code] = { code: code, name: name || code, nameIt: "", target: false, type: type || "lingua" };
+          return langs[code];
+        }
         var arcs = [];
         asList(res[1]).forEach(function (o) {
           var a = normArc(o);
           if (!a || a.n <= 0) return;
           arcs.push(a);
-          if (!langs[a.from]) langs[a.from] = { code: a.from, name: a.from, nameIt: "", target: false, type: a.type || "lingua" };
-          if (a.type && !langs[a.from].target) langs[a.from].type = a.type;
-          if (!langs[a.to]) langs[a.to] = { code: a.to, name: a.to, nameIt: "", target: true, type: "lingua" };
+          var l = ensure(a.from, a.type);
+          if (a.type && !l.target) l.type = a.type;
+          ensure(a.to).target = true;
         });
+        var l2 = normLevel2(res[3]), l2m = normLevel2(res[4]);
+        [l2, l2m].forEach(function (d) {
+          if (d) Object.keys(d).forEach(function (k) { d[k].forEach(function (it) { ensure(it.code, it.type, it.name); }); });
+        });
+        ensure("la", "lingua", "Latin");
         var targets = Object.keys(langs).map(function (k) { return langs[k]; })
           .filter(function (l) { return l.target; })
           .sort(function (a, b) { return a.name.localeCompare(b.name, "en"); });
-        return { langs: langs, arcs: arcs, targets: targets, source: res[2] || {} };
+        return { langs: langs, arcs: arcs, targets: targets, source: res[2] || {}, level2: l2, level2Merged: l2m };
       });
     return cache;
   }
 
   function isLanguage(type) { return !type || type === "lingua"; }
 
-  // Latin varieties: merged into one "Latin" (code "la") unless the viewer splits them.
+  // Latin varieties are merged into one "Latin" (code "la") unless the viewer splits them.
   var OLD_LATIN_CODES = ["L.", "LL.", "VL.", "ML.", "NL.", "EL.", "itc-ola"];
   function isLatin(code) { return code === "la" || /^la-/.test(code) || OLD_LATIN_CODES.indexOf(code) >= 0; }
   function key(code, filters) { return filters && !filters.splitLatin && isLatin(code) ? "la" : code; }
@@ -149,46 +171,22 @@
       .map(function (c) { return langs[c].name; }).sort();
   }
 
-  // Group arcs by the language on the other side, keeping one entry per category.
-  function aggregate(arcs, side, filters, langs) {
-    var by = {};
-    arcs = arcs.slice().sort(function (x, y) { return y.n - x.n; }); // examples from the biggest arcs first
-    arcs.forEach(function (a) {
-      if (filters.cats.indexOf(a.cat) < 0) return;
-      var code = key(side === "from" ? a.from : a.to, filters);
-      var l = langs[code];
-      if (filters.hideOther && l && !isLanguage(l.type)) return;
-      var g = by[code] || (by[code] = { code: code, total: 0, unc: 0, byCat: {} });
-      g.total += a.n; g.unc += a.unc;
-      var c = g.byCat[a.cat] || (g.byCat[a.cat] = { n: 0, unc: 0, ex: [] });
-      c.n += a.n; c.unc += a.unc;
-      a.ex.forEach(function (w) { if (c.ex.length < 12 && c.ex.indexOf(w) < 0) c.ex.push(w); });
-    });
-    return Object.keys(by).map(function (k) { return by[k]; }).sort(function (a, b) { return b.total - a.total || a.code.localeCompare(b.code); });
-  }
-
   var fmt = new Intl.NumberFormat("en-GB");
   function n(v) { return fmt.format(v); }
   function esc(s) {
     return String(s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; });
   }
   function param(name) { return new URLSearchParams(location.search).get(name); }
-  function setParam(name, value) {
-    var u = new URL(location.href);
-    u.searchParams.set(name, value);
-    history.replaceState(null, "", u.pathname.split("/").pop() + u.search);
+
+  function coverageText(l) {
+    if (!l.coverage && l.pct === null) return "";
+    var t = "coverage: " + (l.coverage || "unknown");
+    if (l.pct !== null) t += ", " + Math.round(l.pct) + "% of entries have an etymology";
+    return t;
   }
 
-  function coverageBadge(cov) {
-    var c = COVERAGE[cov];
-    if (!c) return "";
-    var dots = "";
-    for (var i = 0; i < 3; i++) dots += '<i class="' + (i < c.dots ? "on" : "") + '"></i>';
-    return '<span class="cov cov-' + cov + '" title="Wiktionary coverage: ' + c.label + " (" + c.text + ')"><span class="dots" aria-hidden="true">' + dots + "</span>" + c.label + "</span>";
-  }
-
-  // Category chips + "hide families" switch. Calls onChange(filters).
-  // Defaults chosen by Davide (18/10/2026): only borrowed, learned Latin and calque on; Latin merged.
+  // Filters, remembered in the browser while moving between pages.
+  // Defaults chosen by Davide (18/10/2026): borrowed, learned Latin and calque on; Latin merged.
   var STORE = "lexodus.filters.v2";
   function readFilters() {
     var f = { cats: ["borrowed", "learned", "calque"], hideOther: true, splitLatin: false };
@@ -204,27 +202,21 @@
 
   function filterBar(el, onChange) {
     var f = readFilters();
-    var html = '<div class="chips" role="group" aria-label="Categories">';
+    var html = '<fieldset><legend>Show</legend>';
     CATS.forEach(function (c) {
-      html += '<button type="button" class="chip" id="cat-' + c.id + '" data-cat="' + c.id + '" aria-pressed="' + (f.cats.indexOf(c.id) >= 0) + '" title="' + esc(c.hint) + '">' +
-        '<span class="sw sw-' + c.id + '" aria-hidden="true"></span>' + c.label + "</button>";
+      html += '<label><input type="checkbox" id="cat-' + c.id + '" data-cat="' + c.id + '"' + (f.cats.indexOf(c.id) >= 0 ? " checked" : "") + "> " + c.label + "</label>";
     });
-    html += '</div><label class="switch"><input type="checkbox" id="hide-other"' + (f.hideOther ? " checked" : "") + '> Hide families, proto-languages and non-languages</label>' +
-      '<label class="switch"><input type="checkbox" id="split-latin"' + (f.splitLatin ? " checked" : "") + '> Split Latin varieties</label>';
+    html += '</fieldset><fieldset><legend>Options</legend>' +
+      '<label><input type="checkbox" id="split-latin"' + (f.splitLatin ? " checked" : "") + "> split Latin varieties</label>" +
+      '<label><input type="checkbox" id="hide-other"' + (f.hideOther ? " checked" : "") + "> hide families, proto-languages and non-languages</label></fieldset>";
     el.innerHTML = html;
-    el.addEventListener("click", function (e) {
-      var b = e.target.closest("button[data-cat]");
-      if (!b) return;
-      var on = b.getAttribute("aria-pressed") !== "true";
-      b.setAttribute("aria-pressed", on);
-      f.cats = Array.prototype.map.call(el.querySelectorAll('button[aria-pressed="true"]'), function (x) { return x.dataset.cat; });
+    el.addEventListener("change", function (e) {
+      var t = e.target;
+      if (t.dataset.cat) {
+        f.cats = Array.prototype.map.call(el.querySelectorAll("input[data-cat]:checked"), function (x) { return x.dataset.cat; });
+      } else if (t.id === "split-latin") f.splitLatin = t.checked;
+      else if (t.id === "hide-other") f.hideOther = t.checked;
       saveFilters(f); onChange(f);
-    });
-    el.querySelector("#hide-other").addEventListener("change", function (e) {
-      f.hideOther = e.target.checked; saveFilters(f); onChange(f);
-    });
-    el.querySelector("#split-latin").addEventListener("change", function (e) {
-      f.splitLatin = e.target.checked; saveFilters(f); onChange(f);
     });
     return f;
   }
@@ -233,15 +225,14 @@
     var el = document.getElementById("site-footer");
     if (!el) return;
     var sample = source && source.tipo === "campione";
-    el.innerHTML = '<p>Data: English Wiktionary, extracted by <a href="https://kaikki.org/">Wiktextract / kaikki.org</a>, downloaded 18 October 2026. ' +
-      'Wiktionary content is available under <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>.' +
-      (sample ? " This version uses a sample built from the project tables; the final export will replace it." : "") +
-      ' <a href="about.html">How it was made</a>.</p>';
+    el.innerHTML = 'Data: English Wiktionary, extracted by <a href="https://kaikki.org/">Wiktextract / kaikki.org</a>, downloaded 18 October 2026, ' +
+      'licence <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>.' +
+      (sample ? " This version uses a sample built from the project tables." : "") + ' <a href="about.html">How it was made</a>.';
   }
 
   window.Lex = {
-    CATS: CATS, CAT_BY_KEY: CAT_BY_KEY, COVERAGE: COVERAGE, TYPE_LABEL: TYPE_LABEL, NOTES: NOTES,
-    load: load, aggregate: aggregate, isLanguage: isLanguage, isLatin: isLatin, key: key, latinVarieties: latinVarieties, n: n, esc: esc, param: param, setParam: setParam,
-    coverageBadge: coverageBadge, filterBar: filterBar, footer: footer
+    CATS: CATS, CAT_BY_KEY: CAT_BY_KEY, TYPE_LABEL: TYPE_LABEL, NOTES: NOTES,
+    load: load, isLanguage: isLanguage, isLatin: isLatin, key: key, latinVarieties: latinVarieties,
+    n: n, esc: esc, param: param, coverageText: coverageText, filterBar: filterBar, footer: footer
   };
 })();

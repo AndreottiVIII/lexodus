@@ -2,78 +2,48 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>lexodus</title>
 <meta name="description" content="Which languages a language took words from, and which it gave words to, from the etymologies in English Wiktionary.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400&family=IBM+Plex+Sans:ital,wght@0,400;0,600;1,400&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;0,7..72,700;1,7..72,400&display=swap">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 <header class="top">
-  <div class="wrap">
-    <a class="brand" href="index.html">lexodus <span>words on the move</span></a>
-    <nav aria-label="Main">
-      <ul>
-        <li><a href="index.html" aria-current="page">Network</a></li>
-        <li><a href="language.html">Languages</a></li>
-        <li><span class="soon" title="Coming later">Words<small>soon</small></span></li>
-        <li><span class="soon" title="Coming later">Stories<small>soon</small></span></li>
-        <li><a href="about.html">About</a></li>
-      </ul>
-    </nav>
-  </div>
+  <a class="brand" href="index.html">lexodus</a>
+  <nav aria-label="Main">
+    <a href="index.html" aria-current="page">Languages</a>
+    <span class="soon">Words (soon)</span>
+    <span class="soon">Stories (soon)</span>
+    <a href="about.html">About</a>
+  </nav>
 </header>
 
-<main class="wrap">
-  <p id="loading" class="loading">Loading the data&hellip;</p>
-  <div id="app" class="stack" hidden>
-    <section class="picker" aria-labelledby="pick-title">
-      <div>
-        <h1 id="pick-title">Who gave words to whom</h1>
-        <p class="intro">Pick one of the 33 languages. On the left, the languages it took words from; on the right, the languages that took words from it. The thicker the band, the more words. Dots show how well Wiktionary covers each language.</p>
-      </div>
-      <div id="langs" class="langs" role="group" aria-label="Languages"></div>
-    </section>
-
-    <section class="lang-head" aria-live="polite">
-      <h2 id="lang-title"></h2>
-      <div id="lang-sub" class="sub"></div>
-      <p id="lang-notice" class="notice"></p>
-    </section>
-
-    <section aria-label="Network" class="stack tight">
-      <div class="filters">
-        <div id="filters" class="filters"></div>
-        <label class="switch">Show <select id="top-n">
-          <option value="10">top 10</option>
-          <option value="15" selected>top 15</option>
-          <option value="30">top 30</option>
-          <option value="all">all</option>
-        </select> per side</label>
-      </div>
-      <div class="flow-head">
-        <div><strong>Took from</strong><span id="took-sum"></span></div>
-        <div class="right"><strong>Gave to</strong><span id="gave-sum"></span></div>
-      </div>
-      <p id="scale-note" class="scale-note" hidden></p>
-      <div id="flow" class="flow"></div>
-      <div class="flow-foot">
-        <span>Hover a band for numbers and example words. Click a language to put it at the centre.</span>
-        <span>Words counted once per etymology; only the language each word came from directly.</span>
-      </div>
-    </section>
-  </div>
+<main>
+  <h1>Words on the move</h1>
+  <p class="lead">For 33 languages of Europe and its neighbours: which languages each one took words from, and which languages took words from it, as written in English Wiktionary. Choose a language.</p>
+  <p id="loading">Loading&hellip;</p>
+  <ul id="langs" class="lang-list" hidden></ul>
 </main>
 
-<footer><div class="wrap" id="site-footer"></div></footer>
+<footer id="site-footer"></footer>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
 <script src="data/fonte.js"></script>
 <script src="data/lingue.js"></script>
 <script src="data/archi.js"></script>
 <script src="js/common.js"></script>
-<script src="js/network.js"></script>
+<script>
+Lex.load().then(function (d) {
+  Lex.footer(d.source);
+  var ul = document.getElementById("langs");
+  ul.innerHTML = d.targets.map(function (l) {
+    return '<li><a href="language.html?code=' + encodeURIComponent(l.code) + '">' + Lex.esc(l.name) + '</a> <span class="note">' + Lex.esc(Lex.coverageText(l)) + "</span></li>";
+  }).join("");
+  ul.hidden = false;
+  document.getElementById("loading").hidden = true;
+}).catch(function (e) {
+  document.getElementById("loading").textContent = "The data could not be loaded (" + e.message + ").";
+  console.error(e);
+});
+</script>
 </body>
 </html>
