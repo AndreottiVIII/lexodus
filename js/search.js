@@ -39,7 +39,7 @@
   function rowHtml(r) {
     var from = String(r.o || "").split("|").filter(Boolean).map(function (c) { return L.esc(names[c] || c); }).join(" or ");
     var unc = r.i || r.a ? ' <abbr class="unc" title="' + (r.a ? "more than one possible origin" : "uncertain etymology") + '">?</abbr>' : "";
-    return '<li><div class="line"><a class="w" href="' + L.esc(L.treeUrl(r.l, r.p, r.ne, r.t)) + '">' + L.esc(r.p) + "</a>" + L.tr(r.t, r.p) + unc +
+    return '<li><div class="line"><a class="w" href="' + L.esc(L.treeUrl(r.l, r.p, r.ne, r.t, r.f)) + '">' + L.esc(r.p) + "</a>" + L.tr(r.t, r.p) + unc +
       ' <span class="note">' + L.esc(L.catLabel(r.c)) + (from ? " from " + from : "") + "</span></div>" +
       (r.s ? '<p class="mean">' + L.esc(r.s) + "</p>" : "") + "</li>";
   }

@@ -1,25 +1,23 @@
 """Copy the site data from rete-prestiti/risultati/export/ into data/.
 
     python -I -X utf8 scripts/aggiorna_dati.py                 # everything the site uses
-    python -I -X utf8 scripts/aggiorna_dati.py --parole        # also parole/ (127 MB on 18/10/2026)
+    python -I -X utf8 scripts/aggiorna_dati.py --parole        # also parole/ (not used by the site; 155 MB on 18/10/2026)
     python -I -X utf8 scripts/aggiorna_dati.py C:/path/to/export
-    python -I -X utf8 scripts/aggiorna_dati.py --solo-indici   # only rebuild the two indexes below
+    python -I -X utf8 scripts/aggiorna_dati.py --solo-indici   # only rebuild the index below
 
 It copies lingue.json, archi.json, livello2.json, storie.json, griglia.json, the folder coppie/
 (one file per pair of languages, mandate 07; with __via_*.json and __altre.json, mandate 09), the search
 index indice/, the trees alberi/, statistiche.json (mandate 09) and the export README (as data/README_export.md),
 and writes the .js twins of the small files so the home and the language pages also open from a
-local file (browsers block fetch() on file://). Then it builds two indexes from data/coppie/:
+local file (browsers block fetch() on file://). Then it builds one index from data/coppie/:
 
 - data/coppie_elenco.json (+ .js): which pair files exist, {arrivo: {origine: [livello2, ...]}} (file names
   without .json; "_via": [livello2, ...] for the files __via_<livello2>.json, "_altre": [] when __altre.json
   exists, "_alternative": [] when _alternative.json exists), plus "_eccezioni" (code -> file name, from coppie/_eccezioni_nomi.json), so the site
   only turns a number into a link when its list of words exists;
-- data/dati_a/<codice>.json: for each of the 33 languages, the words it gave, keyed by the word as
-  written in the language that took it ("termine_origine"): {termine: [[arrivo, parola, n_etimologia], ...]}.
-  Used by the word page ("This word was then taken by").
+(data/dati_a/ is no longer built: the word page reads "Then taken by" from the trees, alberi/, field "giu".)
 
-coppie/ is copied only if it stays under 500 MB; parole/ only with --parole and under 100 MB.
+coppie/ is copied only if it stays under 700 MB (authorised 18/10/2026: the whole data/ is about 600 MB); parole/ only with --parole and under 100 MB.
 At the end it sets a new version number on the pages (scripts/versione.py).
 Nothing in rete-prestiti changes.
 """
@@ -36,7 +34,7 @@ DATA = os.path.normpath(os.path.join(QUI, "..", "data"))
 EXPORT = os.path.normpath(os.path.join(QUI, "..", "..", "rete-prestiti", "risultati", "export"))
 FILES = ("lingue", "archi", "livello2", "storie", "griglia")
 MAX_PAROLE = 100 * 1024 * 1024
-MAX_COPPIE = 500 * 1024 * 1024
+MAX_COPPIE = 700 * 1024 * 1024
 
 
 def gemello_js(nome, testo, data=None):
@@ -57,10 +55,9 @@ def peso(cartella):
 
 
 def costruisci_indici(data=DATA):
-    """Build data/coppie_elenco.* and data/dati_a/ from data/coppie/."""
+    """Build data/coppie_elenco.* from data/coppie/ (and remove the old data/dati_a/)."""
     coppie = os.path.join(data, "coppie")
-    arrivi = [l["codice"] for l in json.load(open(os.path.join(data, "lingue.json"), encoding="utf-8"))["lingue_di_arrivo"]]
-    elenco, dati_a = {}, {c: {} for c in arrivi}
+    elenco = {}
     for arrivo in sorted(os.listdir(coppie)) if os.path.isdir(coppie) else []:
         cartella = os.path.join(coppie, arrivo)
         if not os.path.isdir(cartella):
@@ -88,27 +85,16 @@ def costruisci_indici(data=DATA):
         if os.path.isfile(os.path.join(cartella, "__altre.json")):
             voce["_altre"] = []
         elenco[arrivo] = voce
-        for o in primo:
-            if o not in dati_a or o == arrivo:
-                continue
-            with open(os.path.join(cartella, o + ".json"), encoding="utf-8") as f:
-                coppia = json.load(f)
-            for p in coppia.get("parole", []):
-                t = p.get("termine_origine") or ""
-                if t:
-                    dati_a[o].setdefault(t, []).append([arrivo, p["parola"], p.get("n_etimologia", 1)])
     ecc = os.path.join(coppie, "_eccezioni_nomi.json")
     if os.path.isfile(ecc):
         # codes whose file name is not the plain rule (Windows reserved names, codes that differ only by case)
         elenco["_eccezioni"] = json.load(open(ecc, encoding="utf-8")).get("eccezioni", {})
     scrivi("coppie_elenco", elenco, js=True, data=data)
-    os.makedirs(os.path.join(data, "dati_a"), exist_ok=True)
-    for c, idx in dati_a.items():
-        with open(os.path.join(data, "dati_a", c + ".json"), "w", encoding="utf-8") as f:
-            json.dump(idx, f, ensure_ascii=False, separators=(",", ":"))
+    vecchio = os.path.join(data, "dati_a")
+    if os.path.isdir(vecchio):
+        shutil.rmtree(vecchio)
     n_file = sum(len(v) + sum(len(x) for x in v.values()) for v in elenco.values())
-    print("indexes: coppie_elenco (%d files listed), dati_a (%d languages, %.1f MB)" % (
-        n_file, len(dati_a), peso(os.path.join(data, "dati_a")) / 1024 / 1024))
+    print("index: coppie_elenco (%d files listed)" % n_file)
 
 
 def main(export, con_parole):
@@ -119,7 +105,7 @@ def main(export, con_parole):
         sys.exit("Missing in %s: %s. Nothing copied." % (export, ", ".join(mancanti)))
     mb_coppie = peso(os.path.join(export, "coppie")) / 1024 / 1024
     if mb_coppie * 1024 * 1024 > MAX_COPPIE:
-        sys.exit("coppie/ is %.0f MB, over 500 MB: nothing copied. Write it in the JOURNAL." % mb_coppie)
+        sys.exit("coppie/ is %.0f MB, over 700 MB: nothing copied. Write it in the JOURNAL." % mb_coppie)
     os.makedirs(DATA, exist_ok=True)
     for nome in FILES:
         src = os.path.join(export, nome + ".json")

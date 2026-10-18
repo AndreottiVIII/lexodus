@@ -132,7 +132,8 @@ Davide vedeva la home ferma su «Loading…» in Chrome: GitHub Pages fa tenere 
 
 ### Cosa è stato fatto
 - **Dati veri (export v3 del mandato 09), non il campione.** All'inizio (16:35) l'export nuovo non c'era: ho costruito le pagine su un campione mio nello stesso formato (script nella cartella temporanea, mai nel repo). L'export è comparso alle 16:54; ho aspettato che fosse fermo (754 MB, 23.620 file, invariato per un minuto) e l'ho copiato con `scripts/aggiorna_dati.py` alle 16:59. Poi ho adattato il codice al formato vero (letto in `data/README_export.md`). Quando ho copiato, nel JOURNAL di rete-prestiti non c'era ancora «Mandato 09 — esito».
-- `aggiorna_dati.py` copia anche `indice/`, `alberi/`, `statistiche.json` e mette in `coppie_elenco` i file `__via_*` (`_via`) e `__altre` (`_altre`). `data/` ora pesa 638 MB (coppie 406, alberi 109, indice 51), 23.577 file.
+- **Seconda copia alle 17:10**: l'export è stato riscritto alle 17:03 (campo `f` nelle righe dell'indice in alfabeto originale = lettera del file dell'albero) e il coordinatore ha chiesto: niente `parole/`, niente `dati_a/` («Then taken by» della scheda parola ora legge il primo livello di `giu` nell'albero), limite dello script a 700 MB. Fatto tutto: ricopiato a export fermo (dopo «Mandato 09 — esito» nel loro JOURNAL), prove rifatte.
+- `aggiorna_dati.py` copia anche `indice/`, `alberi/`, `statistiche.json`, mette in `coppie_elenco` i file `__via_*` (`_via`) e `__altre` (`_altre`), non costruisce più `dati_a/` (e la cancella), si ferma solo se `coppie/` supera 700 MB. `data/` ora pesa 634 MB (coppie 406, alberi 109, indice 51).
 - **Menu nuovo** in tutte le pagine: Languages, Search, Statistics, About. La home tiene titolo, riga di spiegazione e griglia; tolti l'elenco delle lingue e la riga «Jump to the list».
 - **`languages.html`**: le 33 lingue con la copertura in parole, le 3 lingue da cui hanno preso di più (prestito + latinismo + calco, latino unito, famiglie e protolingue escluse, come nella griglia; ogni nome apre l'elenco delle parole) e una casella per cercare per nome.
 - **`search.html?q=`**: una casella; legge `_meta.json` e solo il file della lettera cercata (normalizzazione dell'export: minuscole, senza accenti, `tabella_lettere`, senza apostrofi). Parola scritta in alfabeto non latino → tutti i file `_` (uno per lingua, 6,9 MB in tutto). Cerca sulla parola, sulla traslitterazione e sul significato inglese (nel file caricato); in fondo un pulsante per cercare il significato in tutto l'indice (59 file, 51 MB: solo a richiesta). Risultati per lingua (prima le lingue con la parola identica), 12 per lingua con «Show all»: parola (traslitterazione), «?» se incerta o con più ipotesi, categoria, lingua diretta, significato.
@@ -142,9 +143,10 @@ Davide vedeva la home ferma su «Loading…» in Chrome: GitHub Pages fa tenere 
 - **Parole con più ipotesi** negli elenchi con «?» e nella colonna «From» le ipotesi unite da «or»; nella scheda come prima. Nota sotto gli elenchi e About aggiornati.
 - **Griglia**: ogni casella del secondo livello apre `words.html?to=X&via=Y` (`__via_Y.json`), ogni casella «other» `words.html?to=X&from=other` (`__altre.json`). Controllo: 642 caselle di secondo livello e 689 di primo livello, tutte con il loro file.
 - **Scheda parola**: legge `testo` dal file della coppia semplice (`catena[0].codice`) quando la parola arriva da LATINO, `__via_` o `__altre`; link «See the whole tree».
-- About e README aggiornati. Versione `202610181703`.
+- About e README aggiornati. Versione `202610181712`.
 
-### Verifica (Edge senza finestra, server locale, cache spenta; 53 controlli, console pulita in ogni pagina)
+### Verifica (Edge senza finestra, server locale, cache spenta; 55 controlli, console pulita in ogni pagina)
+Scheda di *caffè*: «This word was then taken by: Dutch (koffie), English (caffè, caffè mocha), French (café), Icelandic (kaffi)», letto dall'albero.
 Menu Languages → pagina (33 righe; italiano «Latin 4,400 · English 1,106 · French 1,054») → italiano. Search «caffè» → 13 parole in 4 lingue → albero con Arabic in cima, poi Ottoman Turkish, Italian, e sotto English, French, Icelandic, Dutch (e i loro discendenti, 28 parole). «zucchero» → 7 tappe sopra. «piano» → inglese con due alberi. «кафе» → bulgaro, russo, ucraino, serbo-croato, albero di кафе (kafé) anche senza `&f=`; «qahwa» → arabo e persiano. Statistics → Bulgarian: Arabic 104 al secondo livello, 5 diretti, via Ottoman Turkish 94. Griglia → casella di secondo livello (Albanian ← … ← Arabic, 110 parole) → scheda con testo e albero; casella «other» (Albanian ← other languages, 2.405). Telefono 375 px: nessuno scorrimento di lato in languages, search, tree, stats, words. Screenshot nuovi: `languages.png`, `search.png`, `tree-caffe.png`, `tree-caffe-phone.png`, `stats.png`.
 
 ### Scelte fatte da me (da confermare con Davide)
@@ -156,4 +158,4 @@ Menu Languages → pagina (33 righe; italiano «Latin 4,400 · English 1,106 · 
 ### Cosa manca / problemi
 1. Le note delle statistiche sono lunghe e citano i nomi dei campi (`diretto`, `secondo_livello`): vanno accorciate nell'export se Davide le vuole più semplici.
 2. Peso: ogni nuovo export rinnova centinaia di MB nella storia di git (ora `data/` 638 MB).
-3. Alberi: per le grafie con più etimologie i discendenti compaiono sotto tutte (lo dice l'export, «Ambiguità»).
+3. Alberi: per le grafie con più etimologie i discendenti compaiono sotto tutte (lo dice l'export, «Ambiguità»). **Visto in pagina**: nell'albero di *caffè*, sotto il francese *café* compare lo spagnolo *café* «brown» (che viene dal *café* «colore», non dalla bevanda) e il portoghese *café* «having a pale brown color»; anche il greco ha due *καφέ* (bevanda e colore). Da correggere nell'export, non nel sito.

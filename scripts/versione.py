@@ -6,7 +6,7 @@
 GitHub Pages lets browsers keep files for 10 minutes: run this before every publication
 (scripts/aggiorna_dati.py runs it by itself). It rewrites, in one go:
 - the "?v=..." after css/*.css, js/*.js and data/*.js in every .html page;
-- the constant VERSION in js/common.js, which is added to every file read with fetch() (data/*.json, coppie/, dati_a/).
+- the constant VERSION in js/common.js, which is added to every file read with fetch() (data/*.json, coppie/, indice/, alberi/).
 """
 import datetime
 import glob

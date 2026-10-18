@@ -30,11 +30,11 @@ The official export of `rete-prestiti` (mandates 05 and 07), copied by `scripts/
 - `livello2.json`: `da_chi_ha_preso` (key `arrivo|diretta` → list of `{codice, n, esempi, file, per_categoria}`) and `totali`.
 - `griglia.json`: the grid of the home (`primo_livello`, `secondo_livello`, the same `_tutte` with all categories, `altre_dettaglio`).
 - `coppie/<arrivo>/<origine>.json`, `<origine>__<livello2>.json`, `LATINO.json`, `_alternative.json`, `_indice.json`: the words of each pair of languages (mandate 07). File name = the code with every character outside `A-Za-z0-9_-` replaced by `_`, except the few codes in `coppie/_eccezioni_nomi.json`.
-- Built by `aggiorna_dati.py` from `coppie/`: `coppie_elenco.json` (which pair files exist, so a number is a link only when its list exists) and `dati_a/<codice>.json` (for each of the 33 languages, the words it gave, keyed by the word as written in the giving language; used by "Then taken by other languages").
+- Built by `aggiorna_dati.py` from `coppie/`: `coppie_elenco.json` (which pair files exist, so a number is a link only when its list exists; `_via` and `_altre` for the grid files). "Then taken by other languages" on the word page reads the first level of `giu` in `alberi/` (the old `dati_a/` is gone).
 - Mandate 09: `coppie/<arrivo>/__via_<livello2>.json` and `__altre.json` (the squares of the grid), `indice/<letter>.json` + `indice/_meta.json` (search index: `p` word, `n` normalised, `l` language, `ne` etymology number, `s` meaning, `t` transliteration, `c` category, `o` direct language), `alberi/<lang>/<letter>.json` (trees, key `word|n_etimologia`: `su`, `giu`, `radici_altre`, `troncato`), `statistiche.json` (`donatori_nascosti`, `lingue_di_passaggio`, `bilancio`, `parole_viaggiate`, each with a `nota`). Transliteration (`traslitterazione`) is in every word and chain step.
 - `storie.json` (not used), `fonte.json`. The small files also exist as `.js`.
 
-`parole/<codice>.json` is **not** copied (the pair files replace it).
+`parole/<codice>.json` is **not** copied (the pair files replace it). `data/` is about 630 MB (authorised; `aggiorna_dati.py` stops if `coppie/` goes over 700 MB).
 
 ### Version number (browser cache)
 
@@ -77,6 +77,6 @@ then http://localhost:8790. Or just open `index.html`.
 - `css/style.css` — the only stylesheet: black on white, one dark blue for bars and links.
 - `js/common.js` — data loading and normalisation, categories, Latin merging, filters, footer. `js/home.js` — the grid. `js/language.js` — language page. `js/words.js` — list of words. `js/word.js` — word page. `js/languages.js`, `js/search.js`, `js/tree.js`, `js/stats.js` — the pages of the same name.
 - `scripts/versione.py` — new version number on every css, js and data file (run before every publication).
-- `scripts/aggiorna_dati.py` — copy the export into `data/` and build the two indexes (`--solo-indici` only rebuilds the indexes). (The scripts that built the first sample from the CSV tables were removed; they are in the git history.)
+- `scripts/aggiorna_dati.py` — copy the export into `data/` and build the index of pair files (`--solo-indici` only rebuilds it). (The scripts that built the first sample from the CSV tables were removed; they are in the git history.)
 - `docs/screenshots/` — screenshots from the check of 18/10/2026.
 - `JOURNAL.md` — choices made and what is missing.

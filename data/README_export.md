@@ -15,7 +15,7 @@ Prodotti da `script/esporta_sito.py` (`python -I -X utf8 script/esporta_sito.py 
 | `griglia.json` | La griglia della home: 33 lingue di arrivo × lingue di origine (le 33, più `LATINO` e `altre`), primo e secondo livello, solo prestiti (+ calchi e latinismi) e tutte le categorie. | gli stessi dati delle coppie |
 | `indice/` | **Mandato 09.** Indice di ricerca «cerca una parola in tutte le lingue»: 385.453 parole (+ 48.083 righe per la ricerca nell'alfabeto originale) in 59 file, 53 MB, il più grande 4.66 MB. `indice/_meta.json` elenca i file. | `rete_parole.csv`, `rete_relazioni.csv`, `glosse.jsonl` |
 | `alberi/<lingua>/<lettera>.json` | **Mandato 09.** Un albero per parola: l'origine più lontana in cima, le tappe, la parola, poi le lingue che l'hanno presa (ricorsivo). 845 file per 385.453 parole, 115 MB, il più grande 2.5 MB (`alberi/en/s.json`); 28.831 parole hanno almeno un discendente. | come le coppie |
-| `statistiche.json` | **Mandato 09.** Le quattro statistiche scelte da Davide (`donatori_nascosti`, `lingue_di_passaggio`, `bilancio`, `parole_viaggiate`), 518 KB. | come le coppie |
+| `statistiche.json` | **Mandato 09.** Le quattro statistiche scelte da Davide (`donatori_nascosti`, `lingue_di_passaggio`, `bilancio`, `parole_viaggiate`), 486 KB. | come le coppie |
 
 Dimensioni dei file delle parole (`parole/`, parole con legami, MB, numero di file):
 
@@ -123,7 +123,7 @@ Un file per ogni coppia (lingua di arrivo, lingua diretta) tra le 33 lingue di a
 ```
 {"p":"caffè","n":"caffe","l":"it","ne":1,"s":"coffee (plant and drink)","t":"","c":"prestito","o":"ota"}
 ```
-`p` parola come scritta; `n` forma normalizzata; `l` lingua; `ne` numero di etimologia; `s` significato (glossa inglese, come nelle coppie); `t` traslitterazione (stringa vuota se manca o se la parola è in alfabeto latino); `c` categoria; `o` lingua diretta (per le parole con alternative i codici delle ipotesi separati da `|`). In più, solo quando valgono: `i: 1` (etimologia incerta) e `a: 1` (la parola ha alternative). Le righe di ogni file sono in ordine di `n`, poi `p`, `l`, `ne`.
+`p` parola come scritta; `n` forma normalizzata; `l` lingua; `ne` numero di etimologia; `s` significato (glossa inglese, come nelle coppie); `t` traslitterazione (stringa vuota se manca o se la parola è in alfabeto latino); `c` categoria; `o` lingua diretta (per le parole con alternative i codici delle ipotesi separati da `|`). In più, solo quando valgono: `i: 1` (etimologia incerta), `a: 1` (la parola ha alternative) e `f` (solo nelle righe «in più» dell'alfabeto originale dei file `_<lingua>.json`: la lettera del file dell'albero, che è quella della traslitterazione). Le righe di ogni file sono in ordine di `n`, poi `p`, `l`, `ne`.
 
 **Normalizzazione** (la stessa va applicata al testo cercato): `n` = parola (oppure, se la parola è in alfabeto non latino e ha la traslitterazione, la traslitterazione) in minuscolo (`str.lower`), scomposta in Unicode NFD, senza i segni combinati (categoria `Mn`: accenti, vocali brevi dell'arabo, punti dell'ebraico…), con le lettere speciali della tabella `tabella_lettere` di `_meta.json` (`đ→d`, `ł→l`, `ø→o`, `æ→ae`, `ß→ss`, `þ→th`…) e **senza apostrofi** (`'`, `’`, `ʿ`, `ʾ`…). Esempi: «caffè» → `caffe`, «قهوة» con traslitterazione «qahwa» → `qahwa`, «šakar» → `sakar`.
 
@@ -136,7 +136,7 @@ Un file per ogni coppia (lingua di arrivo, lingua diretta) tra le 33 lingue di a
 
 ## `alberi/`: l'albero di una parola (mandato 09, parte C)
 
-`alberi/<lingua>/<lettera>.json` è un oggetto `{ "parola|n_etimologia": voce, … }` (chiave per esempio `"caffè|1"`). La `lettera` è calcolata come per l'indice (primo carattere di `n` se `a-z`, altrimenti `_`; per `n` si usa la traslitterazione se la parola è in alfabeto non latino e ce l'ha). Per trovare l'albero di una riga dell'indice: `alberi/<l>/<lettera di n>.json`, chiave `p|ne`. Voce:
+`alberi/<lingua>/<lettera>.json` è un oggetto `{ "parola|n_etimologia": voce, … }` (chiave per esempio `"caffè|1"`). La `lettera` è calcolata come per l'indice (primo carattere di `n` se `a-z`, altrimenti `_`; per `n` si usa la traslitterazione se la parola è in alfabeto non latino e ce l'ha). Per trovare l'albero di una riga dell'indice: `alberi/<l>/<f>.json` se la riga ha il campo `f`, altrimenti `alberi/<l>/<lettera di n>.json`; chiave `p|ne`. Voce:
 
 ```
 {"traslitterazione":"","significato":"coffee (plant and drink)","categoria":"prestito",

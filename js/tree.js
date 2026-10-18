@@ -22,7 +22,7 @@
       return file ? L.fetchJson("data/" + file) : [];
     }).then(function (d) {
       var r = L.indexRows(d).filter(function (x) { return x.l === lang && x.p === w; })[0];
-      return L.treeLetter(w, r && r.t);
+      return (r && r.f) || L.treeLetter(w, r && r.t);
     }).catch(function () { return own; });
   }
   function locate() {

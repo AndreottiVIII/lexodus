@@ -100,12 +100,10 @@
     el("loading").hidden = true; el("app").hidden = false;
 
     if (names._targets.indexOf(lang) < 0) return;
-    L.fetchJson("data/dati_a/" + L.fileCode(lang) + ".json").then(function (idx) {
-      var hits = idx[p.parola] || [];
-      if (!hits.length) {
-        var f = L.fold(p.parola);
-        Object.keys(idx).forEach(function (k) { if (L.fold(k) === f) hits = hits.concat(idx[k]); });
-      }
+    // The first level of "giu" in the tree of the word (mandate 09; data/dati_a/ is gone).
+    L.fetchJson("data/alberi/" + L.fileCode(lang) + "/" + encodeURIComponent(L.treeLetter(p.parola, p.traslitterazione)) + ".json").then(function (d) {
+      var e = d[p.parola + "|" + (p.n_etimologia || 1)];
+      var hits = ((e && e.giu) || []).map(function (g) { return [g.lingua, g.parola, g.n_etimologia, g.traslitterazione]; });
       if (!hits.length) return;
       var by = {}, order = [];
       hits.forEach(function (h) {
@@ -115,7 +113,7 @@
       order.sort(function (a, b) { return (names[a] || a).localeCompare(names[b] || b, "en"); });
       el("given-list").innerHTML = "This word was then taken by: " + order.map(function (c) {
         return langLink(c, names) + " (" + by[c].map(function (h) {
-          return '<a href="' + L.esc(L.wordUrl(c, h[1], h[2], L.fileCode(lang))) + '"><i>' + L.esc(h[1]) + "</i></a>";
+          return '<a href="' + L.esc(L.wordUrl(c, h[1], h[2], L.fileCode(lang))) + '"><i>' + L.esc(h[1]) + "</i></a>" + L.tr(h[3], h[1]);
         }).join(", ") + ")";
       }).join(", ") + ".";
       el("given").hidden = false;

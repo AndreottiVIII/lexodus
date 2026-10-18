@@ -3,7 +3,7 @@
   "use strict";
   // Version of the site, added to every file read with fetch() so browsers do not keep old copies.
   // Set together with the "?v=" in the pages by scripts/versione.py (also run by aggiorna_dati.py).
-  var VERSION = "202610181703";
+  var VERSION = "202610181712";
   function withVersion(path) { return path + (path.indexOf("?") < 0 ? "?" : "&") + "v=" + VERSION; }
 
   var CATS = [
@@ -168,8 +168,9 @@
   }
   // The tree file letter of a word: from its transliteration when it is not in Latin letters.
   function treeLetter(w, t) { return letterOf(norm(!isLatinScript(w) && t ? t : w)); }
-  function treeUrl(lang, w, n, t) {
-    var f = treeLetter(w, t);
+  // f: the tree letter when known (field "f" of the index rows in the original script), else from w and t.
+  function treeUrl(lang, w, n, t, f) {
+    f = f || treeLetter(w, t);
     return "tree.html?lang=" + encodeURIComponent(lang) + "&w=" + encodeURIComponent(w) + "&n=" + encodeURIComponent(n || 1) +
       (f !== letterOf(norm(w)) ? "&f=" + encodeURIComponent(f) : "");
   }
