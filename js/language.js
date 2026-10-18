@@ -5,6 +5,11 @@
   var LIMIT = 20;
   var state = { code: "it", data: null, filters: null, show: { from: LIMIT, to: LIMIT }, open: {} };
   function el(id) { return document.getElementById(id); }
+  // The 5 shortest words, shown alphabetically (Davide, 18/10/2026).
+  function five(list) {
+    return list.slice().sort(function (a, b) { return a.length - b.length || a.localeCompare(b); })
+      .slice(0, 5).sort(function (a, b) { return a.localeCompare(b); });
+  }
   function name(code) { var l = state.data.langs[code]; return l ? l.name : code; }
 
   // One row per (language on the other side, category).
@@ -21,7 +26,7 @@
       var k = other + "|" + a.cat;
       var r = by[k] || (by[k] = { side: side, other: other, cat: a.cat, n: 0, unc: 0, ex: [] });
       r.n += a.n; r.unc += a.unc;
-      a.ex.forEach(function (w) { if (r.ex.length < 5 && r.ex.indexOf(w) < 0) r.ex.push(w); });
+      a.ex.forEach(function (w) { if (r.ex.indexOf(w) < 0) r.ex.push(w); });
     });
     return Object.keys(by).map(function (k) { return by[k]; })
       .sort(function (x, y) { return y.n - x.n || x.other.localeCompare(y.other); });
@@ -48,7 +53,7 @@
           var m = merged[mk];
           if (!m) { m = merged[mk] = { code: c, cat: it.cat, n: 0, ex: [] }; list.push(m); }
           m.n += it.n;
-          it.ex.forEach(function (w) { if (m.ex.length < 5 && m.ex.indexOf(w) < 0) m.ex.push(w); });
+          it.ex.forEach(function (w) { if (m.ex.indexOf(w) < 0) m.ex.push(w); });
         });
       });
     }
@@ -76,7 +81,7 @@
       html += '<li><div class="line"><a class="name" href="language.html?code=' + encodeURIComponent(it.code) + '">' + L.esc(name(it.code)) + "</a>" + typ +
         '<span class="num">' + L.n(it.n) + "</span></div>" +
         '<div class="bar"><span style="width:' + Math.max(0.5, Math.min(100, 100 * it.n / row.n)).toFixed(2) + '%"></span></div>' +
-        (it.ex.length ? '<p class="ex">' + it.ex.slice(0, 5).map(L.esc).join(", ") + "</p>" : "") + "</li>";
+        (it.ex.length ? '<p class="ex">' + five(it.ex).map(L.esc).join(", ") + "</p>" : "") + "</li>";
     });
     html += "</ul>";
     var notes = [];
@@ -99,7 +104,7 @@
       '<span class="cat">' + cat.label + "</span>" +
       '<span class="num">' + L.n(row.n) + "</span></div>" +
       '<div class="bar"><span style="width:' + Math.max(0.3, 100 * row.n / max).toFixed(2) + '%"></span></div>' +
-      (row.ex.length ? '<p class="ex">' + row.ex.slice(0, 5).map(L.esc).join(", ") + "</p>" : "") +
+      (row.ex.length ? '<p class="ex">' + five(row.ex).map(L.esc).join(", ") + "</p>" : "") +
       '<div class="sub"' + (open ? "" : " hidden") + ">" + (open ? subHtml(row) : "") + "</div></li>";
   }
 

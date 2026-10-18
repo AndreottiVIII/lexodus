@@ -64,7 +64,8 @@ def main(ris, out):
         e = agg[unito].setdefault(k, [0, []])
         e[0] += 1
         if BUONA.match(parola) and parola == parola.lower():
-            voto = (0 if (arr, parola) in noti else 1, 1 if incerta else 0,
+            # shortest first (Davide, 18/10/2026); ties: already an arc example, sure, fixed hash
+            voto = (len(parola), 0 if (arr, parola) in noti else 1, 1 if incerta else 0,
                     hashlib.md5(parola.encode("utf-8")).hexdigest())
             e[1].append((voto, parola))
             if len(e[1]) > 60:

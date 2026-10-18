@@ -73,8 +73,9 @@ def main(ris, out):
             codici.setdefault(r["lingua_origine_codice"], (r["lingua_origine_nome"], r["tipo_lingua_origine"]))
     chiavi = {(a["origine"], a["arrivo"], a["categoria"]) for a in archi}
 
-    # Example words: sure words first, then the ones with the longest etymology text
-    # (a rough sign of a common, well documented word), then a fixed hash; shown alphabetically.
+    # Example words (Davide, 18/10/2026): the shortest ones (3+ letters, no hyphens, no capitals,
+    # no digits); ties: sure words first, then the longest etymology text (a rough sign of a common,
+    # well documented word), then a fixed hash. Shown alphabetically.
     cand = {}
     with open(os.path.join(ris, "rete_parole.csv"), encoding="utf-8", newline="") as f:
         for r in csv.DictReader(f):
@@ -85,7 +86,7 @@ def main(ris, out):
             if not BUONA_PAROLA.match(w) or w != w.lower():
                 continue
             h = hashlib.md5(w.encode("utf-8")).hexdigest()
-            voto = (1 if r["incerta"] == "sì" else 0, -len(r["testo_etimologia"]), h)
+            voto = (len(w), 1 if r["incerta"] == "sì" else 0, -len(r["testo_etimologia"]), h)
             lista = cand.setdefault(k, [])
             lista.append((voto, w))
             if len(lista) > 200:
