@@ -14,9 +14,11 @@
     el("langs").innerHTML = d.targets.map(function (l) {
       return '<li><a href="language.html?code=' + encodeURIComponent(l.code) + '">' + L.esc(l.name) + "</a> <span class=\"note\">" + L.esc(L.coverageText(l)) + "</span></li>";
     }).join("");
-    el("langs-block").hidden = false;
+    el("languages").hidden = false;
     el("loading").hidden = true;
-    if (!g) return;
+    // The list is shown before the grid is drawn: go to it again once the page has its final height.
+    function toList() { if (location.hash === "#languages") el("languages").scrollIntoView(); }
+    if (!g) { toList(); return; }
 
     var rows = g.lingue.map(function (l) { return { code: l.codice, name: (d.langs[l.codice] || {}).name || l.nome_en || l.codice }; })
       .sort(function (a, b) { return a.name.localeCompare(b.name, "en"); });
@@ -82,6 +84,7 @@
     }).join("") + ' · “other” = every language outside the 33 except Latin (Ancient Greek, Old French, Ottoman Turkish…). Numbers are those of English Wiktionary.';
     draw();
     el("grid-block").hidden = false;
+    toList();
   }).catch(function (e) {
     el("loading").textContent = "The data could not be loaded (" + e.message + ").";
     console.error(e);
