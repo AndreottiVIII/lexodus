@@ -4,64 +4,116 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>About — lexodus</title>
-<meta name="description" content="Where the lexodus data comes from, what the categories mean, and what the numbers cannot tell.">
+<meta name="description" content="What lexodus is, where its data comes from, how a word's path is read, what the numbers mean and what they leave out.">
 <link rel="icon" href="data:,">
-<link rel="stylesheet" href="css/style.css?v=202610181712">
+<link rel="stylesheet" href="css/style.css?v=202610181757">
 </head>
 <body>
 <header class="top">
   <a class="brand" href="index.html">lexodus</a>
-  <nav aria-label="Main">
+  <nav aria-label="Main" class="menu">
     <a href="languages.html">Languages</a>
     <a href="search.html">Search</a>
+    <details class="explore">
+      <summary>Explore</summary>
+      <ul>
+        <li><a href="hidden.html">Hidden donors</a></li>
+        <li><a href="travelled.html">Most travelled words</a></li>
+        <li><a href="doublets.html">Doublets</a></li>
+        <li><a href="roundtrips.html">Round trips</a></li>
+        <li><a href="families.html">Word families</a></li>
+        <li><a href="compare.html">Compare two languages</a></li>
+      </ul>
+    </details>
     <a href="stats.html">Statistics</a>
     <a href="about.html" aria-current="page">About</a>
   </nav>
 </header>
 
 <main>
-  <article class="prose">
+  <article class="prose about">
     <h1>About</h1>
 
-    <h2>Data</h2>
-    <p>All etymologies come from <a href="https://en.wiktionary.org/">English Wiktionary</a>, as extracted by <a href="https://github.com/tatuylonen/wiktextract">Wiktextract</a> and published on <a href="https://kaikki.org/">kaikki.org</a>. Downloaded on 18 October 2026 (Wiktionary dump of 2 September 2026).</p>
-    <p>33 languages are read: Albanian, Arabic, Bulgarian, Catalan, Czech, Danish, Dutch, English, Estonian, Finnish, French, German, Greek, Hebrew, Hungarian, Icelandic, Italian, Latvian, Lithuanian, Maltese, Norwegian Bokmål, Persian, Polish, Portuguese, Romanian, Russian, Serbo-Croatian, Slovak, Slovene, Spanish, Swedish, Turkish, Ukrainian. Proper names and inflected forms are left out. A word counts once for each etymology.</p>
+    <nav class="toc" aria-label="On this page">
+      <ol>
+        <li><a href="#what">What this is</a></li>
+        <li><a href="#data">Where the data comes from</a></li>
+        <li><a href="#path">How a word's path is read</a></li>
+        <li><a href="#numbers">What the numbers are</a></li>
+        <li><a href="#left-out">What is left out</a></li>
+        <li><a href="#limits">Known limits</a></li>
+        <li><a href="#built">How the site is built</a></li>
+        <li><a href="#credits">Credits</a></li>
+      </ol>
+    </nav>
 
-    <h2>Categories</h2>
+    <h2 id="what">What this is</h2>
+    <p>lexodus shows how words travelled between 33 languages of Europe and its neighbours: which languages each one took words from, which languages took words from it, and the way each word came, step by step. Italian <i>caffè</i>, for example, came from Ottoman Turkish <i>kahve</i>, which came from Arabic <i>qahwa</i>; from Italian it went on to French, English, Dutch and Icelandic.</p>
+    <p>The 33 languages are Albanian, Arabic, Bulgarian, Catalan, Czech, Danish, Dutch, English, Estonian, Finnish, French, German, Greek, Hebrew, Hungarian, Icelandic, Italian, Latvian, Lithuanian, Maltese, Norwegian Bokmål, Persian, Polish, Portuguese, Romanian, Russian, Serbo-Croatian, Slovak, Slovene, Spanish, Swedish, Turkish and Ukrainian. Any of them can be put at the centre.</p>
+    <p>Where to start: the <a href="index.html">grid</a> on the first page (who took from whom), the page of a <a href="languages.html">language</a>, a <a href="search.html">word</a> and its tree, or the pages under Explore: hidden donors, most travelled words, doublets, round trips, word families and the comparison of two languages.</p>
+
+    <h2 id="data">Where the data comes from</h2>
+    <p>Every etymology comes from <a href="https://en.wiktionary.org/">English Wiktionary</a>, the free dictionary written by volunteers, as extracted by <a href="https://github.com/tatuylonen/wiktextract">Wiktextract</a> and published on <a href="https://kaikki.org/">kaikki.org</a>. The file was downloaded on <strong>18 October 2026</strong> (Wiktionary dump of 2 September 2026).</p>
+    <p>Wiktionary content is available under the licence <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>. The tables of lexodus are derived from it and shared under the same licence, with credit to the Wiktionary contributors.</p>
+
+    <h2 id="path">How a word's path is read</h2>
+    <p>Wiktionary writes etymologies with small templates (&ldquo;borrowed from&rdquo;, &ldquo;inherited from&rdquo;, &ldquo;calque of&rdquo;&hellip;). lexodus reads them in order and builds a chain, from the language the word came from straight away back to the oldest word Wiktionary names.</p>
+    <p>Each step has a category:</p>
     <dl>
       <dt>borrowed</dt><dd>taken from another language (English <i>pizza</i> from Italian).</dd>
-      <dt>learned Latin</dt><dd>taken from written Latin, at any stage (Italian <i>nazione</i>).</dd>
-      <dt>inherited</dt><dd>passed down from an older language (Italian <i>figlio</i> from Latin <i>filius</i>). Not a borrowing.</dd>
+      <dt>learned Latin</dt><dd>taken from written Latin, at any time (Italian <i>nazione</i>).</dd>
+      <dt>inherited</dt><dd>passed down from an older form of the language (Italian <i>figlio</i> from Latin <i>filius</i>). Not a borrowing.</dd>
       <dt>calque</dt><dd>translated piece by piece (English <i>bankrupt</i> from Italian <i>bancarotta</i>).</dd>
       <dt>unspecified</dt><dd>Wiktionary only says &ldquo;from X&rdquo;.</dd>
     </dl>
-    <p>Borrowed, learned Latin and calque are shown at first; inherited and unspecified can be switched on.</p>
+    <p>Borrowed, learned Latin and calque are counted as words &ldquo;taken&rdquo; (in the grid, in &ldquo;took most from&rdquo; and in the rankings); inherited and unspecified can be switched on in the language pages.</p>
+    <p>Three places on the chain have a name:</p>
+    <dl>
+      <dt>direct language</dt><dd>where the word came from straight away: Ottoman Turkish for Italian <i>caffè</i>. The grid and the language pages count each word here.</dd>
+      <dt>second level</dt><dd>the language one step before: Arabic for <i>caffè</i>. Opening a row of a language page shows it, for the same words.</dd>
+      <dt>farthest origin</dt><dd>the last step Wiktionary describes. Where Wiktionary splits a word into a base and an affix, the chain follows the base.</dd>
+    </dl>
+    <p>Stages of the same language (Middle English to English, Late Latin to Latin) are not counted as steps between languages. All the varieties of Latin (Classical, Late, Medieval, New&hellip;) count as one &ldquo;Latin&rdquo; unless you split them.</p>
 
-    <h2>Two levels</h2>
-    <p>Each word is counted under the language it came from directly: Italian <i>caffè</i> under Ottoman Turkish. Opening a row shows the step before, for the same words: Ottoman Turkish had <i>caffè</i> from Arabic. The step before counts the same category as the row: under &ldquo;Ottoman Turkish · borrowed&rdquo; only the borrowed words. Steps inside one language (Middle English to English) are skipped. All Latin varieties are counted as one &ldquo;Latin&rdquo; unless you split them.</p>
+    <h2 id="numbers">What the numbers are</h2>
+    <p>The numbers are <strong>a snapshot of Wiktionary, not a measure of the vocabulary</strong>. They say what the editors of Wiktionary wrote about where words come from, not how many words a language really took or gave.</p>
+    <p>Coverage is very uneven. Each language page says how many of its entries have an etymology at all: <i>good</i> when 70% or more do (Finnish 97%, Polish 95%), <i>fair</i> between 30% and 70% (Italian 51%), <i>poor</i> below 30% (Arabic 20%, Maltese 10%). A language with few links did not necessarily take or give few words.</p>
+    <p id="romanian"><strong>Romanian</strong> is a case apart. Its editors write &ldquo;borrowed from French&rdquo; even for international learned words, so French seems to have given Romanian about 28,000 words, more than any other pair. Romanian stays visible (its page, the grid, the lists), but it is left out of statistics and rankings as a language that took words. It still counts as an origin or a language in between. <a href="language.html?code=ro#romanian-note">Romanian page</a>.</p>
+    <p>Families of languages (Germanic) and reconstructed languages (Proto-Slavic) are hidden by default; on a language page they can be shown, and the farthest origins list them apart.</p>
 
-    <h2>The grid and the words</h2>
-    <p>The grid on the first page has one row for each of the 33 languages (the one that took the words) and one column for each language it took them from, plus &ldquo;Latin&rdquo; (all varieties) and &ldquo;other&rdquo; (every other language). It counts borrowed, learned Latin and calque. The second level counts the language one step before the direct one. Every square opens its list of words.</p>
-    <p>Each number on a language page opens the list of its words, with the meaning (the first English definition in Wiktionary, cut at 120 characters) and where each word came from. Each word opens a page with its way, step by step, the start of its Wiktionary etymology and the languages that took it afterwards. Words with two or more possible origins are at the end of the lists with a &ldquo;?&rdquo;; their page shows the possibilities side by side. Words written in another script have their transliteration in brackets, as Wiktionary gives it: قهوة (qahwa).</p>
-
-    <h2>Search, trees and statistics</h2>
-    <p><a href="search.html">Search</a> looks for a word in all 33 languages at once, as written (accents do not matter), by transliteration or by English meaning. Each result opens its tree: at the top the furthest origin, then the steps down to the word, then the words of the 33 languages that took it, and below them those that took it from them (at most 4 levels and 60 words). When the same spelling has two etymologies in one language (English <i>piano</i>), each has its own tree.</p>
-    <p><a href="stats.html">Statistics</a> has four lists: hidden donors (languages that gave many words through another one, like Arabic to Bulgarian through Ottoman Turkish), bridge languages, words given and received by each language (which depends on how well Wiktionary covers it) and the words that travelled most.</p>
-
-    <h2>Limits</h2>
+    <h2 id="left-out">What is left out</h2>
     <ul>
-      <li>The numbers are a snapshot of Wiktionary, not a measure of the vocabulary. Many entries have no etymology: about half of the Italian ones, nine in ten of the Maltese ones.</li>
-      <li>Coverage is <i>good</i> when 70% or more of a language's entries have an etymology, <i>fair</i> between 30% and 70%, <i>poor</i> below 30%.</li>
-      <li>Editors of different languages write differently (Romanian almost always says &ldquo;borrowed&rdquo;), so numbers from two languages are not directly comparable.</li>
-      <li>No dates: Wiktionary rarely says when a word arrived.</li>
-      <li>Families, proto-languages and &ldquo;Translingual&rdquo; (scientific names) are hidden by default.</li>
+      <li><strong>Dates.</strong> Wiktionary rarely says when a word arrived, so no dates are used.</li>
+      <li><strong>Proper names and inflected forms</strong> (plurals, verb forms).</li>
+      <li><strong>Etymologies written only in words</strong>, without templates (&ldquo;from the name of the Venice ghetto&rdquo;).</li>
+      <li><strong>Uncertain etymologies</strong> are not left out but marked: a word with two or more possible origins shows them side by side with &ldquo;or&rdquo; and a &ldquo;?&rdquo; in the lists, and it is not counted in the grid. Origins that the text itself calls unlikely are dropped.</li>
+      <li>&ldquo;Translingual&rdquo; (scientific names of plants and animals) is not a language and is hidden by default.</li>
     </ul>
 
-    <h2>Licence</h2>
-    <p>Wiktionary content is available under <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>. The tables of lexodus are derived from it and shared under the same licence.</p>
+    <h2 id="limits">Known limits</h2>
+    <ul>
+      <li><strong>Homographs in trees.</strong> Wiktionary links a borrowing to a spelling, not to a meaning. When one spelling has two etymologies (French <i>café</i>, the drink and the colour), the words taken from it can appear under the wrong one; the trees mark these words with the trees mark the uncertain casesldquo;one of N origins of this spellingthe trees mark the uncertain casesrdquo;.</li>
+      <li><strong>&ldquo;Via&rdquo; chains.</strong> Some etymologies say &ldquo;from Arabic, via Spanish&rdquo; without a template for each step: the language in between may be missing, and long chains can be noisy.</li>
+      <li><strong>Transliteration gaps.</strong> Words in another script have their transliteration in brackets, as Wiktionary gives it: قهوة (qahwa). It is automatic for Arabic, Persian, Russian or Greek, written by hand for Hebrew, and sometimes missing; then only the original is shown.</li>
+      <li>Editors of different languages write differently, so numbers of two languages are not directly comparable.</li>
+      <li>The meaning shown is the first English definition of the entry, cut at 120 characters: a definition, not a translation.</li>
+    </ul>
+
+    <h2 id="built">How the site is built</h2>
+    <p>lexodus is a set of static pages: plain HTML, CSS and JavaScript, no libraries, no server, no cookies. The data was read from the Wiktextract file with Python scripts (in a separate project folder) and saved as JSON files: one file for each pair of languages with its words, one file per letter for the search and for the trees, and small files for the grid, the statistics and the Explore pages. Each page reads only the files it needs.</p>
+    <p>To update: run the processing again on a newer Wiktextract file, copy the export into <code>data/</code> with <code>scripts/aggiorna_dati.py</code> (it also sets a new version number, so browsers do not keep old files) and publish. The code is on <a href="https://github.com/AndreottiVIII/lexodus">GitHub</a>.</p>
+
+    <h2 id="credits">Credits</h2>
+    <ul>
+      <li>The etymologies: the contributors of <a href="https://en.wiktionary.org/">English Wiktionary</a> (<a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>).</li>
+      <li>The extraction: <a href="https://github.com/tatuylonen/wiktextract">Wiktextract</a> by Tatu Ylonen, files from <a href="https://kaikki.org/">kaikki.org</a>.</li>
+    </ul>
   </article>
 </main>
 
-<footer>Data: English Wiktionary via <a href="https://kaikki.org/">kaikki.org</a>, downloaded 18 October 2026, licence <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>.</footer>
+<footer id="site-footer"></footer>
+
+<script src="js/common.js?v=202610181757"></script>
+<script>Lex.footer();</script>
 </body>
 </html>

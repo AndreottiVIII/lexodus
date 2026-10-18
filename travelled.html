@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Most travelled words — lexodus</title>
+<meta name="description" content="The words that passed through the most languages, and the words taken by the most languages, from English Wiktionary.">
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="css/style.css?v=202610181757">
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="index.html">lexodus</a>
+  <nav aria-label="Main" class="menu">
+    <a href="languages.html">Languages</a>
+    <a href="search.html">Search</a>
+    <details class="explore">
+      <summary class="current">Explore</summary>
+      <ul>
+        <li><a href="hidden.html">Hidden donors</a></li>
+        <li><a href="travelled.html" aria-current="page">Most travelled words</a></li>
+        <li><a href="doublets.html">Doublets</a></li>
+        <li><a href="roundtrips.html">Round trips</a></li>
+        <li><a href="families.html">Word families</a></li>
+        <li><a href="compare.html">Compare two languages</a></li>
+      </ul>
+    </details>
+    <a href="stats.html">Statistics</a>
+    <a href="about.html">About</a>
+  </nav>
+</header>
+
+<main>
+  <h1>Most travelled words</h1>
+  <p class="lead">Words whose way passes through the most languages, and words that the most languages took. Every word opens its tree.</p>
+  <p id="note" class="note" hidden></p>
+  <p id="ro-note" class="note" hidden></p>
+  <p id="loading">Loading&hellip;</p>
+  <div id="app" class="stats" hidden>
+    <section aria-labelledby="one-title">
+      <div class="head">
+        <h2 id="one-title">The 10 of one language</h2>
+        <label><span class="visually-hidden">Language</span><select id="lang"></select></label>
+      </div>
+      <ol id="one-list" class="ranked"></ol>
+    </section>
+    <div class="columns">
+      <section aria-labelledby="long-title">
+        <h2 id="long-title">Longest ways</h2>
+        <p class="note">Steps between different languages; stages of one language (Middle English) are not counted.</p>
+        <ol id="long-list" class="ranked"></ol>
+        <button type="button" id="long-more" class="more" hidden></button>
+      </section>
+      <section aria-labelledby="taken-title">
+        <h2 id="taken-title">Taken by the most languages</h2>
+        <p class="note">How many of the 33 languages took the word straight from it.</p>
+        <ol id="taken-list" class="ranked"></ol>
+        <button type="button" id="taken-more" class="more" hidden></button>
+      </section>
+    </div>
+  </div>
+</main>
+
+<footer id="site-footer"></footer>
+
+<script src="data/lingue.js?v=202610181757"></script>
+<script src="js/common.js?v=202610181757"></script>
+<script src="js/travelled.js?v=202610181757"></script>
+</body>
+</html>

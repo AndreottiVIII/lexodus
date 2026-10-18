@@ -226,3 +226,104 @@ h3 { font-size: 1rem; margin: 0 0 6px; font-weight: 600; }
   .numbers tr { display: table-row; }
   .numbers td { display: table-cell; padding: 6px 8px 6px 0; border-bottom: 1px solid var(--line); font-size: 0.88rem; }
 }
+
+/* Menu: Languages · Search · Explore ▾ · Statistics · About. "Explore" is a <details> drop-down, no library. */
+.menu { align-items: baseline; }
+.explore { position: relative; }
+.explore summary { list-style: none; cursor: pointer; color: var(--blue); }
+.explore summary::-webkit-details-marker { display: none; }
+.explore summary::after { content: " \25BE"; font-size: 0.8em; }
+.explore[open] summary::after { content: " \25B4"; }
+.explore summary.current { color: var(--ink); }
+.explore ul { list-style: none; margin: 0; padding: 6px 0; position: absolute; left: -12px; top: calc(100% + 6px); z-index: 10; min-width: 15rem; background: var(--paper); border: 1px solid var(--line); box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08); }
+.explore li a { display: block; padding: 6px 14px; text-decoration: none; }
+.explore li a:hover, .explore li a:focus-visible { background: #eef2f8; }
+.explore li a[aria-current="page"] { color: var(--ink); font-weight: 600; }
+@media (max-width: 600px) {
+  .top { flex-direction: column; gap: 6px; }
+  nav.menu { flex-direction: column; gap: 4px; }
+  .explore ul { position: static; box-shadow: none; border: 0; border-left: 1px solid var(--line); padding: 2px 0 2px 4px; margin-top: 4px; min-width: 0; }
+  .explore li a { padding: 4px 10px; }
+}
+
+/* Chains in one line: "Arabic qahwa → Ottoman Turkish kahve → Italian caffè" */
+.chain { overflow-wrap: anywhere; }
+.chain .sl { color: var(--muted); }
+.chain .arr { color: var(--muted); }
+.chain .hi { background: #eef2f8; padding: 0 3px; }
+.chain .hi .sl { color: var(--blue); font-weight: 600; }
+.way { margin-top: 4px; font-size: 0.92rem; }
+
+/* Language page: the two blocks below the lists, closed by default */
+.lang-extra { display: grid; gap: 14px; }
+details.block { border-top: 1px solid var(--line); padding-top: 12px; }
+details.block > summary { cursor: pointer; list-style: none; display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+details.block > summary::-webkit-details-marker { display: none; }
+details.block > summary h2 { display: inline; }
+details.block > summary::before { content: "+"; color: var(--blue); width: 1.1em; flex: none; }
+details.block[open] > summary::before { content: "\2212"; }
+details.block > *:not(summary) { margin-top: 10px; }
+details.inner > summary { cursor: pointer; color: var(--blue); font-size: 0.92rem; }
+.rows.plain .note { margin-top: 2px; }
+.ex a.w { font-style: normal; }
+
+/* Hidden donors */
+.words td.r, .words th.r { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.share strong { font-size: 1.05rem; }
+.minibar { display: block; height: 3px; background: var(--line); margin-top: 3px; width: 4.5rem; margin-left: auto; }
+.minibar span { display: block; height: 100%; background: var(--blue); }
+@media (max-width: 600px) {
+  .hidden-table td.r { text-align: left; }
+  .hidden-table td.r::before { color: var(--muted); font-size: 0.85rem; }
+  .hidden-table td:nth-child(2)::before { content: "directly "; }
+  .hidden-table td:nth-child(3)::before { content: "through another language "; }
+  .hidden-table td:nth-child(4)::before { content: "share "; }
+  .minibar { margin-left: 0; }
+}
+
+/* Doublets: the two words side by side */
+.pairs { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
+.pair { padding: 16px 0; border-bottom: 1px solid var(--line); }
+.pair:first-child { border-top: 1px solid var(--line); }
+.halves { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 32px; }
+.half { min-width: 0; display: grid; gap: 2px; align-content: start; }
+.half .big { font-size: 1.1rem; }
+.common { margin-top: 10px; font-size: 0.92rem; }
+@media (max-width: 600px) { .halves { grid-template-columns: 1fr; } }
+.search { display: block; }
+
+/* Round trips */
+.trips li { padding: 10px 0; }
+
+/* Word families */
+.families { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+.families > li { border-bottom: 1px solid var(--line); }
+.families summary { cursor: pointer; list-style: none; display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 10px; padding: 10px 0; }
+.families summary::-webkit-details-marker { display: none; }
+.families .rank { color: var(--muted); font-variant-numeric: tabular-nums; min-width: 2em; }
+.families .fam-root { font-weight: 600; overflow-wrap: anywhere; }
+.families .num { margin-left: auto; font-variant-numeric: tabular-nums; font-size: 0.92rem; }
+.fam-body { padding: 0 0 14px 2.6em; display: grid; gap: 8px; }
+.fam-words { margin: 0; display: grid; grid-template-columns: minmax(7rem, 11rem) minmax(0, 1fr); gap: 6px 16px; font-size: 0.92rem; }
+.fam-words dt { font-weight: 600; }
+.fam-words dd { margin: 0; overflow-wrap: anywhere; }
+@media (max-width: 600px) {
+  .fam-body { padding-left: 0; }
+  .fam-words { grid-template-columns: 1fr; gap: 2px; }
+  .fam-words dd { margin-bottom: 6px; }
+}
+
+/* Compare two languages */
+.pickers { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 12px; }
+.pickers select { font-size: 1rem; }
+.big-num { font-size: 1.6rem; font-weight: 600; }
+.plain-ex { font-style: normal; margin-left: 0; color: var(--ink); }
+.shared-table td { vertical-align: top; }
+
+/* About */
+.toc { border-left: 3px solid var(--blue); padding: 4px 0 4px 14px; }
+.toc ol { margin: 0; padding-left: 20px; columns: 2 14rem; }
+.toc li + li { margin-top: 2px; }
+.about h2 { scroll-margin-top: 12px; }
+code { font-size: 0.9em; background: #f4f4f4; padding: 0 3px; }
+.node .amb { font-size: 0.78rem; color: #8a5a00; border: 1px solid #e3cf9f; background: #fdf8ec; padding: 0 5px; margin-left: 4px; white-space: nowrap; cursor: help; }

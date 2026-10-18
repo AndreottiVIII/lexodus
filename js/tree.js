@@ -46,14 +46,17 @@
     var page = o.word && !o.here && targets.indexOf(o.lang) >= 0
       ? ' <a class="page" href="' + L.esc(L.wordUrl(o.lang, o.word, o.n || 1)) + '">word page</a>' : "";
     return '<div class="node' + (o.here ? " here" : "") + '"><span class="lang">' + langLink(o.lang) + "</span> " + word +
-      (o.how ? ' <span class="how">' + L.esc(o.how) + "</span>" : "") + page +
+      (o.how ? ' <span class="how">' + L.esc(o.how) + "</span>" : "") +
+      (o.amb ? ' <span class="amb" title="The word above has more than one etymology with the same spelling and Wiktionary does not say which one this word came from: it is shown under each of them.">' +
+        (o.amb > 1 ? "one of " + o.amb + " origins of this spelling" : "one of several origins of this spelling") + "</span>" : "") + page +
       (o.mean ? '<span class="mean">' + L.esc(o.mean) + "</span>" : "") + "</div>";
   }
-  function branches(list) {
+  // homographs: how many etymologies the spelling of the parent has (n_omografi_antenato + 1), when known.
+  function branches(list, homographs) {
     if (!list || !list.length) return "";
     return '<ul class="branches">' + list.map(function (g) {
-      return "<li>" + node({ lang: g.lingua, word: g.parola, tr: g.traslitterazione, n: g.n_etimologia, mean: g.significato, how: L.catLabel(g.categoria) }) +
-        branches(g.giu) + (g.troncato ? '<p class="note cut">… more not shown</p>' : "") + "</li>";
+      return "<li>" + node({ lang: g.lingua, word: g.parola, tr: g.traslitterazione, n: g.n_etimologia, mean: g.significato, how: L.catLabel(g.categoria), amb: g.ambiguo ? homographs || 1 : 0 }) +
+        branches(g.giu, g.n_omografi_antenato ? g.n_omografi_antenato + 1 : 0) + (g.troncato ? '<p class="note cut">… more not shown</p>' : "") + "</li>";
     }).join("") + "</ul>";
   }
   function count(list) { return (list || []).reduce(function (s, g) { return s + 1 + count(g.giu); }, 0); }
@@ -75,12 +78,13 @@
       }).join(" or ")
       : "no earlier step in Wiktionary";
     html += '<li class="here-li">' + node({ here: true, lang: lang, word: word, n: ne, tr: e.traslitterazione, mean: e.significato, how: how }) +
-      branches(e.giu) + "</li></ol>";
+      branches(e.giu, e.n_omografi_antenato ? e.n_omografi_antenato + 1 : 0) + "</li></ol>";
     var kids = (e.giu || []).length, all = count(e.giu);
     html += '<p class="note">' + (kids
       ? "Taken directly by " + kids + (kids === 1 ? " word" : " words") + " of the 33 languages" + (all > kids ? ", " + all + " words in all." : ".")
       : "No word of the 33 languages took it, as far as Wiktionary says.") +
-      (e.troncato ? " The tree is cut here (at most 4 levels down and 60 words)." : "") + "</p>";
+      (e.troncato ? " The tree is cut here (at most 4 levels down and 60 words)." : "") +
+      (/"ambiguo":true/.test(JSON.stringify(e.giu || [])) ? " “One of N origins of this spelling”: the same spelling has more than one etymology and Wiktionary does not say which one the word came from, so it is shown under each." : "") + "</p>";
     return html;
   }
 

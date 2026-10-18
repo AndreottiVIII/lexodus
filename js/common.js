@@ -3,7 +3,7 @@
   "use strict";
   // Version of the site, added to every file read with fetch() so browsers do not keep old copies.
   // Set together with the "?v=" in the pages by scripts/versione.py (also run by aggiorna_dati.py).
-  var VERSION = "202610181712";
+  var VERSION = "202610181757";
   function withVersion(path) { return path + (path.indexOf("?") < 0 ? "?" : "&") + "v=" + VERSION; }
 
   var CATS = [
@@ -24,7 +24,6 @@
 
   // Short cautions for some languages (from COSE_INTERESSANTI.md, sections 5-6).
   var NOTES = {
-    ro: "Romanian editors almost always write “borrowed” and rarely “from”, so its borrowings look larger than elsewhere.",
     mt: "Only about 1 Maltese entry in 10 has an etymology: real numbers are probably much higher.",
     ar: "Only about 1 Arabic entry in 5 has an etymology.",
     en: "Wiktionary documents English best of all, especially recent loans.",
@@ -274,7 +273,101 @@
  ' <a href="about.html">How it was made</a>.';
   }
 
+  // Menu: the "Explore" drop-down is a <details>; it also closes on a click outside it and on Escape.
+  (function menu() {
+    var d = document.querySelector("details.explore");
+    if (!d) return;
+    document.addEventListener("click", function (e) { if (d.open && !d.contains(e.target)) d.open = false; });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && d.open) { d.open = false; d.querySelector("summary").focus(); }
+    });
+  })();
+
+  // Romanian stays visible but is left out of statistics and rankings as a language that took words
+  // (Davide, 18/10/2026). The text comes from the export ("nota_esclusione", "nota_romeno") when it is there.
+  var EXCLUDED = ["ro"];
+  var RO_NOTE = "Romanian is left out of statistics and rankings: its Wiktionary editors credit French with almost every learned word, which would crush every other language.";
+  var RO_LINK = "language.html?code=ro#romanian-note";
+  function firstSentence(t) {
+    t = String(t || "").trim();
+    var m = t.match(/^[\s\S]*?[.!?](?=\s+[A-Z“"(]|$)/);
+    return m ? m[0] : t;
+  }
+  function exclusionNote(el, block) {
+    if (!el) return;
+    var t = (block && (block.nota_esclusione || block.nota_romeno)) || RO_NOTE;
+    el.innerHTML = esc(firstSentence(t)) + ' <a href="' + RO_LINK + '">Why</a>.';
+    el.hidden = false;
+  }
+  // One sentence from the "nota" of a block (Davide: notes of one sentence).
+  function noteText(block) { return firstSentence(block && (block.nota || block.note) || ""); }
+
+  // The 33 languages, sorted by English name, optionally without the excluded ones.
+  function targetCodes(nm, withoutExcluded) {
+    return nm._targets.filter(function (c) { return !withoutExcluded || EXCLUDED.indexOf(c) < 0; })
+      .sort(function (a, b) { return String(nm[a] || a).localeCompare(String(nm[b] || b), "en"); });
+  }
+  function langOptions(sel, codes, nm, current) {
+    sel.innerHTML = codes.map(function (c) {
+      return '<option value="' + esc(c) + '"' + (c === current ? " selected" : "") + ">" + esc(nm[c] || c) + "</option>";
+    }).join("");
+  }
+  // ?param=... kept in the address so the page can be shared and reloaded.
+  function setParams(obj) {
+    var p = new URLSearchParams(location.search);
+    Object.keys(obj).forEach(function (k) { if (obj[k]) p.set(k, obj[k]); else p.delete(k); });
+    try { history.replaceState(null, "", "?" + p.toString() + location.hash); } catch (e) { /* ignore */ }
+  }
+  function langName(nm, code, fallback) {
+    return code === "LATINO" ? "Latin" : code === "altre" ? "other languages" : nm[code] || fallback || code;
+  }
+  function langLink(nm, code, fallback) {
+    var c = code === "LATINO" ? "la" : code;
+    return nm[c] || code === "LATINO"
+      ? '<a href="language.html?code=' + encodeURIComponent(c) + '">' + esc(langName(nm, code, fallback)) + "</a>"
+      : esc(langName(nm, code, fallback));
+  }
+  // A word of the export ({lingua|l, parola|p, n_etimologia|ne, traslitterazione|t}) as a link to its tree.
+  function wordTree(w, lang) {
+    var l = w.lingua || w.l || lang, p = w.parola || w.p, t = w.traslitterazione || w.t || "";
+    return '<a class="w" href="' + esc(treeUrl(l, p, w.n_etimologia || w.ne || 1, t)) + '">' + esc(p) + "</a>" + tr(t, p);
+  }
+  function wordPage(w, lang) {
+    var l = w.lingua || w.l || lang, p = w.parola || w.p, t = w.traslitterazione || w.t || "";
+    return '<a class="w" href="' + esc(wordUrl(l, p, w.n_etimologia || w.ne || 1)) + '">' + esc(p) + "</a>" + tr(t, p);
+  }
+  // A chain in one line, oldest first, ending with the word itself:
+  // "Arabic قَهْوَة (qahwa) → Ottoman Turkish قهوه (kahve) → Italian caffè".
+  // steps: from the direct language up, as in the export ({codice, nome, termine, traslitterazione});
+  // last: {lang, word, t}; mark(code): true for the steps to highlight.
+  function chainLine(steps, nm, last, mark) {
+    function one(code, name, term, t) {
+      var hi = mark && mark(code);
+      return '<span class="st' + (hi ? " hi" : "") + '"><span class="sl">' + esc(name) + "</span>" +
+        (term ? " <i>" + esc(term) + "</i>" + tr(t, term) : "") + "</span>";
+    }
+    var parts = (steps || []).slice().reverse().map(function (s) {
+      return one(s.codice, langName(nm, s.codice, s.nome), s.termine, s.traslitterazione);
+    });
+    if (last) parts.push(one(last.lang, langName(nm, last.lang), last.word, last.t));
+    return '<span class="chain">' + parts.join(' <span class="arr">→</span> ') + "</span>";
+  }
+  // A list in the export: either the list itself or a block {nota, lista} (mandate 11).
+  function listOf(v) {
+    if (Array.isArray(v)) return v;
+    if (!v || typeof v !== "object") return [];
+    var ks = ["lista", "elenco", "righe", "parole", "coppie", "vie"];
+    for (var i = 0; i < ks.length; i++) if (Array.isArray(v[ks[i]])) return v[ks[i]];
+    return [];
+  }
+  // A language given as a code or as {codice, nome_en}.
+  function codeOf(v) { return v && typeof v === "object" ? v.codice : v; }
+  function pct(v) { return (v * 100 >= 99.5 && v < 1 ? "99" : Math.round(v * 100)) + "%"; }
+
   window.Lex = {
+    EXCLUDED: EXCLUDED, RO_NOTE: RO_NOTE, RO_LINK: RO_LINK, firstSentence: firstSentence, exclusionNote: exclusionNote, noteText: noteText,
+    targetCodes: targetCodes, langOptions: langOptions, setParams: setParams, langName: langName, langLink: langLink,
+    wordTree: wordTree, wordPage: wordPage, chainLine: chainLine, pct: pct, listOf: listOf, codeOf: codeOf,
     CATS: CATS, CAT_BY_KEY: CAT_BY_KEY, TYPE_LABEL: TYPE_LABEL, NOTES: NOTES,
     load: load, isLanguage: isLanguage, isLatin: isLatin, key: key, latinVarieties: latinVarieties,
     fileCode: fileCode, pairCode: pairCode, pairPath: pairPath, hasPair: hasPair, wordsUrl: wordsUrl, wordUrl: wordUrl,

@@ -1,5 +1,6 @@
-/* lexodus — stats.html: the four statistics of data/statistiche.json (mandate 09), in Davide's order:
-   hidden donors, bridge languages, given and received, most travelled words. Each section shows the "nota" of its block. */
+/* lexodus — stats.html: two statistics of data/statistiche.json (mandate 11): given and received, bridge languages.
+   Each section shows the one-sentence "nota" of its block; Romanian is left out as a language that took words
+   (hidden donors and most travelled words have their own pages: hidden.html, travelled.html). */
 (function () {
   "use strict";
   var L = window.Lex;
@@ -37,7 +38,7 @@
   }
   function bar(v, max) { return '<div class="bar"><span style="width:' + (max ? Math.max(0.5, 100 * v / max) : 0).toFixed(1) + '%"></span></div>'; }
   function note(id, block) {
-    var t = block && pick(block, "nota");
+    var t = L.noteText(block);
     el(id).textContent = t || "";
     el(id).hidden = !t;
   }
@@ -48,53 +49,15 @@
     btn.textContent = "Show all " + items.length;
     btn.onclick = function () { draw(true); btn.hidden = true; };
   }
-  function wordLink(r) {
-    var l = pick(r, "lingua", "l"), w = pick(r, "parola", "p"), ne = pick(r, "n_etimologia", "ne") || 1;
-    return '<a class="w" href="' + L.esc(L.treeUrl(l, w, ne, pick(r, "traslitterazione", "t"))) + '">' + L.esc(w) + "</a>" + L.tr(pick(r, "traslitterazione", "t"), w);
-  }
-
-  // 1. Hidden donors, for the language chosen in the menu.
-  function hidden(block) {
-    var rows = rowsOf((block && block.per_arrivo) || block, ["righe", "coppie", "elenco"]).map(function (r) {
-      if (r.nome_en && !names[r.codice]) names[r.codice] = r.nome_en;
-      if (r.tipo_lingua) types[r.codice] = r.tipo_lingua;
-      return {
-        to: pick(r, "arrivo", "lingua_arrivo"), from: pick(r, "codice", "lingua", "donatore", "origine"),
-        direct: pick(r, "diretto") || 0, second: pick(r, "secondo_livello") || 0, via: pairsOf(pick(r, "via")),
-        ratio: pick(r, "rapporto")
-      };
-    }).filter(function (r) { return isLang(r.from); });
-    var langs = names._targets.filter(function (c) { return rows.some(function (r) { return r.to === c; }); })
-      .sort(function (a, b) { return name(a).localeCompare(name(b), "en"); });
-    var sel = el("hidden-lang"), start = L.param("lang");
-    if (langs.indexOf(start) < 0) start = langs.indexOf("it") >= 0 ? "it" : langs[0];
-    sel.innerHTML = langs.map(function (c) { return '<option value="' + L.esc(c) + '"' + (c === start ? " selected" : "") + ">" + L.esc(name(c)) + "</option>"; }).join("");
-    function draw() {
-      var to = sel.value;
-      var mine = rows.filter(function (r) { return r.to === to; })
-        .sort(function (a, b) { return (b.ratio !== undefined ? b.ratio - a.ratio : 0) || b.second / (b.direct + 1) - a.second / (a.direct + 1); });
-      var max = Math.max.apply(null, mine.map(function (r) { return r.second; }).concat([1]));
-      el("hidden-list").innerHTML = mine.length ? mine.map(function (r) {
-        var sec = L.n(r.second);
-        if (L.hasGridFile(pairs, to, "_via", r.from)) sec = '<a href="' + L.esc(L.viaUrl(to, r.from)) + '">' + sec + "</a>";
-        return '<li class="row"><div class="line"><span class="name">' + langLink(r.from) + "</span>" +
-          '<span class="num">' + sec + ' <span class="note">one step before</span> · ' + L.n(r.direct) + ' <span class="note">directly</span></span></div>' +
-          bar(r.second, max) +
-          (r.via.length ? '<p class="ex">via ' + r.via.map(function (v) { return L.esc(name(v.code)) + " " + L.n(v.n); }).join(", ") + "</p>" : "") + "</li>";
-      }).join("") : '<li class="note">No hidden donor for this language (at least 20 words one step before).</li>';
-      try { history.replaceState(null, "", "?lang=" + encodeURIComponent(to) + location.hash); } catch (e) { /* ignore */ }
-    }
-    sel.addEventListener("change", draw);
-    draw();
-  }
-
-  // 2. Bridge languages.
+  // Bridge languages.
   function bridges(block) {
     var rows = rowsOf(block, ["righe", "lingue", "elenco"]).map(function (r) {
       if (r.nome_en && r.codice && !names[r.codice]) names[r.codice] = r.nome_en;
       if (r.tipo_lingua) types[r.codice] = r.tipo_lingua;
       return { code: pick(r, "codice", "lingua"), n: pick(r, "n_parole", "n", "parole") || 0, to: pairsOf(pick(r, "per_arrivo", "arrivi")) };
     }).filter(function (r) { return isLang(r.code); }).sort(function (a, b) { return b.n - a.n; });
+    var excl = (block && block.escluse) || L.EXCLUDED;
+    rows.forEach(function (r) { r.to = r.to.filter(function (t) { return excl.indexOf(t.code) < 0; }); });
     var max = rows.length ? rows[0].n : 1;
     more(el("bridges-list"), el("bridges-more"), rows, function (r) {
       return '<li class="row"><div class="line"><span class="name">' + langLink(r.code) + '</span><span class="num">' + L.n(r.n) + "</span></div>" + bar(r.n, max) +
@@ -102,13 +65,12 @@
     });
   }
 
-  // 3. Given and received.
+  // Given and received.
   function balance(block) {
     var cov = { buona: "good", media: "fair", scarsa: "poor" };
     var rows = rowsOf(block, ["righe", "lingue", "elenco"]);
-    // The warning about coverage is in the "nota" of the block; a separate "avviso" is shown too when present.
-    el("balance-warn").textContent = pick(block, "avviso") || "";
-    el("balance-warn").hidden = !pick(block, "avviso");
+    var excl = (block && block.escluse) || L.EXCLUDED;
+    rows = rows.filter(function (r) { return excl.indexOf(pick(r, "lingua", "codice")) < 0; });
     el("balance-list").innerHTML = rows.map(function (r) {
       var gave = pick(r, "date", "dato", "uscita") || 0, got = pick(r, "ricevute", "ricevuto", "entrata") || 0;
       var ratio = pick(r, "rapporto");
@@ -119,30 +81,14 @@
     }).join("");
   }
 
-  // 4. Most travelled words.
-  function travel(block) {
-    var long = (block && pick(block, "catena_piu_lunga", "catene_lunghe")) || [];
-    var taken = (block && pick(block, "prese_da_piu_lingue")) || [];
-    function item(numKey, label) {
-      return function (r) {
-        var v = pick.apply(null, [r].concat(numKey)) || 0;
-        return '<li><div class="line">' + wordLink(r) + ' <span class="note">' + L.esc(name(pick(r, "lingua", "l"))) + '</span><span class="num">' + L.n(v) + " " + label(v) + "</span></div>" +
-          (pick(r, "significato", "s") ? '<p class="mean">' + L.esc(pick(r, "significato", "s")) + "</p>" : "") + "</li>";
-      };
-    }
-    more(el("long-list"), el("long-more"), long, item(["n_tappe", "tappe"], function (v) { return v === 1 ? "step" : "steps"; }));
-    more(el("taken-list"), el("taken-more"), taken, item(["n_lingue", "n_discendenti_diretti"], function (v) { return v === 1 ? "language" : "languages"; }));
-  }
-
   Promise.all([L.names(), L.fetchJson("data/statistiche.json"), L.extra("coppie_elenco"), L.getRaw("lingue")]).then(function (res) {
     names = res[0]; pairs = res[2] || {};
     res[3].altre_lingue_origine.forEach(function (o) { types[o.codice] = o.tipo_lingua; });
     var s = res[1];
     L.footer();
-    note("hidden-note", s.donatori_nascosti); hidden(s.donatori_nascosti);
-    note("bridges-note", s.lingue_di_passaggio); bridges(s.lingue_di_passaggio);
+    L.exclusionNote(el("ro-note"), s.bilancio || s.lingue_di_passaggio);
     note("balance-note", s.bilancio); balance(s.bilancio);
-    note("travel-note", s.parole_viaggiate); travel(s.parole_viaggiate);
+    note("bridges-note", s.lingue_di_passaggio); bridges(s.lingue_di_passaggio);
     el("loading").hidden = true; el("app").hidden = false;
   }).catch(function (e) {
     el("loading").textContent = L.fetchFail(e);

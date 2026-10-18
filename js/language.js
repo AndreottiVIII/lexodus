@@ -166,6 +166,64 @@
     sub.hidden = !open;
   }
 
+  // Two blocks below the lists (lingua_extra/<code>.json, mandate 11), closed by default:
+  // "Farthest origins" (with the reconstructed ones apart) and "Most travelled words in <language>".
+  function extraBlocks(code) {
+    var nm = {};
+    Object.keys(state.data.langs).forEach(function (k) { nm[k] = state.data.langs[k].name; });
+    function pick(o) { for (var i = 1; i < arguments.length; i++) if (o && o[arguments[i]] !== undefined && o[arguments[i]] !== null) return o[arguments[i]]; return undefined; }
+    // examples: whole words before affixes ("-io") when there are some
+    function ex(list) {
+      list = list || [];
+      var whole = list.filter(function (w) { return !/^-|-$/.test(w.parola || ""); });
+      return whole.length ? whole : list;
+    }
+    function origins(list) {
+      var max = list.reduce(function (m, o) { return Math.max(m, o.n || 0); }, 1);
+      return list.map(function (o) {
+        var c = pick(o, "codice", "origine");
+        var via = L.listOf(pick(o, "dirette", "strade", "via")).filter(function (v) { return v.codice !== c; });
+        return '<li class="row"><div class="line"><span class="name">' + L.langLink(nm, c, o.nome_en) + "</span>" +
+          (o.tipo_lingua && !L.isLanguage(o.tipo_lingua) ? ' <span class="note">' + L.esc(L.TYPE_LABEL[o.tipo_lingua] || o.tipo_lingua) + "</span>" : "") +
+          '<span class="num">' + L.n(o.n || 0) + "</span></div>" +
+          '<div class="bar"><span style="width:' + Math.max(0.5, 100 * (o.n || 0) / max).toFixed(1) + '%"></span></div>' +
+          (via.length ? '<p class="note">mostly through ' + via.map(function (v) { return L.esc(L.langName(nm, v.codice, v.nome_en)) + " " + L.n(v.n); }).join(", ") + "</p>" : "") +
+          (ex(o.esempi).length ? '<p class="ex">' + ex(o.esempi).map(function (w) { return L.wordPage(w, code); }).join(", ") + "</p>" : "") + "</li>";
+      }).join("");
+    }
+    L.fetchJson("data/lingua_extra/" + L.fileCode(code) + ".json").then(function (d) {
+      var far = L.listOf(pick(d, "origini_lontane")), rec = L.listOf(pick(d, "origini_ricostruite")), trav = L.listOf(pick(d, "piu_viaggiate"));
+      el("far-list").innerHTML = origins(far.slice(0, 15));
+      el("far-more").hidden = far.length <= 15;
+      el("far-more").textContent = "Show all " + far.length;
+      el("far-more").onclick = function () { el("far-list").innerHTML = origins(far); el("far-more").hidden = true; };
+      el("far-sum").textContent = far.length ? "· " + far.slice(0, 3).map(function (o) { return L.langName(nm, o.codice, o.nome_en); }).join(", ") + "…" : "";
+      el("rec-list").innerHTML = origins(rec);
+      el("rec-block").hidden = !rec.length;
+      el("far-block").hidden = !far.length;
+      el("travel-title").textContent = "Most travelled words in " + L.langName(nm, code);
+      el("travel-list").innerHTML = trav.slice(0, 10).map(function (w) {
+        return '<li><div class="line">' + L.wordTree(w, code) + (w.significato ? ' <span class="note">' + L.esc(w.significato) + "</span>" : "") + "</div>" +
+          '<p class="mean">' + L.chainLine(w.catena || [], nm, { lang: code, word: w.parola, t: w.traslitterazione }) + "</p></li>";
+      }).join("");
+      el("travel-block").hidden = !trav.length;
+      if (d.nota_romeno) {
+        el("romanian-note").textContent = d.nota_romeno;
+        el("romanian-note").hidden = false;
+      }
+      el("extra").hidden = !(far.length || trav.length);
+      if (location.hash === "#romanian-note" && !el("romanian-note").hidden) el("romanian-note").scrollIntoView();
+    }).catch(function (e) {
+      if (location.protocol !== "file:") console.warn(e.message);
+    });
+    if (code === "ro") {
+      // shown at once from the site text, replaced by the export's own note when it arrives
+      el("romanian-note").textContent = L.RO_NOTE;
+      el("romanian-note").hidden = false;
+      if (location.hash === "#romanian-note") el("romanian-note").scrollIntoView();
+    }
+  }
+
   Promise.all([L.load(), L.extra("coppie_elenco")]).then(function (res) {
     var data = res[0];
     state.data = data;
@@ -192,6 +250,7 @@
       });
     });
     render();
+    if (data.langs[code].target) extraBlocks(code);
   }).catch(function (err) {
     el("loading").textContent = "The data could not be loaded (" + err.message + ").";
     console.error(err);

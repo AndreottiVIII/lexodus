@@ -4,16 +4,27 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Statistics — lexodus</title>
-<meta name="description" content="Hidden donors, bridge languages, words given and received, and the words that travelled most, from English Wiktionary.">
+<meta name="description" content="Words given and received by each language, and the bridge languages, from English Wiktionary.">
 <link rel="icon" href="data:,">
-<link rel="stylesheet" href="css/style.css?v=202610181712">
+<link rel="stylesheet" href="css/style.css?v=202610181757">
 </head>
 <body>
 <header class="top">
   <a class="brand" href="index.html">lexodus</a>
-  <nav aria-label="Main">
+  <nav aria-label="Main" class="menu">
     <a href="languages.html">Languages</a>
     <a href="search.html">Search</a>
+    <details class="explore">
+      <summary>Explore</summary>
+      <ul>
+        <li><a href="hidden.html">Hidden donors</a></li>
+        <li><a href="travelled.html">Most travelled words</a></li>
+        <li><a href="doublets.html">Doublets</a></li>
+        <li><a href="roundtrips.html">Round trips</a></li>
+        <li><a href="families.html">Word families</a></li>
+        <li><a href="compare.html">Compare two languages</a></li>
+      </ul>
+    </details>
     <a href="stats.html" aria-current="page">Statistics</a>
     <a href="about.html">About</a>
   </nav>
@@ -21,29 +32,14 @@
 
 <main>
   <h1>Statistics</h1>
-  <p class="lead">Four ways to look at the whole network of the 33 languages. The numbers are those of English Wiktionary, which explains some languages much better than others. Families and proto-languages (Proto-Slavic…) are left out, as on the language pages.</p>
+  <p class="lead">Two ways to look at the whole network of the 33 languages. The numbers are those of English Wiktionary, which explains some languages much better than others. Families and proto-languages are left out.</p>
+  <p id="ro-note" class="note" hidden></p>
+  <p class="note">More rankings in Explore: <a href="hidden.html">hidden donors</a>, <a href="travelled.html">most travelled words</a>, <a href="families.html">word families</a>.</p>
   <p id="loading">Loading&hellip;</p>
   <div id="app" class="stats" hidden>
-    <section id="hidden" aria-labelledby="hidden-title">
-      <div class="head">
-        <h2 id="hidden-title">Hidden donors</h2>
-        <label><span class="note">Language that took the words </span><select id="hidden-lang"></select></label>
-      </div>
-      <p id="hidden-note" class="note"></p>
-      <ul id="hidden-list" class="rows plain"></ul>
-    </section>
-
-    <section id="bridges" aria-labelledby="bridges-title">
-      <h2 id="bridges-title">Bridge languages</h2>
-      <p id="bridges-note" class="note"></p>
-      <ul id="bridges-list" class="rows plain"></ul>
-      <button type="button" id="bridges-more" class="more" hidden></button>
-    </section>
-
     <section id="balance" aria-labelledby="balance-title">
       <h2 id="balance-title">Given and received</h2>
       <p id="balance-note" class="note"></p>
-      <p id="balance-warn" class="warn"></p>
       <div class="table-scroll">
         <table class="words numbers">
           <thead><tr><th scope="col">Language</th><th scope="col">Gave</th><th scope="col">Received</th><th scope="col">Gave ÷ received</th><th scope="col">Coverage</th></tr></thead>
@@ -52,31 +48,21 @@
       </div>
     </section>
 
-    <section id="travel" aria-labelledby="travel-title">
-      <h2 id="travel-title">Most travelled words</h2>
-      <p id="travel-note" class="note"></p>
-      <div class="columns">
-        <div>
-          <h3>Longest chains</h3>
-          <ol id="long-list" class="ranked"></ol>
-          <button type="button" id="long-more" class="more" hidden></button>
-        </div>
-        <div>
-          <h3>Taken by the most languages</h3>
-          <ol id="taken-list" class="ranked"></ol>
-          <button type="button" id="taken-more" class="more" hidden></button>
-        </div>
-      </div>
+    <section id="bridges" aria-labelledby="bridges-title">
+      <h2 id="bridges-title">Bridge languages</h2>
+      <p id="bridges-note" class="note"></p>
+      <ul id="bridges-list" class="rows plain"></ul>
+      <button type="button" id="bridges-more" class="more" hidden></button>
     </section>
   </div>
 </main>
 
 <footer id="site-footer"></footer>
 
-<script src="data/fonte.js?v=202610181712"></script>
-<script src="data/lingue.js?v=202610181712"></script>
-<script src="data/coppie_elenco.js?v=202610181712"></script>
-<script src="js/common.js?v=202610181712"></script>
-<script src="js/stats.js?v=202610181712"></script>
+<script src="data/fonte.js?v=202610181757"></script>
+<script src="data/lingue.js?v=202610181757"></script>
+<script src="data/coppie_elenco.js?v=202610181757"></script>
+<script src="js/common.js?v=202610181757"></script>
+<script src="js/stats.js?v=202610181757"></script>
 </body>
 </html>

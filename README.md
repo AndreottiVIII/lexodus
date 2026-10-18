@@ -2,16 +2,20 @@
 
 A static website that shows, for 33 languages of Europe and its neighbours, which languages each one **took words from** and which languages **took words from it**, based on the etymologies written in English Wiktionary. Any of the 33 languages can be put at the centre (Italian is the default).
 
+Menu (same in every page): **Languages · Search · Explore ▾ · Statistics · About**. "Explore" is a drop-down made with a `<details>` element (no library; it also closes on a click outside or on Escape) with the six pages below; on a phone the menu is stacked.
+
 Pages:
-- `index.html` — a 33×33 grid (rows: the language that took the words; columns: the language it took them from, plus "Latin" and "other"), with a switch first level / second level. Every square opens its list of words.
+- `index.html` — a 33×33 grid (rows: the language that took the words; columns: the language it took them from, plus "Latin" and "other"), with a switch first level / second level. Every square opens its list of words. The five tones are on a log scale from 1 to the 95th percentile of the squares, so Romanian ← French (28,664) does not flatten the rest; the squares above stay in the darkest tone.
 - `languages.html` — the 33 languages with their Wiktionary coverage, the 3 languages each took most words from, and a search by name.
 - `search.html?q=caffè` — a word in all 33 languages (as written, transliterated or by English meaning), grouped by language; only the index file of the letter typed is read.
 - `tree.html?lang=it&w=caffè&n=1` — the tree of a word: furthest origin at the top, the steps down to the word, then the languages that took it, recursively; one more tree for each other etymology of the same spelling.
-- `stats.html` — hidden donors, bridge languages, given and received, most travelled words.
-- `language.html?code=it` — one language: two lists, "Took from" and "Gave to". Each row: language, number of words, a thin bar, category, 5 example words. Clicking a row opens the step before for the same words. Every number is a link to its list of words.
+- `stats.html` — two sections only: given and received, bridge languages.
+- `language.html?code=it` — one language: two lists, "Took from" and "Gave to". Each row: language, number of words, a thin bar, category, 5 example words. Clicking a row opens the step before for the same words. Every number is a link to its list of words. Below, two blocks closed by default (from `lingua_extra/<code>.json`): "Farthest origins" (n, the languages it came through most, 5 examples; reconstructed origins in a list apart) and "Most travelled words in <language>" (10 words with the chain in one line, link to the tree). `language.html?code=ro#romanian-note` shows the note on Romanian.
+- Explore: `hidden.html?lang=bg` (hidden donors of one language: origin, direct words, words through another language, share, the languages in between; every number opens its list), `travelled.html?lang=fi` (the 10 of one language, the 100 longest ways, the 100 words taken by the most languages), `doublets.html?lang=it` (pairs of doublets side by side, with a search box), `roundtrips.html?lang=it` (words that went out and came back, the language highlighted twice in the chain), `families.html` (the most widespread families (600, roots always attested languages; any ending in a proto-language would be hidden); a family opens onto its words language by language), `compare.html?a=fr&b=it` (what each took from the other, shared origins, words through each other).
+- **Romanian** stays visible (page, grid, lists) but is left out of statistics and rankings as a language that took words, with a one-sentence note (`nota_esclusione` / `nota_romeno` of the export) linking to its page.
 - `words.html?to=sq&from=LATINO[&via=grc][&cat=learned]` — the words of one pair of languages (optionally only those that had come from `via` one step before): word, meaning, where from, category, "?" when uncertain or with more than one possible origin. Category filters, search, 50 per page. Also `words.html?to=it&via=ar` (second level of the grid, whatever the direct language) and `words.html?to=it&from=other` (the "other" column).
 - `word.html?lang=it&w=caffè&n=1[&from=ota]` — one word: meaning, the way it came step by step (one row per language, down to the furthest origin; possible origins side by side with "or"), the start of the Wiktionary etymology with a link to the entry, and the languages that took it afterwards.
-- `about.html` — method, categories, limits.
+- `about.html` — what this is, where the data comes from, how a word's path is read, what the numbers are, what is left out, known limits, how the site is built, credits (with an index at the top).
 
 No build step and no libraries: plain HTML, CSS and JavaScript with system fonts. The home, the languages and the language pages also open by double-clicking `index.html` (their data is also shipped as `data/*.js`, because browsers block `fetch()` on local files); lists of words, word pages, search, trees and statistics read their files with `fetch()`, so they need a web server (GitHub Pages, or the local server below).
 
@@ -32,9 +36,10 @@ The official export of `rete-prestiti` (mandates 05 and 07), copied by `scripts/
 - `coppie/<arrivo>/<origine>.json`, `<origine>__<livello2>.json`, `LATINO.json`, `_alternative.json`, `_indice.json`: the words of each pair of languages (mandate 07). File name = the code with every character outside `A-Za-z0-9_-` replaced by `_`, except the few codes in `coppie/_eccezioni_nomi.json`.
 - Built by `aggiorna_dati.py` from `coppie/`: `coppie_elenco.json` (which pair files exist, so a number is a link only when its list exists; `_via` and `_altre` for the grid files). "Then taken by other languages" on the word page reads the first level of `giu` in `alberi/` (the old `dati_a/` is gone).
 - Mandate 09: `coppie/<arrivo>/__via_<livello2>.json` and `__altre.json` (the squares of the grid), `indice/<letter>.json` + `indice/_meta.json` (search index: `p` word, `n` normalised, `l` language, `ne` etymology number, `s` meaning, `t` transliteration, `c` category, `o` direct language), `alberi/<lang>/<letter>.json` (trees, key `word|n_etimologia`: `su`, `giu`, `radici_altre`, `troncato`), `statistiche.json` (`donatori_nascosti`, `lingue_di_passaggio`, `bilancio`, `parole_viaggiate`, each with a `nota`). Transliteration (`traslitterazione`) is in every word and chain step.
+- Mandate 11: `statistiche.json` again (Romanian out: `escluse`, `nota_esclusione`; hidden donors with `quota`; `parole_viaggiate.per_lingua`), `lingua_extra/<code>.json` (`origini_lontane`, `origini_ricostruite`, `piu_viaggiate`, `nota_romeno`), `doppioni/<code>.json`, `andate_tornate/<code>.json`, `famiglie.json`, `confronto/<A>__<B>.json` (A before B alphabetically, 528 files). The pages accept a list either as it is or inside a block `{nota, lista}`.
 - `storie.json` (not used), `fonte.json`. The small files also exist as `.js`.
 
-`parole/<codice>.json` is **not** copied (the pair files replace it). `data/` is about 630 MB (authorised; `aggiorna_dati.py` stops if `coppie/` goes over 700 MB).
+`parole/<codice>.json` and `dati_a/` are **not** copied (the pair files and the trees replace them). `aggiorna_dati.py` stops, copying nothing, if what the site uses (the export without `parole/` and `dati_a/`) goes over 800 MB (authorised 18/10/2026).
 
 ### Version number (browser cache)
 
@@ -73,9 +78,10 @@ then http://localhost:8790. Or just open `index.html`.
 
 ## Files
 
-- `index.html`, `languages.html`, `language.html`, `words.html`, `word.html`, `search.html`, `tree.html`, `stats.html`, `about.html` — pages.
+- `index.html`, `languages.html`, `language.html`, `words.html`, `word.html`, `search.html`, `tree.html`, `stats.html`, `about.html` — pages. The header with the menu is the same in every page (if a page is added, copy it from another one).
+- `hidden.html`, `travelled.html`, `doublets.html`, `roundtrips.html`, `families.html`, `compare.html` — the Explore pages, each with its `js/<name>.js`.
 - `css/style.css` — the only stylesheet: black on white, one dark blue for bars and links.
-- `js/common.js` — data loading and normalisation, categories, Latin merging, filters, footer. `js/home.js` — the grid. `js/language.js` — language page. `js/words.js` — list of words. `js/word.js` — word page. `js/languages.js`, `js/search.js`, `js/tree.js`, `js/stats.js` — the pages of the same name.
+- `js/common.js` — data loading and normalisation, categories, Latin merging, filters, footer, the Explore menu, the Romanian note, chains in one line. `js/home.js` — the grid. `js/language.js` — language page. `js/words.js` — list of words. `js/word.js` — word page. `js/languages.js`, `js/search.js`, `js/tree.js`, `js/stats.js` — the pages of the same name.
 - `scripts/versione.py` — new version number on every css, js and data file (run before every publication).
 - `scripts/aggiorna_dati.py` — copy the export into `data/` and build the index of pair files (`--solo-indici` only rebuilds it). (The scripts that built the first sample from the CSV tables were removed; they are in the git history.)
 - `docs/screenshots/` — screenshots from the check of 18/10/2026.

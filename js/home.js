@@ -2,8 +2,23 @@
 (function () {
   "use strict";
   var L = window.Lex;
-  // Five tones of blue, by order of magnitude (Davide, 18/10/2026: darker where the words are more).
+  // Five tones of blue on a log scale from 1 to the 95th percentile of the squares of the grid (Davide, 18/10/2026):
+  // the few squares above it (Romanian ← French, 28,664) stay in the darkest tone and do not flatten the others.
   var STEPS = [1, 10, 100, 1000, 10000];
+  function nice(v) {
+    if (v <= 1) return 1;
+    var e = Math.pow(10, Math.floor(Math.log10(v))), m = v / e;
+    return (m < 1.5 ? 1 : m < 2.5 ? 2 : m < 4 ? 3 : m < 7.5 ? 5 : 10) * e;
+  }
+  function scale(data) {
+    var vals = [];
+    Object.keys(data).forEach(function (r) { Object.keys(data[r]).forEach(function (c) { if (c !== r && data[r][c] > 0) vals.push(data[r][c]); }); });
+    vals.sort(function (a, b) { return a - b; });
+    var p95 = vals.length ? vals[Math.floor(0.95 * (vals.length - 1))] : 10000;
+    var out = [1];
+    for (var i = 1; i < 5; i++) out.push(Math.max(out[i - 1] + 1, nice(Math.pow(p95, i / 5))));
+    return { steps: out, p95: p95 };
+  }
   function tone(v) { var t = 0; STEPS.forEach(function (s, i) { if (v >= s) t = i + 1; }); return t; }
   function compact(v) { return v >= 1000 ? Math.round(v / 1000) + "k" : String(v); }
   function el(id) { return document.getElementById(id); }
@@ -43,6 +58,9 @@
 
     function draw() {
       var data = (level === "1" ? g.primo_livello : g.secondo_livello) || {};
+      var sc = scale(data);
+      STEPS = sc.steps;
+      legend(sc);
       var html = '<thead><tr><th scope="col" class="corner"><span>took ↓ from →</span></th>' + cols.map(headCell).join("") + "</tr></thead><tbody>";
       rows.forEach(function (r) {
         var line = data[r.code] || {};
@@ -60,14 +78,15 @@
           else if (level === "1") { if (L.hasPair(pairs, r.code, c.code)) href = L.wordsUrl(r.code, c.code); }
           else if (L.hasGridFile(pairs, r.code, "_via", c.code)) href = L.viaUrl(r.code, c.code);
           html += '<td class="t' + t + x + '"><a href="' + href + '" title="' + L.esc(cap) + '" data-cap="' + L.esc(cap) + '">' +
-            (t >= 4 ? compact(v) : '<span class="visually-hidden">' + L.n(v) + "</span>") + "</a></td>";
+            (v >= 1000 ? compact(v) : '<span class="visually-hidden">' + L.n(v) + "</span>") + "</a></td>";
         });
         html += "</tr>";
       });
       el("grid").innerHTML = html + "</tbody>";
-      el("grid-explain").textContent = level === "1"
+      el("grid-explain").innerHTML = (level === "1"
         ? "Rows: the language that took the words. Columns: the language it took them from directly. Borrowed, learned Latin and calque only. Click a square for the list of words, a name for its page."
-        : "Second level: the language the words had come from one step before the direct one, whatever the direct one was (Italian caffè: Ottoman Turkish first, Arabic second). Click a square for the list of words, a name for its page.";
+        : "Second level: the language the words had come from one step before the direct one, whatever the direct one was (Italian caffè: Ottoman Turkish first, Arabic second). Click a square for the list of words, a name for its page.") +
+        ' Romanian is a case apart: its editors credit French with almost every learned word (<a href="' + L.RO_LINK + '">see the note</a>).';
     }
 
     el("grid").addEventListener("mouseover", show);
@@ -76,10 +95,17 @@
       var a = e.target.closest("a[data-cap]");
       el("grid-status").textContent = a ? a.dataset.cap + "." : " ";
     }
+    function legend(sc) {
+      var st = sc.steps, labels = [];
+      for (var i = 0; i < 5; i++) {
+        labels.push(i < 4 ? (st[i + 1] - 1 > st[i] ? L.n(st[i]) + "–" + L.n(st[i + 1] - 1) : L.n(st[i])) : L.n(st[4]) + " or more");
+      }
+      el("grid-legend").innerHTML = "Words: " + labels.map(function (t, i) {
+        return '<span class="key"><i class="t' + (i + 1) + '"></i>' + t + "</span>";
+      }).join("") + " The tones go up to the 95th percentile of the squares (" + L.n(sc.p95) + "); the few above it stay in the darkest tone." +
+        " “Other” = every language outside the 33 except Latin (Ancient Greek, Old French, Ottoman Turkish…). Numbers are those of English Wiktionary.";
+    }
     el("level-switch").addEventListener("change", function (e) { level = e.target.value; draw(); });
-    el("grid-legend").innerHTML = "Words: " + ["1–9", "10–99", "100–999", "1,000–9,999", "10,000 or more"].map(function (t, i) {
-      return '<span class="key"><i class="t' + (i + 1) + '"></i>' + t + "</span>";
-    }).join("") + ' · “other” = every language outside the 33 except Latin (Ancient Greek, Old French, Ottoman Turkish…). Numbers are those of English Wiktionary.';
     draw();
     el("grid-block").hidden = false;
   }).catch(function (e) {

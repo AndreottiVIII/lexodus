@@ -7,7 +7,9 @@
 
 It copies lingue.json, archi.json, livello2.json, storie.json, griglia.json, the folder coppie/
 (one file per pair of languages, mandate 07; with __via_*.json and __altre.json, mandate 09), the search
-index indice/, the trees alberi/, statistiche.json (mandate 09) and the export README (as data/README_export.md),
+index indice/, the trees alberi/, statistiche.json (mandate 09), the files of the Explore pages and of the
+language page (mandate 11: lingua_extra/, doppioni/, andate_tornate/, confronto/, famiglie.json) and the
+export README (as data/README_export.md),
 and writes the .js twins of the small files so the home and the language pages also open from a
 local file (browsers block fetch() on file://). Then it builds one index from data/coppie/:
 
@@ -17,7 +19,8 @@ local file (browsers block fetch() on file://). Then it builds one index from da
   only turns a number into a link when its list of words exists;
 (data/dati_a/ is no longer built: the word page reads "Then taken by" from the trees, alberi/, field "giu".)
 
-coppie/ is copied only if it stays under 700 MB (authorised 18/10/2026: the whole data/ is about 600 MB); parole/ only with --parole and under 100 MB.
+Nothing is copied if what the site uses (the export without parole/ and dati_a/) is over 800 MB (authorised
+18/10/2026); parole/ only with --parole and under 100 MB.
 At the end it sets a new version number on the pages (scripts/versione.py).
 Nothing in rete-prestiti changes.
 """
@@ -34,7 +37,10 @@ DATA = os.path.normpath(os.path.join(QUI, "..", "data"))
 EXPORT = os.path.normpath(os.path.join(QUI, "..", "..", "rete-prestiti", "risultati", "export"))
 FILES = ("lingue", "archi", "livello2", "storie", "griglia")
 MAX_PAROLE = 100 * 1024 * 1024
-MAX_COPPIE = 700 * 1024 * 1024
+MAX_TOTALE = 800 * 1024 * 1024
+FOLDERS = ("indice", "alberi", "lingua_extra", "doppioni", "andate_tornate", "confronto")
+SINGLE = ("statistiche", "famiglie")
+NOT_COPIED = ("parole", "dati_a")
 
 
 def gemello_js(nome, testo, data=None):
@@ -104,8 +110,11 @@ def main(export, con_parole):
     if mancanti:
         sys.exit("Missing in %s: %s. Nothing copied." % (export, ", ".join(mancanti)))
     mb_coppie = peso(os.path.join(export, "coppie")) / 1024 / 1024
-    if mb_coppie * 1024 * 1024 > MAX_COPPIE:
-        sys.exit("coppie/ is %.0f MB, over 700 MB: nothing copied. Write it in the JOURNAL." % mb_coppie)
+    totale = sum(peso(os.path.join(export, d)) if os.path.isdir(os.path.join(export, d)) else os.path.getsize(os.path.join(export, d))
+                 for d in os.listdir(export) if d not in NOT_COPIED)
+    if totale > MAX_TOTALE:
+        sys.exit("the export without parole/ and dati_a/ is %.0f MB, over 800 MB: nothing copied. Write it in the JOURNAL." % (totale / 1024 / 1024))
+    print("export without parole/ and dati_a/: %.0f MB" % (totale / 1024 / 1024))
     os.makedirs(DATA, exist_ok=True)
     for nome in FILES:
         src = os.path.join(export, nome + ".json")
@@ -120,8 +129,8 @@ def main(export, con_parole):
         shutil.rmtree(dest)
     shutil.copytree(os.path.join(export, "coppie"), dest)
     print("copied coppie/ (%.0f MB)" % mb_coppie)
-    # mandate 09: search index, trees, statistics (copied when they are in the export)
-    for cartella in ("indice", "alberi"):
+    # mandates 09 and 11: search index, trees, Explore pages, language page (copied when they are in the export)
+    for cartella in FOLDERS:
         src, d = os.path.join(export, cartella), os.path.join(DATA, cartella)
         if os.path.isdir(src):
             if os.path.isdir(d):
@@ -130,13 +139,14 @@ def main(export, con_parole):
             print("copied %s/ (%.0f MB)" % (cartella, peso(d) / 1024 / 1024))
         else:
             print("NOT in the export: %s/ (the site keeps what is in data/)" % cartella)
-    src = os.path.join(export, "statistiche.json")
-    if os.path.isfile(src):
-        json.load(open(src, encoding="utf-8"))
-        shutil.copyfile(src, os.path.join(DATA, "statistiche.json"))
-        print("copied statistiche.json")
-    else:
-        print("NOT in the export: statistiche.json (the site keeps what is in data/)")
+    for nome in SINGLE:
+        src = os.path.join(export, nome + ".json")
+        if os.path.isfile(src):
+            json.load(open(src, encoding="utf-8"))
+            shutil.copyfile(src, os.path.join(DATA, nome + ".json"))
+            print("copied %s.json" % nome)
+        else:
+            print("NOT in the export: %s.json (the site keeps what is in data/)" % nome)
     if os.path.isfile(os.path.join(export, "README.md")):
         shutil.copyfile(os.path.join(export, "README.md"), os.path.join(DATA, "README_export.md"))
     parole = os.path.join(export, "parole")
