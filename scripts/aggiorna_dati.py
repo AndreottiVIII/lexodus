@@ -6,12 +6,14 @@
     python -I -X utf8 scripts/aggiorna_dati.py --solo-indici   # only rebuild the two indexes below
 
 It copies lingue.json, archi.json, livello2.json, storie.json, griglia.json, the folder coppie/
-(one file per pair of languages, mandate 07) and the export README (as data/README_export.md),
+(one file per pair of languages, mandate 07; with __via_*.json and __altre.json, mandate 09), the search
+index indice/, the trees alberi/, statistiche.json (mandate 09) and the export README (as data/README_export.md),
 and writes the .js twins of the small files so the home and the language pages also open from a
 local file (browsers block fetch() on file://). Then it builds two indexes from data/coppie/:
 
 - data/coppie_elenco.json (+ .js): which pair files exist, {arrivo: {origine: [livello2, ...]}} (file names
-  without .json), plus "_eccezioni" (code -> file name, from coppie/_eccezioni_nomi.json), so the site
+  without .json; "_via": [livello2, ...] for the files __via_<livello2>.json, "_altre": [] when __altre.json
+  exists, "_alternative": [] when _alternative.json exists), plus "_eccezioni" (code -> file name, from coppie/_eccezioni_nomi.json), so the site
   only turns a number into a link when its list of words exists;
 - data/dati_a/<codice>.json: for each of the 33 languages, the words it gave, keyed by the word as
   written in the language that took it ("termine_origine"): {termine: [[arrivo, parola, n_etimologia], ...]}.
@@ -79,6 +81,12 @@ def costruisci_indici(data=DATA):
             voce[o].append(v)
         if os.path.isfile(os.path.join(cartella, "_alternative.json")):
             voce["_alternative"] = []
+        # grid files (mandate 09): __via_<livello2>.json and __altre.json
+        via = sorted(f[len("__via_"):-5] for f in os.listdir(cartella) if f.startswith("__via_") and f.endswith(".json"))
+        if via:
+            voce["_via"] = via
+        if os.path.isfile(os.path.join(cartella, "__altre.json")):
+            voce["_altre"] = []
         elenco[arrivo] = voce
         for o in primo:
             if o not in dati_a or o == arrivo:
@@ -126,6 +134,23 @@ def main(export, con_parole):
         shutil.rmtree(dest)
     shutil.copytree(os.path.join(export, "coppie"), dest)
     print("copied coppie/ (%.0f MB)" % mb_coppie)
+    # mandate 09: search index, trees, statistics (copied when they are in the export)
+    for cartella in ("indice", "alberi"):
+        src, d = os.path.join(export, cartella), os.path.join(DATA, cartella)
+        if os.path.isdir(src):
+            if os.path.isdir(d):
+                shutil.rmtree(d)
+            shutil.copytree(src, d)
+            print("copied %s/ (%.0f MB)" % (cartella, peso(d) / 1024 / 1024))
+        else:
+            print("NOT in the export: %s/ (the site keeps what is in data/)" % cartella)
+    src = os.path.join(export, "statistiche.json")
+    if os.path.isfile(src):
+        json.load(open(src, encoding="utf-8"))
+        shutil.copyfile(src, os.path.join(DATA, "statistiche.json"))
+        print("copied statistiche.json")
+    else:
+        print("NOT in the export: statistiche.json (the site keeps what is in data/)")
     if os.path.isfile(os.path.join(export, "README.md")):
         shutil.copyfile(os.path.join(export, "README.md"), os.path.join(DATA, "README_export.md"))
     parole = os.path.join(export, "parole")

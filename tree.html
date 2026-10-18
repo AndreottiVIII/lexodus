@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tree — lexodus</title>
+<meta name="description" content="Where a word came from, step by step, and the languages that took it afterwards, from English Wiktionary.">
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="css/style.css?v=202610181703">
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="index.html">lexodus</a>
+  <nav aria-label="Main">
+    <a href="languages.html">Languages</a>
+    <a href="search.html">Search</a>
+    <a href="stats.html">Statistics</a>
+    <a href="about.html">About</a>
+  </nav>
+</header>
+
+<main>
+  <p id="loading">Loading&hellip;</p>
+  <div id="app" hidden>
+    <div>
+      <h1 id="title"></h1>
+      <p id="sub" class="note"></p>
+    </div>
+    <p class="note">From the top: the furthest origin, the steps down to the word, then the languages that took it, and those that took it from them. Each line says how the word got there.</p>
+    <div id="trees"></div>
+    <p><a id="search-again" href="search.html">Search another word</a></p>
+  </div>
+</main>
+
+<footer id="site-footer"></footer>
+
+<script src="data/fonte.js?v=202610181703"></script>
+<script src="data/lingue.js?v=202610181703"></script>
+<script src="js/common.js?v=202610181703"></script>
+<script src="js/tree.js?v=202610181703"></script>
+</body>
+</html>

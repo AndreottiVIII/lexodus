@@ -3,7 +3,7 @@
   "use strict";
   // Version of the site, added to every file read with fetch() so browsers do not keep old copies.
   // Set together with the "?v=" in the pages by scripts/versione.py (also run by aggiorna_dati.py).
-  var VERSION = "20261018c";
+  var VERSION = "202610181703";
   function withVersion(path) { return path + (path.indexOf("?") < 0 ? "?" : "&") + "v=" + VERSION; }
 
   var CATS = [
@@ -93,6 +93,19 @@
     if (!o) return false;
     return !via || o.indexOf(via) >= 0;
   }
+  // Grid files (mandate 09): coppie/<arrivo>/__via_<livello2>.json and __altre.json, listed in
+  // coppie_elenco[arrivo]._via (the livello2 file codes) and coppie_elenco[arrivo]._altre.
+  function hasGridFile(list, to, kind, code) {
+    var t = list && list[fileCode(to)];
+    if (!t || !t[kind]) return false;
+    return kind === "_altre" || t[kind].indexOf(fileCode(code)) >= 0;
+  }
+  function gridPath(to, from, via) {
+    return "data/coppie/" + fileCode(to) + "/" + (from === "other" ? "__altre" : "__via_" + fileCode(via)) + ".json";
+  }
+  function viaUrl(to, via, cat) {
+    return "words.html?to=" + encodeURIComponent(to) + "&via=" + encodeURIComponent(via) + (cat ? "&cat=" + encodeURIComponent(cat) : "");
+  }
   function wordsUrl(to, from, via, cat) {
     return "words.html?to=" + encodeURIComponent(to) + "&from=" + encodeURIComponent(from) +
       (via ? "&via=" + encodeURIComponent(via) : "") + (cat ? "&cat=" + encodeURIComponent(cat) : "");
@@ -127,6 +140,60 @@
     return String(key || "").replace(/_/g, " ");
   }
   function fold(s) { return String(s || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase(); }
+  // Normalised form as in the search index (data/README_export.md, "Normalizzazione"): lower case, NFD, without
+  // combining marks, special letters replaced (tabella_lettere of indice/_meta.json, copied here), no apostrophes.
+  var LETTER_TABLE = {"\u0111": "d", "\u00f0": "d", "\u0142": "l", "\u00f8": "o", "\u00e6": "ae", "\u0153": "oe", "\u00df": "ss", "\u00fe": "th", "\u0127": "h", "\u0131": "i", "\u014b": "n", "\u0138": "k", "\u0259": "e", "\u025b": "e", "\u0254": "o", "\u0283": "sh", "\u0292": "zh", "'": "", "\u2019": "", "\u2018": "", "\u02bb": "", "\u02bc": "", "\u02be": "", "\u02bf": "", "\u02b9": "", "\u02ba": "", "`": ""};
+  function setLetterTable(t) { if (t) LETTER_TABLE = t; }
+  function norm(s) {
+    return String(s || "").toLowerCase().normalize("NFD").replace(/\p{Mn}/gu, "")
+      .replace(/./gu, function (c) { return LETTER_TABLE[c] !== undefined ? LETTER_TABLE[c] : c; });
+  }
+  // squash() also drops spaces, hyphens and other non-letters, so "caffe latte" and "caffelatte" meet.
+  function squash(s) { return norm(s).replace(/[^\p{L}\p{N}]/gu, ""); }
+
+  // Transliteration next to a word in a non-Latin script: "qahwa" in brackets. Nothing when missing.
+  function tr(t, word) {
+    if (!t || t === word) return "";
+    return ' <span class="tr">(' + esc(t) + ")</span>";
+  }
+
+  // Search index and trees (mandate 09, data/README_export.md): files are named after the "letter" of the
+  // normalised word n = first character of n if a-z, otherwise "_". n uses the transliteration when the word
+  // is not in Latin letters and has one. "_" is split into one file per language (indice/_ar.json, _ru.json…);
+  // a letter over 5 MB would be split by "prefisso" (none on 18/10/2026, handled anyway).
+  function letterOf(n) { var c = String(n || "").charAt(0); return /[a-z]/.test(c) ? c : "_"; }
+  function isLatinScript(s) {
+    var letters = String(s || "").match(/\p{L}/gu) || [];
+    return letters.every(function (c) { return /\p{Script=Latin}/u.test(c); });
+  }
+  // The tree file letter of a word: from its transliteration when it is not in Latin letters.
+  function treeLetter(w, t) { return letterOf(norm(!isLatinScript(w) && t ? t : w)); }
+  function treeUrl(lang, w, n, t) {
+    var f = treeLetter(w, t);
+    return "tree.html?lang=" + encodeURIComponent(lang) + "&w=" + encodeURIComponent(w) + "&n=" + encodeURIComponent(n || 1) +
+      (f !== letterOf(norm(w)) ? "&f=" + encodeURIComponent(f) : "");
+  }
+  // indice/_meta.json: "lettere" {letter: [paths]} and "file" [{file, lettera, prefisso, lingua}].
+  function indexFiles(n, meta) {
+    var L0 = letterOf(n), list = (meta.lettere && meta.lettere[L0]) || [];
+    if (L0 === "_" || list.length < 2) return list;
+    var byFile = {};
+    (meta.file || []).forEach(function (x) { byFile[x.file] = x; });
+    var hit = list.filter(function (p) {
+      var pre = byFile[p] && byFile[p].prefisso;
+      if (!pre) return false;
+      var key = n.slice(0, pre.length).replace(/[^a-z]/g, "_");
+      while (key.length < pre.length) key += "_";
+      return key === pre;
+    });
+    return hit.length ? hit : list;
+  }
+  // The "_" file of one language.
+  function indexFileOfLang(meta, lang) {
+    var x = (meta.file || []).filter(function (o) { return o.lettera === "_" && o.lingua === lang; })[0];
+    return x ? x.file : null;
+  }
+  function indexRows(d) { return Array.isArray(d) ? d : (d && (d.righe || d.parole)) || []; }
   function wiktUrl(word, langName) {
     return "https://en.wiktionary.org/wiki/" + encodeURIComponent(String(word).replace(/ /g, "_")) + "#" + encodeURIComponent(String(langName).replace(/ /g, "_"));
   }
@@ -210,7 +277,10 @@
     CATS: CATS, CAT_BY_KEY: CAT_BY_KEY, TYPE_LABEL: TYPE_LABEL, NOTES: NOTES,
     load: load, isLanguage: isLanguage, isLatin: isLatin, key: key, latinVarieties: latinVarieties,
     fileCode: fileCode, pairCode: pairCode, pairPath: pairPath, hasPair: hasPair, wordsUrl: wordsUrl, wordUrl: wordUrl,
+    hasGridFile: hasGridFile, gridPath: gridPath, viaUrl: viaUrl,
     fetchJson: fetchJson, extra: extra, getRaw: getRaw, names: names, catLabel: catLabel, fold: fold, wiktUrl: wiktUrl, fetchFail: fetchFail,
-    n: n, esc: esc, param: param, coverageText: coverageText, filterBar: filterBar, footer: footer
+    n: n, esc: esc, param: param, coverageText: coverageText, filterBar: filterBar, footer: footer,
+    norm: norm, squash: squash, setLetterTable: setLetterTable, tr: tr, letterOf: letterOf, isLatinScript: isLatinScript, treeLetter: treeLetter,
+    treeUrl: treeUrl, indexFiles: indexFiles, indexFileOfLang: indexFileOfLang, indexRows: indexRows
   };
 })();

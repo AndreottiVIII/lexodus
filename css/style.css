@@ -158,3 +158,71 @@ input[type="checkbox"] { accent-color: var(--blue); margin: 0; }
   .step { grid-template-columns: 1fr auto; }
   .step .term { grid-column: 1 / -1; grid-row: 2; }
 }
+
+/* Transliteration next to a word in another script: "قهوة (qahwa)" */
+.tr { font-style: normal; font-weight: 400; color: var(--muted); }
+h3 { font-size: 1rem; margin: 0 0 6px; font-weight: 600; }
+
+/* Languages page */
+.lang-rows { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+.lang-rows li { padding: 12px 0; border-bottom: 1px solid var(--line); }
+.lang-rows .line { flex-wrap: wrap; gap: 2px 12px; }
+.took { margin-top: 4px; font-size: 0.92rem; overflow-wrap: anywhere; }
+
+/* Search page */
+.search-form { display: flex; gap: 8px; max-width: 30rem; }
+.search-form input { flex: 1; min-width: 0; font: inherit; padding: 7px 10px; border: 1px solid #999; background: var(--paper); color: var(--ink); }
+.search-form button { font: inherit; padding: 7px 14px; border: 1px solid var(--blue); background: var(--blue); color: #fff; cursor: pointer; }
+.results { display: grid; gap: 28px; }
+.result-lang { display: grid; gap: 4px; }
+.result-lang h2 { font-size: 1.05rem; }
+.result-lang ul, .ranked { list-style: none; margin: 0; padding: 0; }
+.result-lang li, .ranked li { padding: 7px 0; border-bottom: 1px solid var(--line); }
+.result-lang .line, .ranked .line { flex-wrap: wrap; gap: 2px 10px; }
+.result-lang a.w, .ranked a.w { font-weight: 600; overflow-wrap: anywhere; }
+.mean { color: var(--muted); font-size: 0.88rem; margin-top: 2px; overflow-wrap: anywhere; }
+
+/* Tree page: the trunk (furthest origin down to the word), then the branches (who took it) */
+.tree { display: grid; gap: 10px; max-width: 52rem; }
+.tree + .tree { margin-top: 28px; padding-top: 22px; border-top: 1px solid var(--line); }
+.trunk { list-style: none; margin: 0; padding: 0 0 0 4px; }
+.trunk > li { position: relative; padding: 6px 0 10px 22px; border-left: 2px solid var(--blue); }
+.trunk > li::before { content: ""; position: absolute; left: -7px; top: 12px; width: 12px; height: 12px; border-radius: 50%; background: var(--paper); border: 2px solid var(--blue); }
+.trunk > li:first-child::before { background: var(--blue); }
+.trunk > li.here-li { border-left-color: transparent; }
+.trunk > li + li.here-li::after { content: ""; position: absolute; left: -2px; top: 0; height: 14px; border-left: 2px solid var(--blue); }
+.trunk > li.here-li::before { background: var(--blue); top: 16px; }
+.node { overflow-wrap: anywhere; }
+.node .lang, .node .lang a { font-weight: 600; }
+.node .tw { font-size: 1.05rem; }
+.node .how, .node .page { font-size: 0.85rem; color: var(--muted); margin-left: 4px; }
+.node .page { white-space: nowrap; }
+.node a.page { color: var(--blue); }
+.node .mean { display: block; }
+.node.here { background: #eef2f8; padding: 6px 10px; }
+.node.here .tw { font-weight: 700; font-size: 1.25rem; }
+.branches { list-style: none; margin: 6px 0 0 4px; padding: 0; }
+.branches li { position: relative; padding: 5px 0 5px 22px; }
+.branches li::before { content: ""; position: absolute; left: 0; top: 0; width: 15px; height: calc(5px + 0.8em); border-left: 1px solid #888; border-bottom: 1px solid #888; }
+.branches li::after { content: ""; position: absolute; left: 0; top: 0; bottom: 0; border-left: 1px solid #888; }
+.branches li:last-child::after { display: none; }
+@media (max-width: 600px) {
+  .branches li { padding-left: 16px; }
+  .branches li::before { width: 11px; }
+}
+
+/* Statistics page */
+.stats { gap: 48px; }
+.stats section { display: grid; gap: 8px; min-width: 0; }
+.rows.plain .row { cursor: default; }
+.rows.plain .bar, .rows.plain .ex { margin-left: 0; font-style: normal; }
+.warn { font-size: 0.92rem; padding-left: 12px; border-left: 3px solid var(--blue); max-width: 68ch; }
+.numbers td:nth-child(n+2):nth-child(-n+4), .numbers th:nth-child(n+2):nth-child(-n+4) { text-align: right; font-variant-numeric: tabular-nums; }
+.ranked .num { margin-left: auto; font-variant-numeric: tabular-nums; font-size: 0.92rem; }
+@media (max-width: 600px) {
+  .numbers thead { display: table-header-group; }
+  .numbers { display: table; width: 100%; }
+  .numbers tbody { display: table-row-group; width: auto; }
+  .numbers tr { display: table-row; }
+  .numbers td { display: table-cell; padding: 6px 8px 6px 0; border-bottom: 1px solid var(--line); font-size: 0.88rem; }
+}

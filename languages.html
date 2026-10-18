@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Languages — lexodus</title>
+<meta name="description" content="The 33 languages of lexodus, with their coverage in English Wiktionary and the languages each one took most words from.">
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="css/style.css?v=202610181703">
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="index.html">lexodus</a>
+  <nav aria-label="Main">
+    <a href="languages.html" aria-current="page">Languages</a>
+    <a href="search.html">Search</a>
+    <a href="stats.html">Statistics</a>
+    <a href="about.html">About</a>
+  </nav>
+</header>
+
+<main>
+  <h1>The 33 languages</h1>
+  <p class="lead">For each language: how much of it English Wiktionary explains, and the three languages it took most words from (borrowed, learned Latin and calque; all varieties of Latin together).</p>
+  <p id="loading">Loading&hellip;</p>
+  <div id="app" hidden>
+    <label class="search"><span class="visually-hidden">Find a language</span><input type="search" id="q" placeholder="Find a language" autocomplete="off"></label>
+    <ul id="langs" class="lang-rows"></ul>
+    <p id="none" class="note" hidden>No language with this name.</p>
+  </div>
+</main>
+
+<footer id="site-footer"></footer>
+
+<script src="data/fonte.js?v=202610181703"></script>
+<script src="data/lingue.js?v=202610181703"></script>
+<script src="data/archi.js?v=202610181703"></script>
+<script src="data/livello2.js?v=202610181703"></script>
+<script src="js/common.js?v=202610181703"></script>
+<script src="js/languages.js?v=202610181703"></script>
+</body>
+</html>

@@ -3,13 +3,17 @@
 A static website that shows, for 33 languages of Europe and its neighbours, which languages each one **took words from** and which languages **took words from it**, based on the etymologies written in English Wiktionary. Any of the 33 languages can be put at the centre (Italian is the default).
 
 Pages:
-- `index.html` — a 33×33 grid (rows: the language that took the words; columns: the language it took them from, plus "Latin" and "other"), with a switch first level / second level; below it the 33 languages with their Wiktionary coverage.
+- `index.html` — a 33×33 grid (rows: the language that took the words; columns: the language it took them from, plus "Latin" and "other"), with a switch first level / second level. Every square opens its list of words.
+- `languages.html` — the 33 languages with their Wiktionary coverage, the 3 languages each took most words from, and a search by name.
+- `search.html?q=caffè` — a word in all 33 languages (as written, transliterated or by English meaning), grouped by language; only the index file of the letter typed is read.
+- `tree.html?lang=it&w=caffè&n=1` — the tree of a word: furthest origin at the top, the steps down to the word, then the languages that took it, recursively; one more tree for each other etymology of the same spelling.
+- `stats.html` — hidden donors, bridge languages, given and received, most travelled words.
 - `language.html?code=it` — one language: two lists, "Took from" and "Gave to". Each row: language, number of words, a thin bar, category, 5 example words. Clicking a row opens the step before for the same words. Every number is a link to its list of words.
-- `words.html?to=sq&from=LATINO[&via=grc][&cat=learned]` — the words of one pair of languages (optionally only those that had come from `via` one step before): word, meaning, where from, category, "?" when uncertain. Category filters, search, 50 per page.
+- `words.html?to=sq&from=LATINO[&via=grc][&cat=learned]` — the words of one pair of languages (optionally only those that had come from `via` one step before): word, meaning, where from, category, "?" when uncertain or with more than one possible origin. Category filters, search, 50 per page. Also `words.html?to=it&via=ar` (second level of the grid, whatever the direct language) and `words.html?to=it&from=other` (the "other" column).
 - `word.html?lang=it&w=caffè&n=1[&from=ota]` — one word: meaning, the way it came step by step (one row per language, down to the furthest origin; possible origins side by side with "or"), the start of the Wiktionary etymology with a link to the entry, and the languages that took it afterwards.
 - `about.html` — method, categories, limits.
 
-No build step and no libraries: plain HTML, CSS and JavaScript with system fonts. The home and the language pages also open by double-clicking `index.html` (their data is also shipped as `data/*.js`, because browsers block `fetch()` on local files); the lists of words and the word pages read `data/coppie/` with `fetch()`, so they need a web server (GitHub Pages, or the local server below).
+No build step and no libraries: plain HTML, CSS and JavaScript with system fonts. The home, the languages and the language pages also open by double-clicking `index.html` (their data is also shipped as `data/*.js`, because browsers block `fetch()` on local files); lists of words, word pages, search, trees and statistics read their files with `fetch()`, so they need a web server (GitHub Pages, or the local server below).
 
 ## Data
 
@@ -27,6 +31,7 @@ The official export of `rete-prestiti` (mandates 05 and 07), copied by `scripts/
 - `griglia.json`: the grid of the home (`primo_livello`, `secondo_livello`, the same `_tutte` with all categories, `altre_dettaglio`).
 - `coppie/<arrivo>/<origine>.json`, `<origine>__<livello2>.json`, `LATINO.json`, `_alternative.json`, `_indice.json`: the words of each pair of languages (mandate 07). File name = the code with every character outside `A-Za-z0-9_-` replaced by `_`, except the few codes in `coppie/_eccezioni_nomi.json`.
 - Built by `aggiorna_dati.py` from `coppie/`: `coppie_elenco.json` (which pair files exist, so a number is a link only when its list exists) and `dati_a/<codice>.json` (for each of the 33 languages, the words it gave, keyed by the word as written in the giving language; used by "Then taken by other languages").
+- Mandate 09: `coppie/<arrivo>/__via_<livello2>.json` and `__altre.json` (the squares of the grid), `indice/<letter>.json` + `indice/_meta.json` (search index: `p` word, `n` normalised, `l` language, `ne` etymology number, `s` meaning, `t` transliteration, `c` category, `o` direct language), `alberi/<lang>/<letter>.json` (trees, key `word|n_etimologia`: `su`, `giu`, `radici_altre`, `troncato`), `statistiche.json` (`donatori_nascosti`, `lingue_di_passaggio`, `bilancio`, `parole_viaggiate`, each with a `nota`). Transliteration (`traslitterazione`) is in every word and chain step.
 - `storie.json` (not used), `fonte.json`. The small files also exist as `.js`.
 
 `parole/<codice>.json` is **not** copied (the pair files replace it).
@@ -68,9 +73,9 @@ then http://localhost:8790. Or just open `index.html`.
 
 ## Files
 
-- `index.html`, `language.html`, `words.html`, `word.html`, `about.html` — pages.
+- `index.html`, `languages.html`, `language.html`, `words.html`, `word.html`, `search.html`, `tree.html`, `stats.html`, `about.html` — pages.
 - `css/style.css` — the only stylesheet: black on white, one dark blue for bars and links.
-- `js/common.js` — data loading and normalisation, categories, Latin merging, filters, footer. `js/home.js` — the grid. `js/language.js` — language page. `js/words.js` — list of words. `js/word.js` — word page.
+- `js/common.js` — data loading and normalisation, categories, Latin merging, filters, footer. `js/home.js` — the grid. `js/language.js` — language page. `js/words.js` — list of words. `js/word.js` — word page. `js/languages.js`, `js/search.js`, `js/tree.js`, `js/stats.js` — the pages of the same name.
 - `scripts/versione.py` — new version number on every css, js and data file (run before every publication).
 - `scripts/aggiorna_dati.py` — copy the export into `data/` and build the two indexes (`--solo-indici` only rebuilds the indexes). (The scripts that built the first sample from the CSV tables were removed; they are in the git history.)
 - `docs/screenshots/` — screenshots from the check of 18/10/2026.

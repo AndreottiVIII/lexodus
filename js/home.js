@@ -1,4 +1,4 @@
-/* lexodus — home: the 33×33 grid (who took from whom) and the list of the 33 languages. */
+/* lexodus — home: the 33×33 grid (who took from whom). The list of the languages is languages.html. */
 (function () {
   "use strict";
   var L = window.Lex;
@@ -11,14 +11,8 @@
   Promise.all([L.load(), L.extra("griglia"), L.extra("coppie_elenco")]).then(function (res) {
     var d = res[0], g = res[1], pairs = res[2] || {};
     L.footer(d.source);
-    el("langs").innerHTML = d.targets.map(function (l) {
-      return '<li><a href="language.html?code=' + encodeURIComponent(l.code) + '">' + L.esc(l.name) + "</a> <span class=\"note\">" + L.esc(L.coverageText(l)) + "</span></li>";
-    }).join("");
-    el("languages").hidden = false;
     el("loading").hidden = true;
-    // The list is shown before the grid is drawn: go to it again once the page has its final height.
-    function toList() { if (location.hash === "#languages") el("languages").scrollIntoView(); }
-    if (!g) { toList(); return; }
+    if (!g) throw new Error("data/griglia.json");
 
     var rows = g.lingue.map(function (l) { return { code: l.codice, name: (d.langs[l.codice] || {}).name || l.nome_en || l.codice }; })
       .sort(function (a, b) { return a.name.localeCompare(b.name, "en"); });
@@ -59,8 +53,12 @@
           var v = line[c.code] || 0;
           if (!v) { html += '<td class="zero' + x + '"></td>'; return; }
           var t = tone(v), cap = caption(r, c, v);
+          // A square opens its list of words when the file exists (mandate 09: second level = coppie/<row>/__via_<col>.json,
+          // "other" = coppie/<row>/__altre.json); otherwise the page of the language of the row.
           var href = "language.html?code=" + encodeURIComponent(r.code);
-          if (level === "1" && c.code !== "altre" && L.hasPair(pairs, r.code, c.code)) href = L.wordsUrl(r.code, c.code);
+          if (level === "1" && c.code === "altre") { if (L.hasGridFile(pairs, r.code, "_altre")) href = L.wordsUrl(r.code, "other"); }
+          else if (level === "1") { if (L.hasPair(pairs, r.code, c.code)) href = L.wordsUrl(r.code, c.code); }
+          else if (L.hasGridFile(pairs, r.code, "_via", c.code)) href = L.viaUrl(r.code, c.code);
           html += '<td class="t' + t + x + '"><a href="' + href + '" title="' + L.esc(cap) + '" data-cap="' + L.esc(cap) + '">' +
             (t >= 4 ? compact(v) : '<span class="visually-hidden">' + L.n(v) + "</span>") + "</a></td>";
         });
@@ -69,7 +67,7 @@
       el("grid").innerHTML = html + "</tbody>";
       el("grid-explain").textContent = level === "1"
         ? "Rows: the language that took the words. Columns: the language it took them from directly. Borrowed, learned Latin and calque only. Click a square for the list of words, a name for its page."
-        : "Second level: the language the words had come from one step before the direct one, whatever the direct one was (Italian caffè: Ottoman Turkish first, Arabic second). Click a square or a name for the language page.";
+        : "Second level: the language the words had come from one step before the direct one, whatever the direct one was (Italian caffè: Ottoman Turkish first, Arabic second). Click a square for the list of words, a name for its page.";
     }
 
     el("grid").addEventListener("mouseover", show);
@@ -84,7 +82,6 @@
     }).join("") + ' · “other” = every language outside the 33 except Latin (Ancient Greek, Old French, Ottoman Turkish…). Numbers are those of English Wiktionary.';
     draw();
     el("grid-block").hidden = false;
-    toList();
   }).catch(function (e) {
     el("loading").textContent = "The data could not be loaded (" + e.message + ").";
     console.error(e);

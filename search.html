@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Search — lexodus</title>
+<meta name="description" content="Search a word in all 33 languages of lexodus and see where it came from and who took it.">
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="css/style.css?v=202610181703">
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="index.html">lexodus</a>
+  <nav aria-label="Main">
+    <a href="languages.html">Languages</a>
+    <a href="search.html" aria-current="page">Search</a>
+    <a href="stats.html">Statistics</a>
+    <a href="about.html">About</a>
+  </nav>
+</header>
+
+<main>
+  <h1>Search a word</h1>
+  <p class="lead">In all 33 languages at once: type a word as it is written (accents do not matter), its transliteration (<i>qahwa</i>, <i>kafe</i>) or an English meaning. Click a word to see its tree.</p>
+  <form id="form" class="search-form" role="search">
+    <label for="q" class="visually-hidden">Word</label>
+    <input type="search" id="q" name="q" placeholder="caffè, zucchero, piano…" autocomplete="off" autocapitalize="off" spellcheck="false">
+    <button type="submit">Search</button>
+  </form>
+  <p id="status" class="note" aria-live="polite"></p>
+  <div id="results" class="results"></div>
+  <p id="all-line" hidden><button type="button" id="all" class="more"></button></p>
+</main>
+
+<footer id="site-footer"></footer>
+
+<script src="data/fonte.js?v=202610181703"></script>
+<script src="data/lingue.js?v=202610181703"></script>
+<script src="js/common.js?v=202610181703"></script>
+<script src="js/search.js?v=202610181703"></script>
+</body>
+</html>

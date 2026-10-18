@@ -6,13 +6,15 @@
 <title>About — lexodus</title>
 <meta name="description" content="Where the lexodus data comes from, what the categories mean, and what the numbers cannot tell.">
 <link rel="icon" href="data:,">
-<link rel="stylesheet" href="css/style.css?v=20261018c">
+<link rel="stylesheet" href="css/style.css?v=202610181703">
 </head>
 <body>
 <header class="top">
   <a class="brand" href="index.html">lexodus</a>
   <nav aria-label="Main">
-    <a href="index.html#languages">Languages</a>
+    <a href="languages.html">Languages</a>
+    <a href="search.html">Search</a>
+    <a href="stats.html">Statistics</a>
     <a href="about.html" aria-current="page">About</a>
   </nav>
 </header>
@@ -39,8 +41,12 @@
     <p>Each word is counted under the language it came from directly: Italian <i>caffè</i> under Ottoman Turkish. Opening a row shows the step before, for the same words: Ottoman Turkish had <i>caffè</i> from Arabic. The step before counts the same category as the row: under &ldquo;Ottoman Turkish · borrowed&rdquo; only the borrowed words. Steps inside one language (Middle English to English) are skipped. All Latin varieties are counted as one &ldquo;Latin&rdquo; unless you split them.</p>
 
     <h2>The grid and the words</h2>
-    <p>The grid on the first page has one row for each of the 33 languages (the one that took the words) and one column for each language it took them from, plus &ldquo;Latin&rdquo; (all varieties) and &ldquo;other&rdquo; (every other language). It counts borrowed, learned Latin and calque. The second level counts the language one step before the direct one.</p>
-    <p>Each number on a language page opens the list of its words, with the meaning (the first English definition in Wiktionary, cut at 120 characters) and where each word came from. Each word opens a page with its way, step by step, the start of its Wiktionary etymology and the languages that took it afterwards. Words with two or more possible origins are not in the lists; their page shows the possibilities side by side.</p>
+    <p>The grid on the first page has one row for each of the 33 languages (the one that took the words) and one column for each language it took them from, plus &ldquo;Latin&rdquo; (all varieties) and &ldquo;other&rdquo; (every other language). It counts borrowed, learned Latin and calque. The second level counts the language one step before the direct one. Every square opens its list of words.</p>
+    <p>Each number on a language page opens the list of its words, with the meaning (the first English definition in Wiktionary, cut at 120 characters) and where each word came from. Each word opens a page with its way, step by step, the start of its Wiktionary etymology and the languages that took it afterwards. Words with two or more possible origins are at the end of the lists with a &ldquo;?&rdquo;; their page shows the possibilities side by side. Words written in another script have their transliteration in brackets, as Wiktionary gives it: قهوة (qahwa).</p>
+
+    <h2>Search, trees and statistics</h2>
+    <p><a href="search.html">Search</a> looks for a word in all 33 languages at once, as written (accents do not matter), by transliteration or by English meaning. Each result opens its tree: at the top the furthest origin, then the steps down to the word, then the words of the 33 languages that took it, and below them those that took it from them (at most 4 levels and 60 words). When the same spelling has two etymologies in one language (English <i>piano</i>), each has its own tree.</p>
+    <p><a href="stats.html">Statistics</a> has four lists: hidden donors (languages that gave many words through another one, like Arabic to Bulgarian through Ottoman Turkish), bridge languages, words given and received by each language (which depends on how well Wiktionary covers it) and the words that travelled most.</p>
 
     <h2>Limits</h2>
     <ul>

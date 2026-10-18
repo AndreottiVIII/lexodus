@@ -127,3 +127,33 @@ Davide vedeva la home ferma su «Loading…» in Chrome: GitHub Pages fa tenere 
 
 ## 2026-10-18 — menu «Languages»
 «Languages» puntava alla home stessa e sembrava non fare nulla. Ora in tutte le pagine punta a `index.html#languages`: l'elenco delle 33 lingue sotto la griglia ha `id="languages"` e la home ci scorre anche dopo aver disegnato la griglia (il disegno spostava l'elenco più in basso). Il logo «lexodus» resta la home. Sopra la griglia c'è la riga «Jump to the list of languages», perché l'elenco sta sotto circa 1.300 px di griglia. Versione `20261018c`. Provato con Edge senza finestra: da una scheda parola, «Languages» porta all'elenco; anche la riga «Jump…» ci porta. Console pulita e prove complete rifatte senza errori.
+
+## 2026-10-18 sera — mandato 10: pagina Languages, ricerca con albero, statistiche, traslitterazione
+
+### Cosa è stato fatto
+- **Dati veri (export v3 del mandato 09), non il campione.** All'inizio (16:35) l'export nuovo non c'era: ho costruito le pagine su un campione mio nello stesso formato (script nella cartella temporanea, mai nel repo). L'export è comparso alle 16:54; ho aspettato che fosse fermo (754 MB, 23.620 file, invariato per un minuto) e l'ho copiato con `scripts/aggiorna_dati.py` alle 16:59. Poi ho adattato il codice al formato vero (letto in `data/README_export.md`). Quando ho copiato, nel JOURNAL di rete-prestiti non c'era ancora «Mandato 09 — esito».
+- `aggiorna_dati.py` copia anche `indice/`, `alberi/`, `statistiche.json` e mette in `coppie_elenco` i file `__via_*` (`_via`) e `__altre` (`_altre`). `data/` ora pesa 638 MB (coppie 406, alberi 109, indice 51), 23.577 file.
+- **Menu nuovo** in tutte le pagine: Languages, Search, Statistics, About. La home tiene titolo, riga di spiegazione e griglia; tolti l'elenco delle lingue e la riga «Jump to the list».
+- **`languages.html`**: le 33 lingue con la copertura in parole, le 3 lingue da cui hanno preso di più (prestito + latinismo + calco, latino unito, famiglie e protolingue escluse, come nella griglia; ogni nome apre l'elenco delle parole) e una casella per cercare per nome.
+- **`search.html?q=`**: una casella; legge `_meta.json` e solo il file della lettera cercata (normalizzazione dell'export: minuscole, senza accenti, `tabella_lettere`, senza apostrofi). Parola scritta in alfabeto non latino → tutti i file `_` (uno per lingua, 6,9 MB in tutto). Cerca sulla parola, sulla traslitterazione e sul significato inglese (nel file caricato); in fondo un pulsante per cercare il significato in tutto l'indice (59 file, 51 MB: solo a richiesta). Risultati per lingua (prima le lingue con la parola identica), 12 per lingua con «Show all»: parola (traslitterazione), «?» se incerta o con più ipotesi, categoria, lingua diretta, significato.
+- **`tree.html?lang=&w=&n=`** (più `&f=` quando la lettera del file viene dalla traslitterazione): in cima l'origine più lontana, le tappe in giù su una linea blu, la parola evidenziata, sotto i rami (righe rientrate con una linea grigia, un ramo per figlio, `giu` ricorsivo). Ogni nodo: lingua (link), parola (traslitterazione), come è arrivata in parola, «word page», significato in piccolo. `radici_altre` → un albero per ciascuna, titolo «Another origin of the same spelling». Senza librerie; su telefono i rami rientrano meno.
+- **`stats.html`**: Hidden donors (menu della lingua di arrivo, si ricorda in `?lang=`; numero del secondo livello = link all'elenco `__via_`), Bridge languages (prime 20, «Show all»), Given and received (tabella con copertura), Most travelled words (catene più lunghe e parole prese da più lingue, link all'albero). Ogni sezione mostra la `nota` del file (in inglese, con i nomi dei campi come li scrive l'export).
+- **Traslitterazione ovunque**: elenchi (parola e «From»), scheda parola (titolo e tappe), albero, ricerca, statistiche: «قهوه (kahve)». Se manca, solo l'originale.
+- **Parole con più ipotesi** negli elenchi con «?» e nella colonna «From» le ipotesi unite da «or»; nella scheda come prima. Nota sotto gli elenchi e About aggiornati.
+- **Griglia**: ogni casella del secondo livello apre `words.html?to=X&via=Y` (`__via_Y.json`), ogni casella «other» `words.html?to=X&from=other` (`__altre.json`). Controllo: 642 caselle di secondo livello e 689 di primo livello, tutte con il loro file.
+- **Scheda parola**: legge `testo` dal file della coppia semplice (`catena[0].codice`) quando la parola arriva da LATINO, `__via_` o `__altre`; link «See the whole tree».
+- About e README aggiornati. Versione `202610181703`.
+
+### Verifica (Edge senza finestra, server locale, cache spenta; 53 controlli, console pulita in ogni pagina)
+Menu Languages → pagina (33 righe; italiano «Latin 4,400 · English 1,106 · French 1,054») → italiano. Search «caffè» → 13 parole in 4 lingue → albero con Arabic in cima, poi Ottoman Turkish, Italian, e sotto English, French, Icelandic, Dutch (e i loro discendenti, 28 parole). «zucchero» → 7 tappe sopra. «piano» → inglese con due alberi. «кафе» → bulgaro, russo, ucraino, serbo-croato, albero di кафе (kafé) anche senza `&f=`; «qahwa» → arabo e persiano. Statistics → Bulgarian: Arabic 104 al secondo livello, 5 diretti, via Ottoman Turkish 94. Griglia → casella di secondo livello (Albanian ← … ← Arabic, 110 parole) → scheda con testo e albero; casella «other» (Albanian ← other languages, 2.405). Telefono 375 px: nessuno scorrimento di lato in languages, search, tree, stats, words. Screenshot nuovi: `languages.png`, `search.png`, `tree-caffe.png`, `tree-caffe-phone.png`, `stats.png`.
+
+### Scelte fatte da me (da confermare con Davide)
+1. «Le 3 lingue da cui prende di più» contano prestito + latinismo dotto + calco (come la griglia), non solo i prestiti.
+2. Statistiche: famiglie e protolingue escluse (Proto-Slavic sarebbe il primo «donatore nascosto» del bulgaro), come l'interruttore acceso nelle pagine lingua.
+3. Ricerca per significato: solo nel file della lettera cercata, il resto con un pulsante.
+4. Nei rami dell'albero il link «word page» c'è per ogni parola delle 33 lingue; anche la tappa araba in cima ce l'ha, ma la forma con le vocali (قَهْوَة) spesso non è negli elenchi e la scheda dice «not in the lists».
+
+### Cosa manca / problemi
+1. Le note delle statistiche sono lunghe e citano i nomi dei campi (`diretto`, `secondo_livello`): vanno accorciate nell'export se Davide le vuole più semplici.
+2. Peso: ogni nuovo export rinnova centinaia di MB nella storia di git (ora `data/` 638 MB).
+3. Alberi: per le grafie con più etimologie i discendenti compaiono sotto tutte (lo dice l'export, «Ambiguità»).

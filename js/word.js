@@ -20,7 +20,7 @@
     var mine = pairs[L.fileCode(lang)] || {};
     if (mine._alternative && tries.indexOf("_alternative") < 0) tries.push("_alternative");
     Object.keys(mine).sort(function (a, b) { return (b === "LATINO") - (a === "LATINO"); }).forEach(function (o) {
-      if (o !== "_alternative" && tries.indexOf(o) < 0) tries.push(o);
+      if (o.charAt(0) !== "_" && tries.indexOf(o) < 0) tries.push(o);
     });
     function next(i) {
       if (i >= tries.length) return Promise.resolve(null);
@@ -40,7 +40,7 @@
   }
   function stepHtml(t, names, how) {
     return '<div class="step"><span class="lang">' + langLink(t.codice, names) + "</span>" +
-      '<span class="term">' + (t.termine ? L.esc(t.termine) : '<span class="note">no word given</span>') + "</span>" +
+      '<span class="term">' + (t.termine ? L.esc(t.termine) + L.tr(t.traslitterazione, t.termine) : '<span class="note">no word given</span>') + "</span>" +
       '<span class="how note">' + L.esc(how) + "</span></div>";
   }
 
@@ -52,7 +52,7 @@
       seen[k] = 1; return true;
     });
     document.title = p.parola + " (" + (names[lang] || lang) + ") — lexodus";
-    el("word").textContent = p.parola;
+    el("word").innerHTML = L.esc(p.parola) + L.tr(p.traslitterazione, p.parola);
     var sub = [langLink(lang, names)];
     if (p.pos) sub.push(L.esc(p.pos.replace(/\|/g, ", ")));
     if (p.categoria) sub.push(L.esc(L.catLabel(p.categoria)));
@@ -64,7 +64,7 @@
     el("meaning").innerHTML = p.significato ? "“" + L.esc(p.significato) + "”" : '<span class="note">The meaning is not in the data yet.</span>';
 
     // The path: the word itself, then one row per step back to the furthest origin.
-    var rows = ['<li class="here">' + stepHtml({ codice: lang, termine: p.parola }, names, "this word") + "</li>"];
+    var rows = ['<li class="here">' + stepHtml({ codice: lang, termine: p.parola, traslitterazione: p.traslitterazione }, names, "this word") + "</li>"];
     var rest = catena;
     if (alts.length) {
       var first = catena.length ? [catena[0]] : [];
@@ -87,7 +87,15 @@
       ? "From the word down to its furthest origin. Each step says how the word passed from that language to the one above."
       : "Wiktionary gives no step for this word.") + (alts.length ? " Wiktionary gives more than one possible origin: they are side by side." : "");
 
-    el("ety").textContent = (p.testo || "No etymology text.") + (p.testo && p.testo.length >= 300 ? "…" : "");
+    // The text is only in the simple pair file (mandate 09: not in LATINO.json nor in the second-level files).
+    var text = p.testo !== undefined || !catena.length ? Promise.resolve(p.testo)
+      : L.fetchJson("data/coppie/" + L.fileCode(lang) + "/" + L.fileCode(catena[0].codice) + ".json")
+        .then(function (d) { var q = find(d); return q && q.testo; }).catch(function () { return ""; });
+    text.then(function (t) { el("ety").textContent = (t || "No etymology text.") + (t && t.length >= 300 ? "…" : ""); });
+    if (names._targets.indexOf(lang) >= 0) {
+      el("tree-link").href = L.treeUrl(lang, p.parola, p.n_etimologia, p.traslitterazione);
+      el("tree-line").hidden = false;
+    }
     el("wikt").href = L.wiktUrl(p.parola, names[lang] || lang);
     el("loading").hidden = true; el("app").hidden = false;
 
