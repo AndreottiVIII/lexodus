@@ -20,7 +20,7 @@
     if (back) how.push("came back from " + L.langName(nm, back));
     return '<li><div class="line">' + L.wordTree(r, lang) + (r.significato ? ' <span class="note">' + L.esc(r.significato) + "</span>" : "") + "</div>" +
       '<p class="way">' + L.chainLine(chain, nm, { lang: lang, word: r.parola, t: r.traslitterazione }, mark) + "</p>" +
-      (how.length ? '<p class="note">' + L.esc(how.join(", ")) + ' · <a href="' + L.esc(L.wordUrl(lang, r.parola, r.n_etimologia || 1)) + '">word page</a></p>' : "") + "</li>";
+      (how.length ? '<p class="note">' + L.esc(how.join(", ")) + ' · <a href="' + L.esc(L.wordUrl(lang, r.parola, r.n_etimologia || 1, L.directOf(r) ? L.fileCode(L.directOf(r)) : "")) + '">word page</a></p>' : "") + "</li>";
   }
   function draw() {
     el("list").innerHTML = rows.slice(0, shown).map(item).join("") || '<li class="note">No round trips for this language.</li>';

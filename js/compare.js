@@ -111,8 +111,8 @@
     return L.CATS.filter(function (c) { return per && per[c.key]; })
       .map(function (c) { return L.n(per[c.key]) + " " + c.label; }).join(" · ");
   }
-  function exList(list, lang) {
-    return (list || []).map(function (w) { return L.wordPage(w, lang); }).join(", ");
+  function exList(list, lang, from) {
+    return (list || []).map(function (w) { return L.wordPage(w, lang, from); }).join(", ");
   }
   // took: {n, per_categoria, esempi}; "to" took the words from "from".
   function tookBlock(id, to, from, took) {
@@ -125,7 +125,7 @@
     var all = L.hasPair(pairs, to, fc) ? ' <a href="' + L.esc(L.wordsUrl(to, fc)) + '">See the words</a>' : "";
     box.innerHTML = '<p class="big-num">' + L.n(n) + ' <span class="note">words</span></p>' +
       '<p class="note">' + L.esc(catLine(pick(took, "per_categoria", "categorie"))) + "</p>" +
-      '<p class="ex plain-ex">' + exList(pick(took, "esempi"), to) + "</p>" + (all ? "<p>" + all + "</p>" : "");
+      '<p class="ex plain-ex">' + exList(pick(took, "esempi"), to, from) + "</p>" + (all ? "<p>" + all + "</p>" : "");
   }
   function sharedRows(list, a, b) {
     el("sh-a").textContent = L.langName(nm, a);

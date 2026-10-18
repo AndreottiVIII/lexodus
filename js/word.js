@@ -12,28 +12,77 @@
     }
     return null;
   }
-  // With ?from= one file is enough. Without it (or if the word is not there): the file of the words with
-  // more than one possible origin, then every pair file of the language, one after the other.
-  function locate(pairs) {
-    var tries = [];
-    if (from) tries.push(from);
-    var mine = pairs[L.fileCode(lang)] || {};
-    if (mine._alternative && tries.indexOf("_alternative") < 0) tries.push("_alternative");
-    Object.keys(mine).sort(function (a, b) { return (b === "LATINO") - (a === "LATINO"); }).forEach(function (o) {
-      if (o.charAt(0) !== "_" && tries.indexOf(o) < 0) tries.push(o);
-    });
-    function next(i) {
-      if (i >= tries.length) return Promise.resolve(null);
-      return L.fetchJson("data/coppie/" + L.fileCode(lang) + "/" + tries[i] + ".json")
-        .catch(function () { return null; })
-        .then(function (d) {
-          var p = find(d);
-          return p ? { word: p, file: tries[i], pair: d } : next(i + 1);
-        });
-    }
-    return next(0);
+  // The direct language of the word when the link has no ?from= (fix of 18/10/2026: the page used to read every
+  // pair file of the language one after the other, and stayed on "Loading…" for words like German Kreuzer).
+  // 1. the tree, alberi/<lang>/<letter>.json, entry "word|n": the direct language is su[0].codice (for Latin the
+  //    precise variety, whose own pair file exists); with no su but alternatives, the file _alternative;
+  // 2. otherwise the search index, indice/<letter>.json: field o (codes joined by "|" = alternatives);
+  // 3. otherwise nothing: "not in the lists", no scanning.
+  function treeLetter() {
+    var own = L.letterOf(L.norm(w));
+    if (own !== "_" || L.isLatinScript(w)) return Promise.resolve(own);
+    return L.fetchJson("data/indice/_meta.json").then(function (m) {
+      var file = L.indexFileOfLang(m, lang);
+      return file ? L.fetchJson("data/" + file) : [];
+    }).then(function (d) {
+      var r = L.indexRows(d).filter(function (x) { return x.l === lang && x.p === w; })[0];
+      return (r && r.f) || L.treeLetter(w, r && r.t);
+    }).catch(function () { return own; });
   }
-
+  function fromCodes(o) {
+    return String(o || "").split("|").length > 1 ? ["_alternative"] : o ? [L.fileCode(o)] : [];
+  }
+  function directFromTree() {
+    return treeLetter().then(function (x) {
+      return L.fetchJson("data/alberi/" + L.fileCode(lang) + "/" + encodeURIComponent(x) + ".json").catch(function () { return null; });
+    }).then(function (d) {
+      if (!d) return [];
+      var e = d[w + "|" + (n || 1)];
+      if (!e) {
+        // no etymology with this number (a link with n=1 for German Kreuzer, which only has n=2): take the
+        // word's own one, and show it
+        var k = Object.keys(d).filter(function (k) { return k.slice(0, k.lastIndexOf("|")) === w; })[0];
+        e = k && d[k];
+        if (e) n = +k.slice(k.lastIndexOf("|") + 1) || n;
+      }
+      if (!e) return [];
+      if (e.su && e.su.length) return [L.fileCode(e.su[0].codice)];
+      return (e.alternative || []).length ? ["_alternative"] : [];
+    });
+  }
+  function directFromIndex() {
+    var nw = L.norm(w);
+    return L.fetchJson("data/indice/_meta.json").then(function (meta) {
+      if (meta.tabella_lettere) L.setLetterTable(meta.tabella_lettere);
+      var files = L.letterOf(nw) === "_" ? [L.indexFileOfLang(meta, lang)].filter(Boolean) : L.indexFiles(nw, meta);
+      return Promise.all(files.map(function (f) { return L.fetchJson("data/" + f).catch(function () { return []; }); }));
+    }).then(function (all) {
+      var rows = [].concat.apply([], all.map(L.indexRows)).filter(function (r) { return r.l === lang && r.p === w; });
+      var r = rows.filter(function (r) { return !n || +r.ne === n; })[0] || rows[0];
+      if (r && r.ne) n = +r.ne;
+      return r ? fromCodes(r.o) : [];
+    }).catch(function () { return []; });
+  }
+  function lookup() {
+    return directFromTree().then(function (t) { return t.length ? t : directFromIndex(); }).then(function (tries) {
+      if (tries.length && tries.indexOf("_alternative") < 0) tries.push("_alternative");
+      return next(tries, 0);
+    });
+  }
+  // With ?from= one file is enough; if the word is not there, the tree and the index say where it is.
+  function locate() {
+    if (!from || !L.hasPair(pairs, lang, from)) return lookup();
+    return next([from], 0).then(function (found) { return found || lookup(); });
+  }
+  function next(tries, i) {
+    if (i >= tries.length) return Promise.resolve(null);
+    return L.fetchJson("data/coppie/" + L.fileCode(lang) + "/" + tries[i] + ".json")
+      .catch(function () { return null; })
+      .then(function (d) {
+        var p = find(d);
+        return p ? { word: p, file: tries[i], pair: d } : next(tries, i + 1);
+      });
+  }
   function langLink(code, names) {
     var name = names[code] || code;
     return names[code] ? '<a href="language.html?code=' + encodeURIComponent(code) + '">' + L.esc(name) + "</a>" : L.esc(name);
@@ -120,11 +169,13 @@
     }).catch(function (e) { console.warn(e.message); });
   }
 
+  var pairs = {};
   Promise.all([L.names(), L.extra("coppie_elenco")]).then(function (res) {
-    var names = res[0], pairs = res[1] || {};
+    var names = res[0];
+    pairs = res[1] || {};
     L.footer();
     if (!lang || !w) throw new Error("missing ?lang= or ?w=");
-    return locate(pairs).then(function (found) {
+    return locate().then(function (found) {
       if (!found) {
         el("loading").innerHTML = "“" + L.esc(w) + "” (" + L.esc(names[lang] || lang) + ") is not in the lists of words. " +
           '<a href="' + L.esc(L.wiktUrl(w, names[lang] || lang)) + '">Look it up on Wiktionary</a>.';

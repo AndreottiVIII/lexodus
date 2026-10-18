@@ -44,7 +44,7 @@
   function node(o) {
     var word = o.word ? '<i class="tw">' + L.esc(o.word) + "</i>" + L.tr(o.tr, o.word) : '<span class="note">no word given</span>';
     var page = o.word && !o.here && targets.indexOf(o.lang) >= 0
-      ? ' <a class="page" href="' + L.esc(L.wordUrl(o.lang, o.word, o.n || 1)) + '">word page</a>' : "";
+      ? ' <a class="page" href="' + L.esc(L.wordUrl(o.lang, o.word, o.n || 1, o.from && o.from !== o.lang ? L.fileCode(o.from) : "")) + '">word page</a>' : "";
     return '<div class="node' + (o.here ? " here" : "") + '"><span class="lang">' + langLink(o.lang) + "</span> " + word +
       (o.how ? ' <span class="how">' + L.esc(o.how) + "</span>" : "") +
       (o.amb ? ' <span class="amb" title="The word above has more than one etymology with the same spelling and Wiktionary does not say which one this word came from: it is shown under each of them.">' +
@@ -52,11 +52,12 @@
       (o.mean ? '<span class="mean">' + L.esc(o.mean) + "</span>" : "") + "</div>";
   }
   // homographs: how many etymologies the spelling of the parent has (n_omografi_antenato + 1), when known.
-  function branches(list, homographs) {
+  // parent: the language of the word above, which is the direct language of these words (for the word page link).
+  function branches(list, homographs, parent) {
     if (!list || !list.length) return "";
     return '<ul class="branches">' + list.map(function (g) {
-      return "<li>" + node({ lang: g.lingua, word: g.parola, tr: g.traslitterazione, n: g.n_etimologia, mean: g.significato, how: L.catLabel(g.categoria), amb: g.ambiguo ? homographs || 1 : 0 }) +
-        branches(g.giu, g.n_omografi_antenato ? g.n_omografi_antenato + 1 : 0) + (g.troncato ? '<p class="note cut">… more not shown</p>' : "") + "</li>";
+      return "<li>" + node({ lang: g.lingua, from: parent, word: g.parola, tr: g.traslitterazione, n: g.n_etimologia, mean: g.significato, how: L.catLabel(g.categoria), amb: g.ambiguo ? homographs || 1 : 0 }) +
+        branches(g.giu, g.n_omografi_antenato ? g.n_omografi_antenato + 1 : 0, g.lingua) + (g.troncato ? '<p class="note cut">… more not shown</p>' : "") + "</li>";
     }).join("") + "</ul>";
   }
   function count(list) { return (list || []).reduce(function (s, g) { return s + 1 + count(g.giu); }, 0); }
@@ -68,7 +69,7 @@
     var html = '<ol class="trunk">';
     for (var i = su.length - 1; i >= 0; i--) {
       var t = su[i];
-      html += "<li>" + node({ lang: t.codice, word: t.termine, tr: t.traslitterazione,
+      html += "<li>" + node({ lang: t.codice, from: su[i + 1] && su[i + 1].codice, word: t.termine, tr: t.traslitterazione,
         how: i === su.length - 1 ? "furthest origin" : L.catLabel(su[i + 1].categoria) }) + "</li>";
     }
     var alts = e.alternative || [];
@@ -78,7 +79,7 @@
       }).join(" or ")
       : "no earlier step in Wiktionary";
     html += '<li class="here-li">' + node({ here: true, lang: lang, word: word, n: ne, tr: e.traslitterazione, mean: e.significato, how: how }) +
-      branches(e.giu, e.n_omografi_antenato ? e.n_omografi_antenato + 1 : 0) + "</li></ol>";
+      branches(e.giu, e.n_omografi_antenato ? e.n_omografi_antenato + 1 : 0, lang) + "</li></ol>";
     var kids = (e.giu || []).length, all = count(e.giu);
     html += '<p class="note">' + (kids
       ? "Taken directly by " + kids + (kids === 1 ? " word" : " words") + " of the 33 languages" + (all > kids ? ", " + all + " words in all." : ".")
@@ -101,7 +102,7 @@
       }
       var e = found.file[found.key];
       el("title").innerHTML = L.esc(w) + L.tr(e.traslitterazione, w);
-      el("sub").innerHTML = [langLink(lang), '<a href="' + L.esc(L.wordUrl(lang, w, keyN(found.key))) + '">word page</a>',
+      el("sub").innerHTML = [langLink(lang), '<a href="' + L.esc(L.wordUrl(lang, w, keyN(found.key), e.su && e.su[0] ? L.fileCode(e.su[0].codice) : "")) + '">word page</a>',
         '<a href="' + L.esc(L.wiktUrl(w, names[lang] || lang)) + '">Wiktionary</a>'].join(" · ");
       var html = '<section class="tree" aria-label="Tree">' + treeHtml(found.key, e) + "</section>";
       (e.radici_altre || []).forEach(function (k) {

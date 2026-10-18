@@ -3,7 +3,7 @@
   "use strict";
   // Version of the site, added to every file read with fetch() so browsers do not keep old copies.
   // Set together with the "?v=" in the pages by scripts/versione.py (also run by aggiorna_dati.py).
-  var VERSION = "202610181858";
+  var VERSION = "202610182213";
   function withVersion(path) { return path + (path.indexOf("?") < 0 ? "?" : "&") + "v=" + VERSION; }
 
   var CATS = [
@@ -376,9 +376,18 @@
   window.addEventListener("pageshow", function () {
     Array.prototype.forEach.call(document.querySelectorAll("[data-surprise]"), function (b) { b.disabled = false; });
   });
-  function wordPage(w, lang) {
+  // from: the direct language, when the caller knows it; otherwise taken from the word (lingua_diretta, the
+  // first step of catena, or "o" of the index), so word.html reads one pair file only.
+  function directOf(w) {
+    var d = w.lingua_diretta && typeof w.lingua_diretta === "object" ? w.lingua_diretta.codice : w.lingua_diretta;
+    if (!d && w.catena && w.catena.length) d = w.catena[0].codice;
+    if (!d && w.o && String(w.o).indexOf("|") < 0) d = w.o;
+    return d || "";
+  }
+  function wordPage(w, lang, from) {
     var l = w.lingua || w.l || lang, p = w.parola || w.p, t = w.traslitterazione || w.t || "";
-    return '<a class="w" href="' + esc(wordUrl(l, p, w.n_etimologia || w.ne || 1)) + '">' + esc(p) + "</a>" + tr(t, p);
+    var f = from || directOf(w);
+    return '<a class="w" href="' + esc(wordUrl(l, p, w.n_etimologia || w.ne || 1, f && f !== l ? fileCode(f) : "")) + '">' + esc(p) + "</a>" + tr(t, p);
   }
   // A chain in one line, oldest first, ending with the word itself:
   // "Arabic قَهْوَة (qahwa) → Ottoman Turkish قهوه (kahve) → Italian caffè".
@@ -411,7 +420,7 @@
   window.Lex = {
     EXCLUDED: EXCLUDED, RO_NOTE: RO_NOTE, RO_LINK: RO_LINK, firstSentence: firstSentence, exclusionNote: exclusionNote, noteText: noteText,
     targetCodes: targetCodes, langOptions: langOptions, setParams: setParams, langName: langName, langLink: langLink,
-    wordTree: wordTree, treeOf: treeOf, surprise: surprise, wordPage: wordPage, chainLine: chainLine, pct: pct, listOf: listOf, codeOf: codeOf,
+    wordTree: wordTree, treeOf: treeOf, surprise: surprise, wordPage: wordPage, directOf: directOf, chainLine: chainLine, pct: pct, listOf: listOf, codeOf: codeOf,
     CATS: CATS, CAT_BY_KEY: CAT_BY_KEY, TYPE_LABEL: TYPE_LABEL, NOTES: NOTES,
     load: load, isLanguage: isLanguage, isLatin: isLatin, key: key, latinVarieties: latinVarieties,
     fileCode: fileCode, pairCode: pairCode, pairPath: pairPath, hasPair: hasPair, wordsUrl: wordsUrl, wordUrl: wordUrl,
