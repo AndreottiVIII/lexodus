@@ -18,12 +18,16 @@ local file (browsers block fetch() on file://). Then it builds two indexes from 
   Used by the word page ("This word was then taken by").
 
 coppie/ is copied only if it stays under 500 MB; parole/ only with --parole and under 100 MB.
+At the end it sets a new version number on the pages (scripts/versione.py).
 Nothing in rete-prestiti changes.
 """
 import json
 import os
 import shutil
 import sys
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import versione  # noqa: E402
 
 QUI = os.path.dirname(os.path.abspath(__file__))
 DATA = os.path.normpath(os.path.join(QUI, "..", "data"))
@@ -138,6 +142,7 @@ def main(export, con_parole):
     costruisci_indici()
     fonte = {"tipo": "export", "da": "rete-prestiti/risultati/export", "scarico": "2026-10-18"}
     scrivi("fonte", fonte, js=True)
+    versione.segna()  # new "?v=" everywhere, so browsers load the new files
     print("done")
 
 

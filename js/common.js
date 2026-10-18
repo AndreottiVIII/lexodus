@@ -1,6 +1,10 @@
 /* lexodus — shared code: data loading and normalisation, categories, Latin merging, filters. */
 (function () {
   "use strict";
+  // Version of the site, added to every file read with fetch() so browsers do not keep old copies.
+  // Set together with the "?v=" in the pages by scripts/versione.py (also run by aggiorna_dati.py).
+  var VERSION = "20261018b";
+  function withVersion(path) { return path + (path.indexOf("?") < 0 ? "?" : "&") + "v=" + VERSION; }
 
   var CATS = [
     { id: "borrowed", key: "prestito", label: "borrowed" },
@@ -41,7 +45,7 @@
   function getRaw(name) {
     var g = window.LEXODUS || {};
     if (g[name] !== undefined) return Promise.resolve(g[name]);
-    return fetch("data/" + name + ".json").then(function (r) {
+    return fetch(withVersion("data/" + name + ".json")).then(function (r) {
       if (!r.ok) throw new Error("data/" + name + ".json: " + r.status);
       return r.json();
     });
@@ -100,7 +104,7 @@
   var jsonCache = {};
   function fetchJson(path) {
     if (!jsonCache[path]) {
-      jsonCache[path] = fetch(path).then(function (r) {
+      jsonCache[path] = fetch(withVersion(path)).then(function (r) {
         if (!r.ok) throw new Error(path + ": " + r.status);
         return r.json();
       });

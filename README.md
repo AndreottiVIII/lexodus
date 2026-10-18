@@ -31,13 +31,17 @@ The official export of `rete-prestiti` (mandates 05 and 07), copied by `scripts/
 
 `parole/<codice>.json` is **not** copied (the pair files replace it).
 
+### Version number (browser cache)
+
+GitHub Pages lets browsers keep files for 10 minutes, so after a publication a browser can mix an old `js/home.js` with new data and stop on "Loading…". Every css, js and data file is therefore loaded with a version number (`js/home.js?v=20261018b`): the `?v=` in the pages and the constant `VERSION` in `js/common.js` (added to every file read with `fetch()`). **Change it at every publication**: `python -I -X utf8 scripts/versione.py` sets a new one (date and time) everywhere; `scripts/aggiorna_dati.py` runs it by itself.
+
 ### How to update the data
 
 When the export changes:
 
 ```
 cd lexodus
-python -I -X utf8 scripts/aggiorna_dati.py
+python -I -X utf8 scripts/aggiorna_dati.py     # also sets a new version number
 git add data && git commit -m "Update data from export" && git push
 ```
 
@@ -67,6 +71,7 @@ then http://localhost:8790. Or just open `index.html`.
 - `index.html`, `language.html`, `words.html`, `word.html`, `about.html` — pages.
 - `css/style.css` — the only stylesheet: black on white, one dark blue for bars and links.
 - `js/common.js` — data loading and normalisation, categories, Latin merging, filters, footer. `js/home.js` — the grid. `js/language.js` — language page. `js/words.js` — list of words. `js/word.js` — word page.
+- `scripts/versione.py` — new version number on every css, js and data file (run before every publication).
 - `scripts/aggiorna_dati.py` — copy the export into `data/` and build the two indexes (`--solo-indici` only rebuilds the indexes). (The scripts that built the first sample from the CSV tables were removed; they are in the git history.)
 - `docs/screenshots/` — screenshots from the check of 18/10/2026.
 - `JOURNAL.md` — choices made and what is missing.
