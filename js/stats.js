@@ -37,8 +37,8 @@
     return names[code] || c === "LATINO" ? '<a href="language.html?code=' + encodeURIComponent(code) + '">' + L.esc(name(c)) + "</a>" : L.esc(name(c));
   }
   function bar(v, max) { return '<div class="bar"><span style="width:' + (max ? Math.max(0.5, 100 * v / max) : 0).toFixed(1) + '%"></span></div>'; }
-  function note(id, block) {
-    var t = L.noteText(block);
+  function note(id, block, key) {
+    var t = L.noteText(block, key);
     el(id).textContent = t || "";
     el(id).hidden = !t;
   }
@@ -87,8 +87,8 @@
     var s = res[1];
     L.footer();
     L.exclusionNote(el("ro-note"), s.bilancio || s.lingue_di_passaggio);
-    note("balance-note", s.bilancio); balance(s.bilancio);
-    note("bridges-note", s.lingue_di_passaggio); bridges(s.lingue_di_passaggio);
+    note("balance-note", s.bilancio, "balance"); balance(s.bilancio);
+    note("bridges-note", s.lingue_di_passaggio, "bridges"); bridges(s.lingue_di_passaggio);
     el("loading").hidden = true; el("app").hidden = false;
   }).catch(function (e) {
     el("loading").textContent = L.fetchFail(e);

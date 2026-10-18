@@ -59,7 +59,7 @@
     nm = res[0];
     var d = res[1];
     L.footer();
-    var t = L.noteText(d);
+    var t = L.noteText(d, "families");
     el("note").textContent = t; el("note").hidden = !t;
     // Families that end in a reconstructed language (Proto-Indo-European…) stay hidden, as everywhere on the site.
     var all = L.listOf(pick(d, "famiglie", "elenco") || d);

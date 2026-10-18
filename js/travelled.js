@@ -39,7 +39,7 @@
     var b = res[1].parole_viaggiate || {};
     L.footer();
     var excl = b.escluse || L.EXCLUDED;
-    var t = L.noteText(b);
+    var t = L.noteText(b, "travelled");
     el("note").textContent = t; el("note").hidden = !t;
     L.exclusionNote(el("ro-note"), b);
     function notExcl(r) { return excl.indexOf(pick(r, "lingua", "l")) < 0; }

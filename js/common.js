@@ -3,7 +3,7 @@
   "use strict";
   // Version of the site, added to every file read with fetch() so browsers do not keep old copies.
   // Set together with the "?v=" in the pages by scripts/versione.py (also run by aggiorna_dati.py).
-  var VERSION = "202610181757";
+  var VERSION = "202610181803";
   function withVersion(path) { return path + (path.indexOf("?") < 0 ? "?" : "&") + "v=" + VERSION; }
 
   var CATS = [
@@ -284,10 +284,18 @@
   })();
 
   // Romanian stays visible but is left out of statistics and rankings as a language that took words
-  // (Davide, 18/10/2026). The text comes from the export ("nota_esclusione", "nota_romeno") when it is there.
+  // (Davide, 18/10/2026). The notes are the site's own short texts, not the export's (Davide: at most 15 words;
+  // the Romanian note two short sentences).
   var EXCLUDED = ["ro"];
-  var RO_NOTE = "Romanian is left out of statistics and rankings: its Wiktionary editors credit French with almost every learned word, which would crush every other language.";
-  var RO_LINK = "language.html?code=ro#romanian-note";
+  var RO_NOTE = "Romanian is left out of statistics and rankings. Its Wiktionary editors credit French with almost every learned word.";
+  var RO_LINK = "about.html#romanian";
+  var SHORT = {
+    hidden: "Origins that gave this language words mostly through another language.",
+    travelled: "Words whose way crosses the most languages, and words the most languages took.",
+    balance: "Words each language gave and took; the ratio depends on Wiktionary's coverage.",
+    bridges: "Languages that passed on words they had taken from another language.",
+    families: "All the words of the 33 languages that go back to one origin."
+  };
   function firstSentence(t) {
     t = String(t || "").trim();
     var m = t.match(/^[\s\S]*?[.!?](?=\s+[A-Z“"(]|$)/);
@@ -295,12 +303,11 @@
   }
   function exclusionNote(el, block) {
     if (!el) return;
-    var t = (block && (block.nota_esclusione || block.nota_romeno)) || RO_NOTE;
-    el.innerHTML = esc(firstSentence(t)) + ' <a href="' + RO_LINK + '">Why</a>.';
+    el.innerHTML = esc(RO_NOTE) + ' <a href="' + RO_LINK + '">More</a>.';
     el.hidden = false;
   }
   // One sentence from the "nota" of a block (Davide: notes of one sentence).
-  function noteText(block) { return firstSentence(block && (block.nota || block.note) || ""); }
+  function noteText(block, key) { return SHORT[key] || ""; }
 
   // The 33 languages, sorted by English name, optionally without the excluded ones.
   function targetCodes(nm, withoutExcluded) {

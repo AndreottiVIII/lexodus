@@ -208,7 +208,7 @@
       }).join("");
       el("travel-block").hidden = !trav.length;
       if (d.nota_romeno) {
-        el("romanian-note").textContent = d.nota_romeno;
+        el("romanian-note").textContent = L.RO_NOTE;
         el("romanian-note").hidden = false;
       }
       el("extra").hidden = !(far.length || trav.length);

@@ -25,6 +25,28 @@
     return '<li class="pair"><div class="halves">' + side(a, roads[0]) + side(b, roads[1]) + "</div>" +
       (c ? '<p class="common">Common origin: ' + c + "</p>" : '<p class="common note">No common step written in Wiktionary.</p>') + "</li>";
   }
+  // Best-known pairs first (Davide, 18/10/2026): both words short (at most 9 letters), without hyphens, with a
+  // meaning, borrowed / learned Latin / calque, and two ways through different languages; then by number of
+  // languages. Pairs where one way is an Italian dialect or regional language go to the end.
+  var DIALECTS = ["scn", "nap", "vec", "lmo", "pms", "lij", "sc", "fur"];
+  var TAKEN = ["prestito", "latinismo_dotto", "calco"];
+  function dialect(c) { return DIALECTS.indexOf(c) >= 0 || /^roa-/.test(c || ""); }
+  function known(w) {
+    var p = String(w.parola || "");
+    return p.length <= 9 && !/[-\s]/.test(p) && !!String(w.significato || "").trim() && TAKEN.indexOf(w.categoria) >= 0;
+  }
+  function langsOf(w) { return (w.catena || []).map(function (s) { return s.codice; }).sort().join("|"); }
+  function rank(p) {
+    var a = p.a || {}, b = p.b || {};
+    var dial = (p.strade || []).some(dialect) ? 1 : 0;
+    var top = known(a) && known(b) && langsOf(a) !== langsOf(b) ? 0 : 1;
+    return [dial, top, -(p.n_lingue || 0)];
+  }
+  function sortPairs(list) {
+    var r = list.map(function (p, i) { return { p: p, k: rank(p).concat([i]) }; });
+    r.sort(function (x, y) { for (var i = 0; i < x.k.length; i++) if (x.k[i] !== y.k[i]) return x.k[i] - y.k[i]; return 0; });
+    return r.map(function (x) { return x.p; });
+  }
   function visible() {
     var q = L.fold(el("q").value.trim());
     if (!q) return pairs;
@@ -43,10 +65,10 @@
     L.setParams({ lang: code });
     el("count").textContent = "Loading…";
     L.fetchJson("data/doppioni/" + L.fileCode(code) + ".json").then(function (d) {
-      pairs = L.listOf(pick(d, "coppie", "doppioni") || d);
+      pairs = sortPairs(L.listOf(pick(d, "coppie", "doppioni") || d));
       shown = SHOW;
       var n = pick(d, "n_coppie", "n") || pairs.length;
-      el("count").textContent = L.n(n) + (n === 1 ? " pair" : " pairs") + " of doublets in " + L.langName(nm, code) + ", the ones through the most languages first.";
+      el("count").textContent = L.n(n) + (n === 1 ? " pair" : " pairs") + " of doublets in " + L.langName(nm, code) + ", the best-known words first.";
       draw();
     }).catch(function (e) {
       pairs = []; draw();

@@ -11,7 +11,7 @@
     L.footer();
     var per = block.per_arrivo || {};
     var excl = block.escluse || L.EXCLUDED;
-    var t = L.noteText(block);
+    var t = L.noteText(block, "hidden");
     el("note").textContent = t; el("note").hidden = !t;
     L.exclusionNote(el("ro-note"), block);
     var codes = L.targetCodes(nm).filter(function (c) { return excl.indexOf(c) < 0 && per[c] && per[c].length; });

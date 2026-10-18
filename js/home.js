@@ -86,7 +86,7 @@
       el("grid-explain").innerHTML = (level === "1"
         ? "Rows: the language that took the words. Columns: the language it took them from directly. Borrowed, learned Latin and calque only. Click a square for the list of words, a name for its page."
         : "Second level: the language the words had come from one step before the direct one, whatever the direct one was (Italian caffè: Ottoman Turkish first, Arabic second). Click a square for the list of words, a name for its page.") +
-        ' Romanian is a case apart: its editors credit French with almost every learned word (<a href="' + L.RO_LINK + '">see the note</a>).';
+        ' Romanian is a case apart: its editors credit French with almost every learned word (<a href="language.html?code=ro#romanian-note">see the note</a>).';
     }
 
     el("grid").addEventListener("mouseover", show);
