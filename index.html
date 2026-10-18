@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>lexodus</title>
 <meta name="description" content="Which languages a language took words from, and which it gave words to, from the etymologies in English Wiktionary.">
+<link rel="icon" href="data:,">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -12,17 +13,34 @@
   <a class="brand" href="index.html">lexodus</a>
   <nav aria-label="Main">
     <a href="index.html" aria-current="page">Languages</a>
-    <span class="soon">Words (soon)</span>
-    <span class="soon">Stories (soon)</span>
     <a href="about.html">About</a>
   </nav>
 </header>
 
 <main>
   <h1>Words on the move</h1>
-  <p class="lead">For 33 languages of Europe and its neighbours: which languages each one took words from, and which languages took words from it, as written in English Wiktionary. Choose a language.</p>
+  <p class="lead">For 33 languages of Europe and its neighbours: which languages each one took words from, and which languages took words from it, as written in English Wiktionary.</p>
   <p id="loading">Loading&hellip;</p>
-  <ul id="langs" class="lang-list" hidden></ul>
+
+  <section id="grid-block" class="grid-block" aria-labelledby="grid-title" hidden>
+    <div class="head">
+      <h2 id="grid-title">Who took from whom</h2>
+      <fieldset class="switch" id="level-switch">
+        <legend class="visually-hidden">Level</legend>
+        <label><input type="radio" name="level" value="1" checked> first level</label>
+        <label><input type="radio" name="level" value="2"> second level</label>
+      </fieldset>
+    </div>
+    <p id="grid-explain" class="note"></p>
+    <p id="grid-status" class="grid-status" aria-live="polite">&nbsp;</p>
+    <div class="grid-scroll"><table id="grid" class="grid"></table></div>
+    <p id="grid-legend" class="legend note"></p>
+  </section>
+
+  <section id="langs-block" aria-labelledby="langs-title" hidden>
+    <h2 id="langs-title">The 33 languages</h2>
+    <ul id="langs" class="lang-list"></ul>
+  </section>
 </main>
 
 <footer id="site-footer"></footer>
@@ -31,20 +49,9 @@
 <script src="data/lingue.js"></script>
 <script src="data/archi.js"></script>
 <script src="data/livello2.js"></script>
+<script src="data/griglia.js"></script>
+<script src="data/coppie_elenco.js"></script>
 <script src="js/common.js"></script>
-<script>
-Lex.load().then(function (d) {
-  Lex.footer(d.source);
-  var ul = document.getElementById("langs");
-  ul.innerHTML = d.targets.map(function (l) {
-    return '<li><a href="language.html?code=' + encodeURIComponent(l.code) + '">' + Lex.esc(l.name) + '</a> <span class="note">' + Lex.esc(Lex.coverageText(l)) + "</span></li>";
-  }).join("");
-  ul.hidden = false;
-  document.getElementById("loading").hidden = true;
-}).catch(function (e) {
-  document.getElementById("loading").textContent = "The data could not be loaded (" + e.message + ").";
-  console.error(e);
-});
-</script>
+<script src="js/home.js"></script>
 </body>
 </html>

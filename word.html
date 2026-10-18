@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Word — lexodus</title>
+<meta name="description" content="One word and the way it came, step by step, from the etymologies in English Wiktionary.">
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="index.html">lexodus</a>
+  <nav aria-label="Main">
+    <a href="index.html">Languages</a>
+    <a href="about.html">About</a>
+  </nav>
+</header>
+
+<main>
+  <p id="loading">Loading&hellip;</p>
+  <div id="app" class="word-page" hidden>
+    <div>
+      <h1 id="word"></h1>
+      <p id="sub" class="note"></p>
+      <p id="meaning" class="meaning"></p>
+    </div>
+
+    <section aria-labelledby="path-title">
+      <h2 id="path-title">The way it came</h2>
+      <ol id="path" class="path"></ol>
+      <p id="path-note" class="note"></p>
+    </section>
+
+    <section aria-labelledby="ety-title">
+      <h2 id="ety-title">Etymology in Wiktionary</h2>
+      <blockquote id="ety" class="ety"></blockquote>
+      <p><a id="wikt" href="https://en.wiktionary.org/">Read the entry on en.wiktionary.org</a></p>
+    </section>
+
+    <section id="given" aria-labelledby="given-title" hidden>
+      <h2 id="given-title">Then taken by other languages</h2>
+      <p id="given-list"></p>
+    </section>
+  </div>
+</main>
+
+<footer id="site-footer"></footer>
+
+<script src="data/fonte.js"></script>
+<script src="data/lingue.js"></script>
+<script src="data/coppie_elenco.js"></script>
+<script src="js/common.js"></script>
+<script src="js/word.js"></script>
+</body>
+</html>

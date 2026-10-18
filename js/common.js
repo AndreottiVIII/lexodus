@@ -74,6 +74,65 @@
     return cache;
   }
 
+  // Pair files (mandate 07): data/coppie/<arrivo>/<origine>.json or <origine>__<livello2>.json.
+  // Codes: "." and other odd characters become "_"; merged Latin is "LATINO".
+  // A few codes have another file name (coppie/_eccezioni_nomi.json, copied into coppie_elenco._eccezioni).
+  function fileCode(code) {
+    var g = window.LEXODUS || {}, ex = (g.coppie_elenco && g.coppie_elenco._eccezioni) || {};
+    return ex[code] || String(code).replace(/[^A-Za-z0-9_-]/g, "_");
+  }
+  function pairCode(code, filters) { return (!filters || !filters.splitLatin) && isLatin(code) ? "LATINO" : fileCode(code); }
+  function pairPath(to, from, via) { return "data/coppie/" + fileCode(to) + "/" + from + (via ? "__" + via : "") + ".json"; }
+  // data/coppie_elenco: {arrivo: {origine: [livello2, ...]}}, built by scripts/aggiorna_dati.py.
+  function hasPair(list, to, from, via) {
+    var t = list && list[fileCode(to)], o = t && t[from];
+    if (!o) return false;
+    return !via || o.indexOf(via) >= 0;
+  }
+  function wordsUrl(to, from, via, cat) {
+    return "words.html?to=" + encodeURIComponent(to) + "&from=" + encodeURIComponent(from) +
+      (via ? "&via=" + encodeURIComponent(via) : "") + (cat ? "&cat=" + encodeURIComponent(cat) : "");
+  }
+  function wordUrl(lang, w, n, from) {
+    return "word.html?lang=" + encodeURIComponent(lang) + "&w=" + encodeURIComponent(w) + "&n=" + encodeURIComponent(n || 1) +
+      (from ? "&from=" + encodeURIComponent(from) : "");
+  }
+  var jsonCache = {};
+  function fetchJson(path) {
+    if (!jsonCache[path]) {
+      jsonCache[path] = fetch(path).then(function (r) {
+        if (!r.ok) throw new Error(path + ": " + r.status);
+        return r.json();
+      });
+    }
+    return jsonCache[path];
+  }
+  // Names only (words and word pages do not need the arcs): {code: English name}.
+  function names() {
+    return getRaw("lingue").then(function (raw) {
+      var m = { LATINO: "Latin", altre: "other languages" };
+      raw.altre_lingue_origine.concat(raw.lingue_di_arrivo).forEach(function (o) { if (!m[o.codice]) m[o.codice] = o.nome_en || o.codice; });
+      m._targets = raw.lingue_di_arrivo.map(function (o) { return o.codice; });
+      return m;
+    });
+  }
+  function catLabel(key) {
+    var c = CAT_BY_KEY[key];
+    if (c) return c.label;
+    if (key === "stadio_stessa_lingua") return "earlier stage";
+    return String(key || "").replace(/_/g, " ");
+  }
+  function fold(s) { return String(s || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase(); }
+  function wiktUrl(word, langName) {
+    return "https://en.wiktionary.org/wiki/" + encodeURIComponent(String(word).replace(/ /g, "_")) + "#" + encodeURIComponent(String(langName).replace(/ /g, "_"));
+  }
+  function fetchFail(e) {
+    return location.protocol === "file:"
+      ? "Lists of words need the site to be opened from a web server (for example GitHub Pages), not from a local file."
+      : "This list is not in the data (" + e.message + ").";
+  }
+  function extra(name) { return getRaw(name).catch(function () { return null; }); }
+
   function isLanguage(type) { return !type || type === "lingua"; }
 
   // Latin varieties are merged into one "Latin" (code "la") unless the viewer splits them.
@@ -146,6 +205,8 @@
   window.Lex = {
     CATS: CATS, CAT_BY_KEY: CAT_BY_KEY, TYPE_LABEL: TYPE_LABEL, NOTES: NOTES,
     load: load, isLanguage: isLanguage, isLatin: isLatin, key: key, latinVarieties: latinVarieties,
+    fileCode: fileCode, pairCode: pairCode, pairPath: pairPath, hasPair: hasPair, wordsUrl: wordsUrl, wordUrl: wordUrl,
+    fetchJson: fetchJson, extra: extra, getRaw: getRaw, names: names, catLabel: catLabel, fold: fold, wiktUrl: wiktUrl, fetchFail: fetchFail,
     n: n, esc: esc, param: param, coverageText: coverageText, filterBar: filterBar, footer: footer
   };
 })();

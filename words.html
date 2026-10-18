@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Words — lexodus</title>
+<meta name="description" content="The words one language took from another, with their meaning and where they came from, from English Wiktionary.">
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="index.html">lexodus</a>
+  <nav aria-label="Main">
+    <a href="index.html">Languages</a>
+    <a href="about.html">About</a>
+  </nav>
+</header>
+
+<main>
+  <p id="loading">Loading&hellip;</p>
+  <div id="app" hidden>
+    <h1 id="title"></h1>
+    <p id="sub" class="note"></p>
+    <div class="filters">
+      <fieldset id="cats"><legend>Show</legend></fieldset>
+      <label class="search"><span class="visually-hidden">Search</span><input type="search" id="q" placeholder="Search a word, meaning or origin" autocomplete="off"></label>
+    </div>
+    <p id="count" class="note" aria-live="polite"></p>
+    <div class="table-scroll">
+      <table class="words">
+        <thead><tr><th scope="col">Word</th><th scope="col">Meaning</th><th scope="col">From</th><th scope="col">Category</th></tr></thead>
+        <tbody id="list"></tbody>
+      </table>
+    </div>
+    <nav class="pager" id="pager" aria-label="Pages" hidden>
+      <button type="button" id="prev" class="more">&larr; previous 50</button>
+      <span id="page" class="note"></span>
+      <button type="button" id="next" class="more">next 50 &rarr;</button>
+    </nav>
+    <p class="note">? = Wiktionary marks the etymology as uncertain. Words with two or more possible origins are not in these lists.</p>
+  </div>
+</main>
+
+<footer id="site-footer"></footer>
+
+<script src="data/fonte.js"></script>
+<script src="data/lingue.js"></script>
+<script src="data/coppie_elenco.js"></script>
+<script src="js/common.js"></script>
+<script src="js/words.js"></script>
+</body>
+</html>

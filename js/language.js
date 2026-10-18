@@ -60,6 +60,12 @@
     return { items: items, words: words, hidden: hidden, rest: Math.max(0, words - reached) + sameLatin, direct: direct, arr: arr };
   }
 
+  // The number opens the list of the words of that pair (words.html), when its file exists.
+  function numLink(v, to, from, via, cat) {
+    if (!L.hasPair(state.pairs, to, from, via)) return L.n(v);
+    return '<a href="' + L.esc(L.wordsUrl(to, from, via, cat)) + '" title="See the words">' + L.n(v) + "</a>";
+  }
+
   function subHtml(row) {
     var r = level2(row);
     if (!r.words) return '<p class="note">No chain recorded for these words.</p>';
@@ -68,7 +74,7 @@
       var l = state.data.langs[it.code];
       var typ = l && !L.isLanguage(l.type) ? ' <span class="note">' + (L.TYPE_LABEL[l.type] || l.type) + "</span>" : "";
       html += '<li><div class="line"><a class="name" href="language.html?code=' + encodeURIComponent(it.code) + '">' + L.esc(name(it.code)) + "</a>" + typ +
-        '<span class="num">' + L.n(it.n) + "</span></div>" +
+        '<span class="num">' + numLink(it.n, r.arr, L.pairCode(r.direct, state.filters), L.pairCode(it.code, state.filters)) + "</span></div>" +
         '<div class="bar"><span style="width:' + Math.max(0.5, Math.min(100, 100 * it.n / r.words)).toFixed(2) + '%"></span></div>' +
         (it.ex.length ? '<p class="ex">' + five(it.ex).map(L.esc).join(", ") + "</p>" : "") + "</li>";
     });
@@ -90,7 +96,9 @@
       '<div class="line"><button type="button" class="toggle" aria-expanded="' + open + '" aria-label="Show the step before">' + (open ? "−" : "+") + "</button>" +
       '<a class="name" href="language.html?code=' + encodeURIComponent(row.other) + '">' + L.esc(name(row.other)) + "</a>" + typ +
       '<span class="cat">' + cat.label + "</span>" +
-      '<span class="num">' + L.n(row.n) + "</span></div>" +
+      '<span class="num">' + (row.side === "from"
+        ? numLink(row.n, state.code, L.pairCode(row.other, state.filters), "", row.cat)
+        : numLink(row.n, row.other, L.pairCode(state.code, state.filters), "", row.cat)) + "</span></div>" +
       '<div class="bar"><span style="width:' + Math.max(0.3, 100 * row.n / max).toFixed(2) + '%"></span></div>' +
       (row.ex.length ? '<p class="ex">' + five(row.ex).map(L.esc).join(", ") + "</p>" : "") +
       '<div class="sub"' + (open ? "" : " hidden") + ">" + (open ? subHtml(row) : "") + "</div></li>";
@@ -150,8 +158,10 @@
     sub.hidden = !open;
   }
 
-  L.load().then(function (data) {
+  Promise.all([L.load(), L.extra("coppie_elenco")]).then(function (res) {
+    var data = res[0];
     state.data = data;
+    state.pairs = res[1] || {};
     L.footer(data.source);
     var code = L.param("code") || "it";
     if (!data.langs[code]) {
