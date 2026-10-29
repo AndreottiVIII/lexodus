@@ -1,0 +1,120 @@
+/* lexodus, draft "pixel" (mandate 16): an 80s video game. 16 colours only (the PICO-8 palette), hard edges, no
+   gradients. Home = world map of 33 kingdoms; language = the kingdom screen with HP-style bars; word = the item card;
+   tree = the skill tree. */
+:root {
+  --c0: #000000; --c1: #1d2b53; --c2: #7e2553; --c3: #008751; --c4: #ab5236; --c5: #5f574f; --c6: #c2c3c7; --c7: #fff1e8;
+  --c8: #ff004d; --c9: #ffa300; --c10: #ffec27; --c11: #00e436; --c12: #29adff; --c13: #83769c; --c14: #ff77a8; --c15: #ffccaa;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { background: var(--c0); }
+body { margin: 0; background: var(--c1); color: var(--c7); font: 400 24px/1.15 "VT323", "Consolas", monospace; image-rendering: pixelated; }
+a { color: var(--c10); }
+a:hover { color: var(--c7); background: var(--c2); }
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.px { font-family: "Press Start 2P", monospace; font-weight: 400; line-height: 1.5; }
+.hud { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 22px; padding: 12px 24px; background: var(--c0); border-bottom: 4px solid var(--c5); }
+.hud .brand { font-family: "Press Start 2P", monospace; font-size: 20px; color: var(--c9); text-decoration: none; }
+.hud .brand span { color: var(--c8); }
+.hud nav { display: flex; flex-wrap: wrap; gap: 4px 20px; font-size: 24px; }
+.hud nav a { text-decoration: none; color: var(--c7); }
+.hud nav a::before { content: "▶ "; color: var(--c0); }
+.hud nav a:hover::before { color: var(--c10); }
+main { max-width: 1200px; margin: 0 auto; padding: 20px 24px 36px; }
+.footer { max-width: 1200px; margin: 0 auto; padding: 0 24px 28px; color: var(--c6); font-size: 20px; }
+.footer a { color: var(--c12); }
+#loading { font-family: "Press Start 2P", monospace; font-size: 18px; color: var(--c10); }
+.box { background: var(--c0); border: 4px solid var(--c7); box-shadow: 0 0 0 4px var(--c0), 8px 8px 0 4px var(--c0); padding: 16px 18px; }
+.title { font-family: "Press Start 2P", monospace; font-size: 28px; color: var(--c10); margin: 0 0 10px; line-height: 1.4; text-shadow: 4px 4px 0 var(--c2); }
+.blink { animation: blink 1s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .blink { animation: none; } }
+
+/* world map */
+.world { border: 4px solid var(--c7); box-shadow: 8px 8px 0 var(--c0); background: var(--c1); overflow-x: auto; }
+.world svg { display: block; width: 100%; height: auto; min-width: 760px; shape-rendering: crispEdges; }
+.world text { font-family: "VT323", monospace; }
+.world .k:hover rect.flag, .world .k:focus-visible rect.flag { fill: var(--c7); }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 22px; list-style: none; padding: 0; margin: 16px 0 0; font-size: 22px; }
+.legend i { display: inline-block; width: 18px; height: 18px; background: var(--c); margin-right: 8px; vertical-align: -2px; border: 2px solid var(--c0); }
+.intro { margin: 0 0 14px; font-size: 24px; max-width: 70ch; }
+
+/* kingdom screen */
+.kingdom { display: grid; grid-template-columns: 330px 1fr; gap: 26px; align-items: start; }
+.stats h1 { font-family: "Press Start 2P", monospace; font-size: 24px; line-height: 1.4; margin: 0 0 12px; color: var(--c); }
+.stats .sprite { display: block; width: 160px; height: 160px; margin: 0 auto 10px; }
+.stats dl { display: grid; grid-template-columns: 1fr auto; gap: 4px 10px; margin: 0; }
+.stats dt { color: var(--c6); }
+.stats dd { margin: 0; font-family: "Press Start 2P", monospace; font-size: 15px; text-align: right; align-self: center; color: var(--c7); }
+.stats select { margin-top: 14px; width: 100%; font: 22px "VT323", monospace; background: var(--c1); color: var(--c7); border: 4px solid var(--c7); padding: 4px; }
+.meters { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; min-width: 0; }
+.meters h2 { font-family: "Press Start 2P", monospace; font-size: 17px; line-height: 1.5; margin: 0 0 4px; }
+.meters h2.took { color: var(--c11); }
+.meters h2.gave { color: var(--c9); }
+.meters .sum { color: var(--c6); margin: 0 0 10px; font-size: 22px; }
+.hp { list-style: none; margin: 0; padding: 0; }
+.hp li { padding: 6px 0 8px; border-bottom: 2px dashed var(--c5); }
+.hp .top { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+.hp .top a { color: var(--c7); text-decoration: none; font-size: 24px; }
+.hp .top a:hover { color: var(--c10); background: none; }
+.hp .top a::before { content: ""; display: inline-block; width: 12px; height: 12px; background: var(--fc); margin-right: 8px; vertical-align: 1px; }
+.hp .num { font-family: "Press Start 2P", monospace; font-size: 15px; color: var(--c10); }
+.hp .bar { display: flex; gap: 2px; height: 16px; margin: 4px 0; padding: 2px; border: 2px solid var(--c7); width: 100%; }
+.hp .bar i { flex: 1; background: var(--c5); }
+.hp .bar i.on { background: var(--bc); }
+.hp .ex { font-size: 21px; color: var(--c6); }
+.hp .ex a { color: var(--c12); }
+.btn { margin-top: 12px; font: 15px "Press Start 2P", monospace; background: var(--c8); color: var(--c7); border: 0; padding: 10px 14px; cursor: pointer; box-shadow: 4px 4px 0 var(--c0); }
+.btn:hover { background: var(--c10); color: var(--c0); }
+.btn:active { transform: translate(4px, 4px); box-shadow: none; }
+
+/* item card */
+.item { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); gap: 26px; align-items: start; }
+.item .name { font-family: "Press Start 2P", monospace; font-size: 40px; line-height: 1.3; color: var(--c10); margin: 4px 0 8px; text-shadow: 4px 4px 0 var(--c2); word-break: break-word; }
+.item .rar { font-family: "Press Start 2P", monospace; font-size: 15px; display: inline-block; padding: 6px 8px; background: var(--rc, var(--c13)); color: var(--c0); }
+.item .desc { font-size: 24px; margin: 12px 0; }
+.item dl { display: grid; grid-template-columns: auto 1fr; gap: 4px 14px; margin: 0; }
+.item dt { color: var(--c6); }
+.item dd { margin: 0; color: var(--c7); }
+.quest h2 { font-family: "Press Start 2P", monospace; font-size: 18px; color: var(--c11); margin: 0 0 12px; line-height: 1.4; }
+.levels { list-style: none; margin: 0; padding: 0; }
+.levels li { display: grid; grid-template-columns: 82px 1fr; gap: 12px; align-items: center; }
+.levels .lv { font-family: "Press Start 2P", monospace; font-size: 15px; color: var(--c0); background: var(--fc); text-align: center; padding: 14px 4px; border: 4px solid var(--c7); }
+.levels .what { font-size: 26px; line-height: 1.1; }
+.levels .what b { font-weight: 400; color: var(--c10); }
+.levels .what small { display: block; color: var(--c6); font-size: 21px; }
+.levels .step { grid-column: 1 / -1; display: grid; grid-template-columns: 82px 1fr; gap: 12px; height: 46px; align-items: center; }
+.levels .step span:first-child { justify-self: center; width: 8px; height: 100%; background: var(--c7); position: relative; }
+.levels .step span:first-child::after { content: ""; position: absolute; left: -8px; bottom: -2px; width: 0; height: 0; border-left: 12px solid transparent; border-right: 12px solid transparent; border-top: 12px solid var(--c7); }
+.levels .step span:last-child { color: var(--c14); font-size: 22px; }
+.levels li.here .lv { border-color: var(--c10); }
+.cta { display: inline-block; margin-top: 18px; font: 15px "Press Start 2P", monospace; background: var(--c11); color: var(--c0); padding: 12px 14px; text-decoration: none; box-shadow: 4px 4px 0 var(--c0); line-height: 1.4; }
+.cta:hover { background: var(--c10); color: var(--c0); }
+.unlocks { margin-top: 26px; }
+.unlocks h2 { font-family: "Press Start 2P", monospace; font-size: 17px; color: var(--c9); margin: 0 0 10px; line-height: 1.4; }
+.chips { display: flex; flex-wrap: wrap; gap: 10px; list-style: none; padding: 0; margin: 0; }
+.chips a { display: inline-block; background: var(--c0); border: 4px solid var(--fc); padding: 4px 10px; color: var(--c7); text-decoration: none; font-size: 22px; }
+.chips a:hover { background: var(--fc); color: var(--c0); }
+.chips small { color: var(--c6); }
+.chips a:hover small { color: var(--c0); }
+
+/* skill tree */
+.skill { border: 4px solid var(--c7); background: var(--c0); padding: 10px; overflow-x: auto; box-shadow: 8px 8px 0 var(--c0); }
+.skill svg { display: block; shape-rendering: crispEdges; }
+.skill text { font-family: "VT323", monospace; }
+
+@media (max-width: 900px) {
+  .kingdom, .item { grid-template-columns: 1fr; }
+  .meters { grid-template-columns: 1fr; }
+}
+@media (max-width: 760px) {
+  main { padding: 14px 12px 28px; }
+  .hud { padding: 8px 12px; gap: 4px 14px; }
+  .hud .brand { font-size: 16px; }
+  .hud nav { font-size: 21px; gap: 2px 14px; }
+  .title { font-size: 20px; }
+  .item .name { font-size: 28px; }
+  .stats .sprite { width: 110px; height: 110px; }
+  .world svg { min-width: 700px; }
+}
+body { min-height: 100vh; }

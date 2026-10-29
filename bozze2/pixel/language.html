@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kingdom — lexodus (pixel draft)</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body data-page="language">
+<header class="hud">
+  <a class="brand" href="index.html">LEX<span>O</span>DUS</a>
+  <nav aria-label="Main">
+    <a href="index.html">World map</a>
+    <a href="language.html?code=it">Kingdom: Italian</a>
+    <a href="word.html?lang=it&amp;w=caff%C3%A8&amp;n=1&amp;from=ota">Item: caffè</a>
+    <a href="tree.html?lang=it&amp;w=caff%C3%A8&amp;n=1">Skill tree</a>
+    <a href="../index.html">All drafts</a>
+    <a href="../../index.html">Real site</a>
+  </nav>
+</header>
+<main>
+<p id="loading">LOADING<span class="blink">_</span></p>
+<div id="app" hidden>
+  <div class="kingdom">
+    <aside id="stats" class="stats box">
+      <h1 id="kname"></h1>
+      <div id="sprite"></div>
+      <dl id="dl"></dl>
+      <label><span class="visually-hidden">Go to</span><select id="jump"></select></label>
+    </aside>
+    <div class="meters">
+      <section id="from-col" aria-labelledby="t1" class="box">
+        <h2 id="t1" class="took">WORDS TAKEN</h2>
+        <p id="from-sum" class="sum"></p>
+        <ul id="from-list" class="hp"></ul>
+        <button type="button" id="from-more" class="btn" hidden></button>
+      </section>
+      <section aria-labelledby="t2" class="box">
+        <h2 id="t2" class="gave">WORDS GIVEN</h2>
+        <p id="to-sum" class="sum"></p>
+        <ul id="to-list" class="hp"></ul>
+        <button type="button" id="to-more" class="btn" hidden></button>
+      </section>
+    </div>
+  </div>
+</div>
+</main>
+<p class="footer">Data: English Wiktionary, extracted by <a href="https://kaikki.org/">Wiktextract / kaikki.org</a>, downloaded 18 October 2026, licence <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>. Draft “pixel”: not the real site.</p>
+<script src="../../data/lingue.js"></script>
+<script src="../../data/archi.js"></script>
+<script src="../js/dati.js"></script>
+<script src="js/pagine.js"></script>
+</body>
+</html>

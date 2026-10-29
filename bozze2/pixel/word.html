@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Item — lexodus (pixel draft)</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body data-page="word">
+<header class="hud">
+  <a class="brand" href="index.html">LEX<span>O</span>DUS</a>
+  <nav aria-label="Main">
+    <a href="index.html">World map</a>
+    <a href="language.html?code=it">Kingdom: Italian</a>
+    <a href="word.html?lang=it&amp;w=caff%C3%A8&amp;n=1&amp;from=ota">Item: caffè</a>
+    <a href="tree.html?lang=it&amp;w=caff%C3%A8&amp;n=1">Skill tree</a>
+    <a href="../index.html">All drafts</a>
+    <a href="../../index.html">Real site</a>
+  </nav>
+</header>
+<main>
+<p id="loading">LOADING<span class="blink">_</span></p>
+<div id="app" hidden>
+  <div class="item">
+    <section class="box" aria-labelledby="name">
+      <span id="rar" class="rar"></span>
+      <h1 id="name" class="name"></h1>
+      <p id="desc" class="desc"></p>
+      <dl id="dl"></dl>
+    </section>
+    <section class="box quest" aria-labelledby="q">
+      <h2 id="q">QUEST LOG: HOW IT GOT HERE</h2>
+      <ol id="levels" class="levels"></ol>
+      <a id="tree" class="cta" href="#">OPEN SKILL TREE ▶</a>
+    </section>
+  </div>
+  <section class="unlocks box" aria-labelledby="u">
+    <h2 id="u">UNLOCKED IN OTHER KINGDOMS</h2>
+    <ul id="chips" class="chips"></ul>
+  </section>
+</div>
+</main>
+<p class="footer">Data: English Wiktionary, extracted by <a href="https://kaikki.org/">Wiktextract / kaikki.org</a>, downloaded 18 October 2026, licence <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>. Draft “pixel”: not the real site.</p>
+
+<script src="../js/dati.js"></script>
+<script src="js/pagine.js"></script>
+</body>
+</html>

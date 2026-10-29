@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LEXODUS — world map (pixel draft)</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body data-page="home">
+<header class="hud">
+  <a class="brand" href="index.html">LEX<span>O</span>DUS</a>
+  <nav aria-label="Main">
+    <a href="index.html">World map</a>
+    <a href="language.html?code=it">Kingdom: Italian</a>
+    <a href="word.html?lang=it&amp;w=caff%C3%A8&amp;n=1&amp;from=ota">Item: caffè</a>
+    <a href="tree.html?lang=it&amp;w=caff%C3%A8&amp;n=1">Skill tree</a>
+    <a href="../index.html">All drafts</a>
+    <a href="../../index.html">Real site</a>
+  </nav>
+</header>
+<main>
+<p id="loading">LOADING<span class="blink">_</span></p>
+<div id="app" hidden>
+  <h1 class="title">SELECT A KINGDOM<span class="blink">_</span></h1>
+  <p class="intro">33 language kingdoms; the colour of the flag is the clan (family). Roads join kingdoms of the same clan. Enter a kingdom to see the words it took and gave, or pick up an item: <a href="word.html?lang=it&amp;w=caff%C3%A8&amp;n=1&amp;from=ota">caffè</a>.</p>
+  <div id="world" class="world"></div>
+  <ul id="legend" class="legend"></ul>
+</div>
+</main>
+<p class="footer">Data: English Wiktionary, extracted by <a href="https://kaikki.org/">Wiktextract / kaikki.org</a>, downloaded 18 October 2026, licence <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>. Draft “pixel”: not the real site.</p>
+<script src="../../data/lingue.js"></script>
+<script src="../js/dati.js"></script>
+<script src="js/pagine.js"></script>
+</body>
+</html>
