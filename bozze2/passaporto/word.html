@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Passport — lexodus (passport draft)</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Staatliches&family=Spectral:ital,wght@0,400;0,600;1,400&family=Share+Tech+Mono&family=Kalam:wght@400;700&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body data-page="word">
+<header class="counter">
+  <a class="brand" href="index.html">lexodus</a>
+  <nav aria-label="Main">
+    <a href="index.html">Passport office</a>
+    <a href="language.html?code=it">Italian register</a>
+    <a href="word.html?lang=it&amp;w=caff%C3%A8&amp;n=1&amp;from=ota">Passport of caffè</a>
+    <a href="../index.html">All drafts</a>
+    <a href="../../index.html">Real site</a>
+  </nav>
+</header>
+<main>
+<p id="loading">Checking papers&hellip;</p>
+<div id="app" hidden>
+  <div class="spread">
+    <section class="page left paper" aria-label="Data page">
+      <div class="left-inner">
+        <div class="page-label"><span>Passport · words</span><span id="passno" class="page-no"></span></div>
+        <div class="datapage">
+          <div class="portrait"><span class="big" id="w-big"></span><span class="ghost" id="w-ghost" aria-hidden="true"></span></div>
+          <div id="fields" class="fields"></div>
+          <div id="remarks" class="remarks field"></div>
+        </div>
+      </div>
+      <div id="mrz" class="mrz" aria-label="Machine-readable zone"></div>
+    </section>
+    <section class="page right paper" aria-labelledby="visa-title">
+      <div class="page-label"><span>Visas · entries</span><span class="page-no">2</span></div>
+      <h2 id="visa-title">The way it came</h2>
+      <p class="note">One stamp for every language the word crossed, from where it was born down to today. Ink = how it entered.</p>
+      <div id="entry-stamps" class="stamps"></div>
+      <ul id="inks" class="legend-inks"></ul>
+    </section>
+  </div>
+  <div id="visas" class="spread" hidden>
+    <section class="page left paper visas" aria-labelledby="onward-title" style="grid-column: 1 / -1; border-radius: 10px;">
+      <div class="page-label"><span>Visas · onward</span><span class="page-no">3</span></div>
+      <h2 id="onward-title">Then taken by</h2>
+      <p id="visa-note" class="note"></p>
+      <div id="visa-stamps" class="stamps"></div>
+    </section>
+  </div>
+</div>
+</main>
+<p class="footer">Data: English Wiktionary, extracted by <a href="https://kaikki.org/">Wiktextract / kaikki.org</a>, downloaded 18 October 2026, licence <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>. Draft “passport”: not the real site.</p>
+
+<script src="../js/dati.js"></script>
+<script src="js/pagine.js"></script>
+</body>
+</html>

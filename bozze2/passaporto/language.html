@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Customs register — lexodus (passport draft)</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Staatliches&family=Spectral:ital,wght@0,400;0,600;1,400&family=Share+Tech+Mono&family=Kalam:wght@400;700&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body data-page="language">
+<header class="counter">
+  <a class="brand" href="index.html">lexodus</a>
+  <nav aria-label="Main">
+    <a href="index.html">Passport office</a>
+    <a href="language.html?code=it">Italian register</a>
+    <a href="word.html?lang=it&amp;w=caff%C3%A8&amp;n=1&amp;from=ota">Passport of caffè</a>
+    <a href="../index.html">All drafts</a>
+    <a href="../../index.html">Real site</a>
+  </nav>
+</header>
+<main>
+<p id="loading">Checking papers&hellip;</p>
+<div id="app" hidden>
+ <div class="register-wrap">
+  <div class="register-top">
+    <h1><small>Customs register</small><span id="lang"></span></h1>
+    <p id="facts" class="facts"></p>
+    <label><span class="visually-hidden">Go to</span><select id="jump"></select></label>
+    <div id="officer" class="officer" aria-hidden="true"></div>
+  </div>
+  <div class="ledger">
+    <section id="from-folio" class="folio" aria-labelledby="in-title">
+      <div class="folio-head"><h2 id="in-title">In · entries</h2><span class="sub">words taken from each language<br>borrowed, learned Latin, calques</span></div>
+      <table class="book"><thead><tr><th class="no">No.</th><th class="who">Came from</th><th class="num">Words</th><th>Declared, e.g.</th></tr></thead><tbody id="from-body"></tbody></table>
+      <button type="button" id="from-more" class="turn" hidden></button>
+    </section>
+    <section class="folio" aria-labelledby="out-title">
+      <div class="folio-head"><h2 id="out-title">Out · exits</h2><span class="sub">words each language<br>took from this one</span></div>
+      <table class="book"><thead><tr><th class="no">No.</th><th class="who">Went to</th><th class="num">Words</th><th>Declared, e.g.</th></tr></thead><tbody id="to-body"></tbody></table>
+      <button type="button" id="to-more" class="turn" hidden></button>
+    </section>
+  </div>
+  <div id="travel-block" class="register-foot" hidden>
+    <div class="folio-head"><h2>Frequent travellers</h2><span class="sub">words whose way crosses the most languages</span></div>
+    <ol id="travellers" class="travellers"></ol>
+  </div>
+ </div>
+</div>
+</main>
+<p class="footer">Data: English Wiktionary, extracted by <a href="https://kaikki.org/">Wiktextract / kaikki.org</a>, downloaded 18 October 2026, licence <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>. Draft “passport”: not the real site.</p>
+<script src="../../data/lingue.js"></script>
+<script src="../../data/archi.js"></script>
+<script src="../js/dati.js"></script>
+<script src="js/pagine.js"></script>
+</body>
+</html>
