@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shipping tag — lexodus (market draft)</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Stencil+Display:wght@700;800;900&family=Permanent+Marker&family=Barlow+Condensed:wght@400;600&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body data-page="word">
+<header class="dock">
+  <a class="brand" href="index.html">LEXODUS &amp; CO.</a>
+  <nav aria-label="Main">
+    <a href="index.html">Warehouse</a>
+    <a href="language.html?code=it">Italian import / export</a>
+    <a href="word.html?lang=it&amp;w=caff%C3%A8&amp;n=1&amp;from=ota">Parcel: caffè</a>
+    <a href="../index.html">All drafts</a>
+    <a href="../../index.html">Real site</a>
+  </nav>
+</header>
+<main>
+<p id="loading">Unloading&hellip;</p>
+<div id="app" hidden>
+  <div class="shipment">
+    <div><div class="rail"></div><div id="bigtag" class="bigtag hang"></div></div>
+    <section class="manifest" aria-labelledby="bl">
+      <div class="stampbox"><span class="big-stamp">IMPORT</span></div>
+      <h2 id="bl" class="sten">Bill of lading</h2>
+      <table><thead><tr><th>Leg</th><th>From</th><th>To</th><th>Goods</th><th>Terms</th></tr></thead><tbody id="legs"></tbody></table>
+      <p id="ety" class="ety"></p>
+      <p><a id="wikt" href="#">Entry on en.wiktionary.org</a></p>
+    </section>
+  </div>
+  <section class="reexport" aria-labelledby="re">
+    <h2 id="re" class="sten">Re-exported</h2>
+    <p id="re-sum" class="note"></p>
+    <div class="line-rail"><div class="rail"></div><div id="clothes" class="clothes"></div></div>
+  </section>
+</div>
+</main>
+<p class="footer">Data: English Wiktionary, extracted by <a href="https://kaikki.org/">Wiktextract / kaikki.org</a>, downloaded 18 October 2026, licence <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>. Draft “market”: not the real site.</p>
+
+<script src="../js/dati.js"></script>
+<script src="js/pagine.js"></script>
+</body>
+</html>

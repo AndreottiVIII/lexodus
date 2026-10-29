@@ -1,0 +1,149 @@
+/* lexodus, draft "mercato" (mandate 16): words are goods. Kraft paper, shipping crates with stencil, tags on a
+   string, IMPORT / EXPORT stamps, sealing-wax red; prices replaced by the number of words. */
+:root {
+  --kraft: #c9a36b;
+  --kraft-dark: #b38a52;
+  --kraft-light: #dcbd8a;
+  --stencil: #16130f;
+  --wax: #a3201a;
+  --tag: #efe2c2;
+  --pine: #d9b27a;
+  --pine-dark: #a77a43;
+  --muted: #4a3b27;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; color: var(--stencil); font: 400 19px/1.4 "Barlow Condensed", "Arial Narrow", sans-serif;
+  background-color: var(--kraft);
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='k'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.012 .5' numOctaves='3' seed='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .22 0 0 0 0 .08 0 0 0 .32 0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23k)'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .2 0 0 0 0 .12 0 0 0 0 .05 0 0 0 .2 0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+a { color: inherit; }
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.sten { font-family: "Big Shoulders Stencil Display", "Impact", sans-serif; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; }
+.marker { font-family: "Permanent Marker", "Segoe Print", cursive; font-weight: 400; }
+.dock { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 22px; padding: 10px 24px; background: var(--stencil); color: var(--kraft-light); }
+.dock .brand { font-family: "Big Shoulders Stencil Display", sans-serif; font-weight: 900; font-size: 30px; letter-spacing: .08em; text-decoration: none; color: #f0d9a8; }
+.dock nav { display: flex; flex-wrap: wrap; gap: 2px 18px; font-size: 18px; text-transform: uppercase; letter-spacing: .06em; }
+.dock nav a { text-decoration: none; }
+.dock nav a:hover { color: #fff; text-decoration: underline; }
+main { max-width: 1200px; margin: 0 auto; padding: 22px 24px 36px; }
+.footer { max-width: 1200px; margin: 0 auto; padding: 0 24px 28px; color: var(--muted); font-size: 16px; }
+h1.sten { font-size: 58px; line-height: .95; margin: 0 0 6px; }
+.lead { max-width: 64ch; margin: 0 0 18px; color: var(--muted); }
+
+/* crates */
+.crate {
+  position: relative; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;
+  text-decoration: none; color: var(--stencil); padding: 16px 14px; min-height: 150px;
+  background-color: var(--pine);
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200'%3E%3Cfilter id='w'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.006 .12' numOctaves='3' seed='5' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .4 0 0 0 0 .25 0 0 0 0 .1 0 0 0 .45 0'/%3E%3C/filter%3E%3Crect width='400' height='200' filter='url(%23w)'/%3E%3C/svg%3E"),
+    repeating-linear-gradient(180deg, transparent 0 37px, rgba(70, 40, 10, .55) 37px 39px);
+  box-shadow: inset 0 0 0 10px var(--pine-dark), inset 0 0 0 12px rgba(60, 35, 10, .5), 0 6px 0 rgba(60, 35, 10, .35), 0 10px 20px rgba(60, 35, 10, .3);
+}
+.crate::before, .crate::after { content: ""; position: absolute; width: 8px; height: 8px; border-radius: 50%; background: #3a2a1a; top: 14px; }
+.crate::before { left: 14px; } .crate::after { right: 14px; }
+.crate:hover, .crate:focus-visible { transform: translateY(-3px); outline: 3px solid var(--wax); outline-offset: 2px; }
+.crate .nm { font-family: "Big Shoulders Stencil Display", sans-serif; font-weight: 900; text-transform: uppercase; font-size: 34px; line-height: .95; letter-spacing: .03em; opacity: .9; mix-blend-mode: multiply; }
+.crate .code { font-family: "Big Shoulders Stencil Display", sans-serif; font-weight: 800; font-size: 20px; letter-spacing: .3em; opacity: .75; }
+.crate .qty { font-family: "Big Shoulders Stencil Display", sans-serif; font-weight: 700; font-size: 19px; letter-spacing: .06em; margin-top: 4px; opacity: .85; }
+.crate.big .nm { font-size: 58px; }
+.crate.mid .nm { font-size: 42px; }
+.crate .fragile { position: absolute; right: 18px; bottom: 16px; transform: rotate(-12deg); color: var(--wax); border: 3px solid var(--wax); padding: 0 6px; font-family: "Big Shoulders Stencil Display", sans-serif; font-weight: 800; font-size: 17px; letter-spacing: .1em; opacity: .85; }
+.warehouse { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); grid-auto-flow: dense; gap: 14px; list-style: none; padding: 0; margin: 0; }
+.warehouse > li { display: flex; }
+.warehouse > li > .crate { flex: 1; }
+.warehouse > li.big { grid-column: span 2; grid-row: span 2; }
+.warehouse > li.mid { grid-column: span 2; }
+.seal { position: absolute; left: 18px; bottom: 14px; width: 34px; height: 34px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #d8443a, var(--wax) 55%, #6d120e); box-shadow: 0 2px 2px rgba(0,0,0,.35); display: grid; place-items: center; color: #f3c6b8; font-family: "Big Shoulders Stencil Display", sans-serif; font-size: 15px; font-weight: 800; }
+
+/* tags */
+.tag {
+  position: relative; display: inline-flex; flex-direction: column; gap: 1px; background: var(--tag); color: var(--stencil);
+  padding: 30px 14px 12px; min-width: 120px; text-decoration: none; line-height: 1.15;
+  clip-path: polygon(16px 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%, 0 16px);
+  transform: rotate(var(--r, 0deg)); transform-origin: 50% 0;
+  box-shadow: inset 0 0 0 1px rgba(80, 55, 20, .25);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.7' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .4 0 0 0 0 .3 0 0 0 0 .1 0 0 0 .12 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.tag::before { content: ""; position: absolute; top: 9px; left: 50%; width: 14px; height: 14px; margin-left: -7px; border-radius: 50%; background: var(--kraft); box-shadow: 0 0 0 4px #b98f52, inset 0 1px 2px rgba(0,0,0,.4); }
+.tag .w { font-family: "Permanent Marker", cursive; font-size: 22px; line-height: 1.1; word-break: break-word; }
+.tag .f { font-size: 15px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+.tag .f b { font-family: "Permanent Marker", cursive; font-weight: 400; text-transform: none; letter-spacing: 0; color: var(--stencil); font-size: 17px; }
+a.tag:hover { background-color: #fff6dc; }
+.hang { display: flex; flex-direction: column; align-items: center; }
+.hang .string { width: 2px; height: var(--len, 26px); background: repeating-linear-gradient(180deg, #6b5030 0 3px, #8a6a42 3px 6px); margin-bottom: -10px; position: relative; z-index: 1; }
+
+/* language page: import / export */
+.ledger-head { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 10px 30px; margin-bottom: 18px; }
+.ledger-head select { font: 600 18px "Barlow Condensed", sans-serif; padding: 6px 8px; background: var(--tag); border: 2px solid var(--stencil); }
+.trade { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+.side { position: relative; }
+.big-stamp { display: inline-block; font-family: "Big Shoulders Stencil Display", sans-serif; font-weight: 900; font-size: 54px; letter-spacing: .14em; color: var(--wax); border: 6px double var(--wax); padding: 0 16px; transform: rotate(-4deg); mix-blend-mode: multiply; opacity: .9; margin: 0 0 4px 6px; line-height: 1.1; }
+.side .sum { margin: 2px 0 12px; color: var(--muted); }
+.lots { list-style: none; margin: 0; padding: 0; display: grid; gap: 34px; }
+.lot { display: grid; grid-template-columns: 1fr; }
+.lot .crate { min-height: 0; flex-direction: row; justify-content: space-between; align-items: center; padding: 18px 26px 16px; text-align: left; }
+.lot .crate .nm { font-size: 34px; }
+.lot .crate .price { font-family: "Big Shoulders Stencil Display", sans-serif; font-weight: 900; font-size: 34px; text-align: right; line-height: .9; }
+.lot .crate .price small { display: block; font-size: 16px; letter-spacing: .12em; }
+.lot .tags { display: flex; flex-wrap: wrap; gap: 0 10px; padding: 0 16px; margin-top: -4px; }
+.more { margin-top: 18px; font: 800 20px "Big Shoulders Stencil Display", sans-serif; letter-spacing: .1em; text-transform: uppercase; background: var(--stencil); color: var(--kraft-light); border: 0; padding: 8px 18px; cursor: pointer; }
+.more:hover { background: var(--wax); color: #fff; }
+.note { color: var(--muted); font-size: 17px; }
+
+/* word page: the big tag and the bill of lading */
+.shipment { display: grid; grid-template-columns: 420px 1fr; gap: 40px; align-items: start; }
+.rail { height: 10px; background: linear-gradient(180deg, #555, #222); border-radius: 5px; margin: 0 0 0; box-shadow: 0 3px 4px rgba(0,0,0,.3); }
+.bigtag { display: flex; flex-direction: column; align-items: center; }
+.bigtag .string { height: 46px; }
+.bigtag .tag { width: 380px; padding: 48px 26px 22px; gap: 6px; --r: -2deg; }
+.bigtag .tag::before { top: 14px; width: 22px; height: 22px; margin-left: -11px; box-shadow: 0 0 0 6px #b98f52, inset 0 1px 2px rgba(0,0,0,.4); }
+.bigtag .tag .w { font-size: 64px; text-align: center; }
+.bigtag .tag .f { font-size: 17px; border-top: 1.5px solid rgba(60, 40, 10, .35); padding-top: 6px; }
+.bigtag .tag .f b { font-size: 26px; display: block; }
+.bigtag .tag .tr { font-family: "Barlow Condensed", sans-serif; font-size: 18px; color: var(--muted); text-transform: none; letter-spacing: 0; }
+.manifest { background: var(--tag); padding: 18px 22px; box-shadow: 0 6px 18px rgba(60, 35, 10, .3); position: relative; }
+.manifest h2 { margin: 0; font-size: 34px; }
+.manifest table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+.manifest th { text-align: left; font-size: 15px; letter-spacing: .1em; text-transform: uppercase; border-bottom: 2px solid var(--stencil); padding: 4px 6px; }
+.manifest td { border-bottom: 1px solid rgba(60, 40, 10, .3); padding: 6px; vertical-align: top; }
+.manifest td.m { font-family: "Permanent Marker", cursive; font-size: 20px; }
+.manifest .ety { margin: 12px 0 0; font-size: 18px; }
+.manifest .stampbox { position: absolute; right: 16px; top: 10px; }
+.manifest .stampbox .big-stamp { font-size: 30px; border-width: 4px; }
+.reexport { margin-top: 36px; }
+.reexport h2 { font-size: 34px; margin: 0; }
+.line-rail { position: relative; padding-top: 0; }
+.line-rail .rail { margin-top: 6px; }
+.clothes { display: flex; flex-wrap: wrap; gap: 0 14px; padding: 0 10px; }
+.clothes .hang:nth-child(3n+2) .string { --len: 40px; }
+.clothes .hang:nth-child(3n) .string { --len: 18px; }
+
+@media (max-width: 900px) {
+  .warehouse { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .trade, .shipment { grid-template-columns: 1fr; }
+}
+@media (max-width: 760px) {
+  main { padding: 14px 12px 28px; }
+  .dock { padding: 8px 12px; gap: 2px 14px; }
+  .dock .brand { font-size: 24px; }
+  .dock nav { font-size: 16px; gap: 2px 12px; }
+  h1.sten { font-size: 40px; }
+  .warehouse { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .warehouse > li.big { grid-row: span 1; }
+  .crate .nm { font-size: 26px; }
+  .crate.big .nm, .crate.mid .nm { font-size: 34px; }
+  .lot .crate .nm, .lot .crate .price { font-size: 26px; }
+  .big-stamp { font-size: 40px; }
+  .bigtag .tag { width: 100%; max-width: 340px; }
+  .bigtag .tag .w { font-size: 48px; }
+  .manifest { padding: 14px 12px; }
+  .manifest .stampbox { position: static; margin-bottom: 4px; }
+}
+.warehouse > li.big .crate { min-height: 320px; }
+.crate .fragile { top: 26px; bottom: auto; right: 26px; }
+@media (max-width: 760px) { .warehouse > li.big .crate { min-height: 150px; } .warehouse > li.big, .warehouse > li.mid { grid-column: span 2; } }
