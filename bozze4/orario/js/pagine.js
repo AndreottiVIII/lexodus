@@ -127,7 +127,7 @@
           '<p class="intro">' + E(p.significato || "") + ". " + (r.text ? "In the Wiktionary: “" + E(r.text) + "”" : "") + "</p>" +
           '<p class="stamp"><b>' + (stops.length - 1) + "</b>" + (stops.length - 1 === 1 ? "change" : "changes") + "</p>" +
           '<div class="tbl"><table><thead><tr>' + headN("Fermata", "Stop") + head("Stazione", "Station") + head("Forma", "Form") + '<th class="hide-s"><span class="it">Trascr.</span>Transliteration</th>' +
-          headN("Parole", "Words") + head("Come", "How it went on") + '<th class="n"><span class="it">Note</span>Notes</th></tr></thead><tbody>' +
+          headN("Parole", "Words") + '<th class="hide-s"><span class="it">Come</span>How it went on</th>' + '<th class="n"><span class="it">Note</span>Notes</th></tr></thead><tbody>' +
           stops.map(function (s, i) {
             var notes = "";
             if (quadro(L, s.code)) { notes += sym("◆"); used.d = 1; }
@@ -136,7 +136,7 @@
             if (i && pc[i] == null) used.x = 1;
             var script = s.term && !B.isLatinScript(s.term);
             return "<tr" + (s.here ? ' class="me"' : "") + '><td class="n">' + (i + 1) + '</td><td class="st">' + stName(L, s.code, s.name) + '</td><td class="form' + (script ? " ar" : "") + '"><bdi>' + E(s.term) + "</bdi></td>" +
-              '<td class="hide-s">' + E(s.tr && s.tr !== s.term ? s.tr : "") + '</td><td class="n">' + words + "</td><td>" + E(s.how || (s.here ? "terminus" : "")) + '</td><td class="note">' + notes + "</td></tr>";
+              '<td class="hide-s">' + E(s.tr && s.tr !== s.term ? s.tr : "") + '</td><td class="n">' + words + '</td><td class="hide-s">' + E(s.how || (s.here ? "terminus" : "")) + '</td><td class="note">' + notes + "</td></tr>";
           }).join("") + "</tbody></table></div>" +
           '<p class="intro" style="grid-column:1/-1;margin-top:11px">Words: all the words the station took from the one before it, the number this train shares with the others on the same line.</p></section>';
         if (onward.length) {
