@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>lexodus — the periodic table of languages (draft)</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,300..900;1,62..125,400..700&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body data-page="home">
+<header class="bar-top">
+  <a class="brand" href="index.html"><b>Lx</b>lexodus</a>
+  <nav aria-label="Main">
+    <a href="index.html">The table</a>
+    <a href="language.html?code=it">It — Italian</a>
+    <a href="word.html?lang=it&amp;w=caff%C3%A8&amp;n=1&amp;from=ota">caffè</a>
+    <a href="../index.html">All drafts</a>
+    <a href="../../index.html">Real site</a>
+  </nav>
+</header>
+<main>
+<p id="loading">Loading&hellip;</p>
+<div id="app" hidden>
+  <h1 class="chart-title">Periodic table of the languages</h1>
+  <p class="chart-sub">33 languages of Europe and its neighbours, grouped by family like the groups of the chart. The “atomic number” is the number of entries each has in English Wiktionary; under the name, words taken ← and given →.</p>
+  <div id="table" class="table">
+    <div class="keyrow">
+      <div class="key">
+        <div class="tile" style="--fam: var(--f-romance)"><span class="z">136,968</span><span class="s">It</span><span class="nm">Italian</span><span class="m">8,304 ← · → 9,358</span></div>
+        <dl><dt>136,968</dt><dd>entries in Wiktionary</dd><dt>It</dt><dd>symbol</dd><dt>←</dt><dd>words taken</dd><dt>→</dt><dd>words given</dd></dl>
+      </div>
+      <div class="formula-demo">
+        <p><b>A word is a formula.</b> Its languages, from the oldest to today:</p>
+        <p><a href="word.html?lang=it&amp;w=caff%C3%A8&amp;n=1&amp;from=ota" style="font-size:26px;font-weight:800;text-decoration:none">caffè = Ar → Ota → It</a></p>
+        <p>Arabic <i>qahwa</i>, then Ottoman Turkish <i>kahve</i>, then Italian <i>caffè</i>. Languages outside the 33 often have longer symbols (Ota, Grc); a star marks a reconstructed proto-language.</p>
+        <ul class="legend">
+          <li><i style="--fam:var(--f-romance)"></i>Romance</li><li><i style="--fam:var(--f-germanic)"></i>Germanic</li>
+          <li><i style="--fam:var(--f-slavic)"></i>Slavic</li><li><i style="--fam:var(--f-baltic)"></i>Baltic</li>
+          <li><i style="--fam:var(--f-uralic)"></i>Finno-Ugric</li><li><i style="--fam:var(--f-semitic)"></i>Semitic</li>
+          <li><i style="--fam:var(--f-turkic)"></i>Turkic</li><li><i style="--fam:var(--f-other)"></i>Greek, Albanian, Iranian</li>
+          <li><i style="--fam:var(--f-world)"></i>Rest of the world</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <h2 class="donors-title">Outside the 33: the biggest donors (number = words they gave to the 33)</h2>
+  <div id="donors" class="donors"></div>
+</div>
+</main>
+<p class="footer">Data: English Wiktionary, extracted by <a href="https://kaikki.org/">Wiktextract / kaikki.org</a>, downloaded 18 October 2026, licence <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>. Draft “periodic table”: not the real site.</p>
+<script src="../../data/lingue.js"></script>
+<script src="../../data/archi.js"></script>
+<script src="../js/dati.js"></script>
+<script src="js/pagine.js"></script>
+</body>
+</html>

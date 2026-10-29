@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Element sheet — lexodus (periodic table draft)</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,300..900;1,62..125,400..700&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body data-page="language">
+<header class="bar-top">
+  <a class="brand" href="index.html"><b>Lx</b>lexodus</a>
+  <nav aria-label="Main">
+    <a href="index.html">The table</a>
+    <a href="language.html?code=it">It — Italian</a>
+    <a href="word.html?lang=it&amp;w=caff%C3%A8&amp;n=1&amp;from=ota">caffè</a>
+    <a href="../index.html">All drafts</a>
+    <a href="../../index.html">Real site</a>
+  </nav>
+</header>
+<main>
+<p id="loading">Loading&hellip;</p>
+<div id="app" hidden>
+  <div class="sheet">
+    <aside class="element">
+      <a id="element-tile"></a>
+      <dl id="props" class="props"></dl>
+      <label><span class="visually-hidden">Go to</span><select id="jump"></select></label>
+    </aside>
+    <div class="lists">
+      <section id="from-col" aria-labelledby="from-title">
+        <h2 id="from-title">← Took from</h2>
+        <p id="from-sum" class="sum"></p>
+        <ul id="from-list" class="rows"></ul>
+        <button type="button" id="from-more" class="more" hidden></button>
+      </section>
+      <section aria-labelledby="to-title">
+        <h2 id="to-title">→ Gave to</h2>
+        <p id="to-sum" class="sum"></p>
+        <ul id="to-list" class="rows"></ul>
+        <button type="button" id="to-more" class="more" hidden></button>
+      </section>
+      <section id="formula-block" class="formulas" hidden aria-labelledby="f-title">
+        <h2 id="f-title">Longest formulas</h2>
+        <p class="sum">Words whose way crosses the most languages, oldest on the left.</p>
+        <ol id="formulas"></ol>
+      </section>
+    </div>
+  </div>
+</div>
+</main>
+<p class="footer">Data: English Wiktionary, extracted by <a href="https://kaikki.org/">Wiktextract / kaikki.org</a>, downloaded 18 October 2026, licence <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>. Draft “periodic table”: not the real site.</p>
+<script src="../../data/lingue.js"></script>
+<script src="../../data/archi.js"></script>
+<script src="../js/dati.js"></script>
+<script src="js/pagine.js"></script>
+</body>
+</html>

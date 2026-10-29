@@ -27,7 +27,7 @@
   FAMILIES.forEach(function (f) { FAM_BY_ID[f.id] = f; });
   var EXPLICIT = {
     romance: "it fr es pt ca ro la fro frm pro vec scn nap lmo osp roa gl oc an ast rm fur lld sc co lij pms egl rgn dlm wa pcd nrf frp xno ofr ruo rup ist mxi lad LATINO",
-    germanic: "en enm ang de gmh goh nl dum odt sv da nb nn no is fo non gml nds yi fy ofs frk got sco lb gsw bar af osx sxu vls pdc",
+    germanic: "lng en enm ang de gmh goh nl dum odt sv da nb nn no is fo non gml nds yi fy ofs frk got sco lb gsw bar af osx sxu vls pdc",
     slavic: "pl cs sk ru uk be bg mk sh sl cu orv hsb dsb csb szl rue sr hr bs",
     baltic: "lt lv olt prg sgs ltg",
     uralic: "hu fi et fit krl vep vot liv se sme smn kv mhr mdf myv ohu sma izh fkv",
