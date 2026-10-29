@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Drawer — lexodus (card catalogue draft)</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Caveat:wght@500;700&family=Courier+Prime&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body data-page="language">
+<header class="sign">
+  <a class="brand" href="index.html">lexodus</a>
+  <nav aria-label="Main">
+    <a href="index.html">The cabinet</a>
+    <a href="language.html?code=it">Drawer: Italian</a>
+    <a href="word.html?lang=it&amp;w=caff%C3%A8&amp;n=1&amp;from=ota">Card: caffè</a>
+    <a href="../index.html">All drafts</a>
+    <a href="../../index.html">Real site</a>
+  </nav>
+</header>
+<main>
+<p id="loading">Looking in the drawers&hellip;</p>
+<div id="app" hidden>
+  <div class="drawer-head">
+    <div><h1 id="lang"></h1><p id="facts"></p></div>
+    <label><span class="visually-hidden">Go to</span><select id="jump"></select></label>
+  </div>
+  <div class="open-drawers">
+    <section id="from-box" class="box oak" aria-label="Took from">
+      <div id="from-front" class="front oak"></div>
+      <div class="well"><ol id="from-stack" class="stack"></ol></div>
+      <button type="button" id="from-more" class="pullmore" hidden></button>
+    </section>
+    <section class="box oak" aria-label="Gave to">
+      <div id="to-front" class="front oak"></div>
+      <div class="well"><ol id="to-stack" class="stack"></ol></div>
+      <button type="button" id="to-more" class="pullmore" hidden></button>
+    </section>
+  </div>
+</div>
+</main>
+<p class="footer">Data: English Wiktionary, extracted by <a href="https://kaikki.org/">Wiktextract / kaikki.org</a>, downloaded 18 October 2026, licence <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>. Draft “card catalogue”: not the real site.</p>
+<script src="../../data/lingue.js"></script>
+<script src="../../data/archi.js"></script>
+<script src="../js/dati.js"></script>
+<script src="js/pagine.js"></script>
+</body>
+</html>

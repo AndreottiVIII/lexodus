@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Catalogue card — lexodus (card catalogue draft)</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Caveat:wght@500;700&family=Courier+Prime&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body data-page="word">
+<header class="sign">
+  <a class="brand" href="index.html">lexodus</a>
+  <nav aria-label="Main">
+    <a href="index.html">The cabinet</a>
+    <a href="language.html?code=it">Drawer: Italian</a>
+    <a href="word.html?lang=it&amp;w=caff%C3%A8&amp;n=1&amp;from=ota">Card: caffè</a>
+    <a href="../index.html">All drafts</a>
+    <a href="../../index.html">Real site</a>
+  </nav>
+</header>
+<main>
+<p id="loading">Looking in the drawers&hellip;</p>
+<div id="app" hidden>
+  <div class="catalogue">
+    <article class="card big" aria-label="Catalogue card">
+      <span id="callno" class="callno"></span>
+      <h1 id="entry" class="entry"></h1>
+      <p id="meaning" class="typed"></p>
+      <p class="typed">Tracings, oldest first:</p>
+      <ol id="trace" class="trace"></ol>
+      <p id="ety" class="typed"></p>
+      <p class="typed small"><a id="wikt" href="#">en.wiktionary.org</a></p>
+      <span id="margin" class="margin-note pen blue"></span>
+    </article>
+    <section class="seealso" aria-labelledby="see-title">
+      <h2 id="see-title">See also</h2>
+      <p id="see-sum"></p>
+      <div class="box oak"><div class="well"><ol id="see" class="stack"></ol></div></div>
+    </section>
+  </div>
+</div>
+</main>
+<p class="footer">Data: English Wiktionary, extracted by <a href="https://kaikki.org/">Wiktextract / kaikki.org</a>, downloaded 18 October 2026, licence <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>. Draft “card catalogue”: not the real site.</p>
+
+<script src="../js/dati.js"></script>
+<script src="js/pagine.js"></script>
+</body>
+</html>

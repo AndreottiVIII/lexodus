@@ -1,0 +1,177 @@
+/* lexodus, draft "schedario" (mandate 16): a library card catalogue.
+   Home = the oak cabinet, one drawer per language; language = two drawers pulled out, cards stacked and staggered;
+   word = the catalogue card of the word, typed, with pen notes in red and blue. */
+:root {
+  --wall: #e9e3d6;
+  --oak: #9a6a3a;
+  --oak-dark: #6e4521;
+  --brass: #c9a24f;
+  --brass-dark: #8a6a26;
+  --card: #fbf7ea;
+  --card-line: #a9c4dd;
+  --card-red: #d9534f;
+  --type: #23211d;
+  --red-pen: #c0281e;
+  --blue-pen: #1d47a8;
+  --muted: #5c564a;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; color: var(--type); font: 18px/1.45 "Special Elite", "Courier New", monospace;
+  background-color: var(--wall);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .3 0 0 0 0 .25 0 0 0 0 .2 0 0 0 .12 0'/%3E%3C/filter%3E%3Crect width='260' height='260' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+a { color: inherit; }
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.pen { font-family: "Caveat", "Segoe Print", cursive; font-size: 24px; line-height: 1.1; }
+.pen.red { color: var(--red-pen); }
+.pen.blue { color: var(--blue-pen); }
+
+/* the reading room sign at the top */
+.sign { display: flex; flex-wrap: wrap; gap: 4px 22px; align-items: baseline; padding: 12px 24px; border-bottom: 2px solid #c8bfa9; }
+.sign .brand { font-size: 26px; text-decoration: none; letter-spacing: .06em; }
+.sign nav { display: flex; flex-wrap: wrap; gap: 2px 18px; font-size: 17px; }
+.sign nav a { text-decoration: none; border-bottom: 1px solid #a99f86; }
+.sign nav a:hover { color: var(--red-pen); }
+main { max-width: 1200px; margin: 0 auto; padding: 20px 24px 36px; }
+.footer { max-width: 1200px; margin: 0 auto; padding: 0 24px 28px; font: 15px/1.4 "Courier Prime", "Courier New", monospace; color: var(--muted); }
+
+/* ---------- wood ---------- */
+.oak {
+  background-color: var(--oak);
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='300'%3E%3Cfilter id='w'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.004 .09' numOctaves='4' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .25 0 0 0 0 .13 0 0 0 0 .04 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='600' height='300' filter='url(%23w)'/%3E%3C/svg%3E"),
+    linear-gradient(180deg, rgba(255,255,255,.08), rgba(0,0,0,.12));
+  background-size: 600px 300px, 100% 100%;
+}
+.cabinet { padding: 22px; border-radius: 6px; box-shadow: 0 2px 0 #4b2e15, 0 24px 40px rgba(60, 35, 10, .35), inset 0 0 0 4px rgba(0,0,0,.15); }
+.cabinet h1 { margin: 0 0 16px; text-align: center; color: #f4e6c8; font-size: 30px; letter-spacing: .3em; text-shadow: 0 2px 0 rgba(0,0,0,.4); font-weight: 400; }
+.drawers { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px; list-style: none; margin: 0; padding: 0; }
+.drawer {
+  position: relative; display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 14px 10px 16px; text-decoration: none;
+  border-radius: 3px; box-shadow: inset 0 0 0 2px rgba(0,0,0,.25), inset 0 3px 0 rgba(255,255,255,.12), inset 0 -4px 0 rgba(0,0,0,.25), 0 1px 0 rgba(255,255,255,.1);
+  transition: transform .12s;
+}
+.drawer:hover, .drawer:focus-visible { transform: translateY(4px) scale(1.01); outline: none; box-shadow: inset 0 0 0 2px rgba(0,0,0,.25), 0 0 0 3px #f4e6c8; }
+.holder { width: 86%; padding: 4px; border-radius: 3px; background: linear-gradient(180deg, #e4c675, var(--brass) 40%, var(--brass-dark)); box-shadow: 0 1px 2px rgba(0,0,0,.5); }
+.holder .lab { display: block; background: var(--card); padding: 4px 6px 3px; text-align: center; line-height: 1.15; font-size: 16px; box-shadow: inset 0 1px 3px rgba(0,0,0,.35); }
+.holder .lab b { display: block; font-weight: 400; font-size: 18px; text-transform: uppercase; letter-spacing: .04em; }
+.holder .lab small { font-size: 15px; color: var(--muted); }
+.pull { width: 54%; height: 20px; border-radius: 0 0 40px 40px / 0 0 22px 22px; background: linear-gradient(180deg, #f0d68a, var(--brass) 45%, var(--brass-dark)); box-shadow: 0 3px 3px rgba(0,0,0,.45), inset 0 2px 0 rgba(255,255,255,.5); position: relative; }
+.pull::before, .pull::after { content: ""; position: absolute; top: -3px; width: 8px; height: 8px; border-radius: 50%; background: #6b521a; }
+.pull::before { left: -2px; } .pull::after { right: -2px; }
+.drawer.blank { pointer-events: none; opacity: .9; }
+.drawer.blank .lab { color: transparent; }
+.intro { max-width: 68ch; margin: 0 0 18px; }
+.intro .pen { font-size: 26px; }
+
+/* ---------- index cards ---------- */
+.card {
+  position: relative; background: var(--card); padding: 30px 18px 14px; min-width: 0;
+  background-image:
+    linear-gradient(var(--card-red), var(--card-red)),
+    repeating-linear-gradient(180deg, transparent 0 25px, var(--card-line) 25px 26px);
+  background-size: 100% 1.5px, 100% 100%;
+  background-position: 0 56px, 0 56px;
+  background-repeat: no-repeat, no-repeat;
+  box-shadow: 0 1px 0 rgba(0,0,0,.08), 0 2px 6px rgba(60, 40, 10, .25);
+  border-radius: 2px;
+}
+.card .tab {
+  position: absolute; top: -26px; left: var(--tab-x, 0); height: 27px; padding: 3px 14px 0; background: var(--card);
+  border-radius: 6px 6px 0 0; font-size: 16px; white-space: nowrap; box-shadow: 0 -1px 2px rgba(60, 40, 10, .15);
+  text-transform: uppercase; letter-spacing: .04em; text-decoration: none; max-width: 70%; overflow: hidden; text-overflow: ellipsis;
+}
+.card .head { display: flex; justify-content: space-between; gap: 10px; align-items: baseline; margin-top: -10px; height: 34px; }
+.card .head .who { font-size: 20px; text-decoration: none; }
+.card .head .who:hover { text-decoration: underline; }
+.card .head .cnt { font-size: 20px; white-space: nowrap; }
+.card .typed { margin: 4px 0 0; line-height: 26px; font-size: 17px; }
+.card .typed a { text-decoration: none; border-bottom: 1px dotted #888; }
+.card .typed a:hover { border-bottom-style: solid; }
+.card .note { position: absolute; right: 16px; bottom: 6px; transform: rotate(-3deg); }
+
+/* drawer pulled out: the box, the front, the stack */
+.open-drawers { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+.box { border-radius: 4px; padding: 0 14px 18px; position: relative; }
+.box .front { margin: 0 -14px 18px; padding: 14px 14px 12px; border-radius: 4px 4px 0 0; display: flex; flex-direction: column; align-items: center; gap: 8px; box-shadow: inset 0 -5px 0 rgba(0,0,0,.25); }
+.box .front .holder { width: auto; min-width: 60%; }
+.box .front .holder .lab { padding: 4px 16px; }
+.box .well { background: linear-gradient(180deg, #4a2f17, #5a3a1c 30px, #6a4524); border-radius: 2px; padding: 34px 10px 10px; box-shadow: inset 0 6px 14px rgba(0,0,0,.55); }
+.stack { list-style: none; margin: 0; padding: 0; }
+.stack li { margin-top: -38px; transform: rotate(var(--rot, 0deg)) translateX(var(--dx, 0)); transition: transform .12s; position: relative; }
+.stack li:first-child { margin-top: 0; }
+.stack li:hover, .stack li:focus-within { transform: translateY(-8px) rotate(0deg); z-index: 5; }
+.stack .card { min-height: 150px; }
+.pullmore { margin-top: 14px; font: 17px "Special Elite", monospace; background: var(--card); border: 0; padding: 7px 14px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,.4); }
+.pullmore:hover { background: #fff; }
+.drawer-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 10px 24px; margin: 0 0 18px; }
+.drawer-head h1 { margin: 0; font-size: 40px; font-weight: 400; letter-spacing: .04em; line-height: 1; }
+.drawer-head p { margin: 0; max-width: 60ch; }
+.drawer-head select { font: 17px "Special Elite", monospace; padding: 5px; background: var(--card); border: 1px solid #a99f86; color: var(--type); }
+.sum { color: #f2e2c0; text-align: center; margin: -8px 0 10px; font-size: 16px; }
+
+/* word: the catalogue card */
+.catalogue { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 34px; align-items: start; }
+.big.card { padding: 40px 34px 64px; transform: rotate(-.6deg); min-height: 560px;
+  background-image: linear-gradient(var(--card-red), var(--card-red)), repeating-linear-gradient(180deg, transparent 0 29px, var(--card-line) 29px 30px);
+  background-position: 0 92px, 0 92px; }
+.big.card::after { content: ""; position: absolute; left: 50%; bottom: 18px; width: 22px; height: 22px; margin-left: -11px; border-radius: 50%; background: var(--wall); box-shadow: inset 0 2px 3px rgba(0,0,0,.35); }
+.callno { position: absolute; left: 34px; top: 14px; font-size: 16px; color: var(--muted); }
+.big .entry { font-size: 40px; line-height: 1.05; margin: 8px 0 10px; height: 62px; display: flex; align-items: end; gap: 16px; font-weight: 400; }
+.big .entry .pos { font-size: 20px; }
+.big .typed { font-size: 19px; line-height: 30px; margin: 0; }
+.trace { list-style: none; margin: 0; padding: 0; }
+.trace li { display: grid; grid-template-columns: 2.2em 1fr auto; align-items: baseline; line-height: 30px; font-size: 19px; }
+.trace li .how { white-space: nowrap; transform: rotate(-2deg); }
+.trace .here { text-decoration: underline; text-decoration-thickness: 1px; }
+.margin-note { position: absolute; right: -6px; top: 38px; transform: rotate(6deg); max-width: 210px; text-align: right; }
+.circle { position: relative; display: inline-block; }
+.circle::after { content: ""; position: absolute; inset: -6px -12px; border: 2px solid var(--red-pen); border-radius: 50%; transform: rotate(-4deg); opacity: .85; pointer-events: none; }
+.seealso h2 { font-weight: 400; font-size: 24px; margin: 0 0 30px; }
+.seealso .stack .card { min-height: 110px; padding-top: 28px; }
+.seealso .stack li { margin-top: -30px; }
+.seealso .stack li:first-child { margin-top: 0; }
+.small { font-size: 16px; }
+
+@media (max-width: 900px) {
+  .drawers { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .open-drawers, .catalogue { grid-template-columns: 1fr; }
+}
+@media (max-width: 760px) {
+  main { padding: 14px 12px 28px; }
+  .sign { padding: 8px 12px; gap: 2px 14px; }
+  .sign .brand { font-size: 21px; }
+  .sign nav { font-size: 15px; gap: 2px 12px; }
+  .cabinet { padding: 12px; }
+  .cabinet h1 { font-size: 20px; letter-spacing: .14em; }
+  .drawers { gap: 8px; }
+  .drawer { padding: 10px 4px 12px; }
+  .holder .lab b { font-size: 15px; }
+  .big.card { padding: 34px 16px 56px; min-height: 0; transform: none; }
+  .big .entry { font-size: 32px; height: 62px; }
+  .margin-note { position: static; transform: rotate(-2deg); text-align: left; max-width: none; margin-top: 10px; }
+  .trace li { grid-template-columns: 1.6em 1fr; }
+  .trace li .how { grid-column: 2; line-height: 1; margin: -4px 0 6px; }
+  .drawer-head h1 { font-size: 30px; }
+  .card .head .who, .card .head .cnt { font-size: 18px; }
+}
+.card .note { position: static; display: block; text-align: right; margin-top: 2px; transform: rotate(-2deg); }
+.stack .card { padding-bottom: 46px; }
+.stack li { margin-top: -16px; }
+.seealso .stack li { margin-top: -14px; }
+.big.card { min-height: 430px; background-position: 0 118px, 0 118px; }
+.big .entry { height: 66px; margin-top: 14px; }
+.margin-note { right: 18px; top: 30px; }
+@media (max-width: 760px) { .margin-note { margin-top: 14px; } }
+.drawers > li { display: flex; }
+.drawers .drawer { flex: 1; justify-content: space-between; }
+.holder .lab b { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.holder .lab small { display: block; }
+.drawers > li { min-width: 0; }
+@media (max-width: 760px) {
+  .drawers { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .holder { width: 94%; }
+  .holder .lab b { white-space: normal; overflow-wrap: anywhere; }
+}
