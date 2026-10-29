@@ -239,3 +239,24 @@ Versione nuova; prove con Edge senza finestra rifatte: tutto come prima, console
 - **Link con `from`** quando il sito lo sa: albero (ogni ramo: la lingua del padre; ogni tappa: la tappa sopra; «word page» in alto: `su[0]`), round trips (prima tappa della catena), doppioni (catena), Compare (esempi di «A took from B» → B; cugine → lingua diretta), «Then taken by» (c'era già), `L.wordPage` usa `lingua_diretta`, `catena[0]` o `o` quando ci sono. Restano senza `from` solo i link dove il dato non c'è (esempi delle famiglie, delle origini comuni e delle origini lontane, la tappa più lontana dell'albero): si risolvono con l'albero, un file di coppia al massimo.
 - **Prove** (Edge senza finestra, server locale, console pulita): Kreuzer senza `from` → scheda in 0,3 s leggendo solo `coppie/de/nl.json`; caffè senza `from` (anche senza `n`) → solo `coppie/it/ota.json`; قهوة arabo → `coppie/ar/omv.json`; *abet* → `_alternative.json`; parola inesistente → «not in the lists» senza leggere file di coppia; gave.html → albero di *pizza* → «word page» con `from=nap` → scheda. Tutti i link a schede di round trips (25), doppioni (60), albero di caffè (29 su 30) hanno `from`. Prove del mandato 14 rifatte: invariate (55 su 56, manca solo banca/Bank).
 - Versione `202610182213`.
+
+## 2026-10-29 — mandato 15: bozze grafiche (il sito vero non cambia)
+Davide vuole vedere tre vesti diverse della stessa pagina prima di scegliere. Nome «lexodus» scritto bene, nessun logo.
+
+### Come sono fatte
+- `bozze/<stile>/language.html` e `bozze/<stile>/index.html` sono copie delle pagine vere fatte da `scripts/bozze.py` (si rilancia se le pagine vere cambiano): stesso HTML, stesso contenuto, solo il foglio di stile `bozze/<stile>/style.css` (scritto a mano) e il link a Google Fonts (`display=swap`). I dati sono quelli veri (`../../data/`).
+- I js sono copie in `bozze/js/`: `home.js` e `language.js` identici; `common.js` con una sola differenza, legge i dati da `../../` e manda liste di parole, schede, alberi e About alle pagine vere. Il menu porta alle pagine vere; logo e cambio lingua restano nella bozza.
+- `bozze/index.html`: i tre link (pagina dell'italiano e home) con una frase per stile, in italiano. Tutte le bozze hanno `noindex`.
+- `scripts/versione.py` tocca solo le pagine della radice: le bozze non cambiano versione.
+
+### Caratteri e colori
+- **Tipografico** (dizionario stampato): Literata per il testo (17 px), Cormorant Garamond per titoli e per il nome, *lexodus* in corsivo minuscolo. Carta avorio `#f6f0e2`, inchiostro `#1e1a15`, rosso mattone `#8f2b1c` per link e secondo livello, grigio caldo `#5b5146`, filetti `#cdbfa3`. Testata con doppio filetto, menu in maiuscole spaziate, liste affiancate con un filetto verticale. Barre: linea d'inchiostro di 2 px su una riga di puntini (come i puntini di guida di un indice); secondo livello rientrato con filetto rosso e linee rosse sottili. Tappe di una parola con le lingue in maiuscoletto e frecce rosse; le 10 parole più viaggiate numerate. Griglia in toni seppia.
+- **Moderno** (strumento web): Manrope in tutto, titoli grandi e leggeri (300), corpo 17 px. Bianco, inchiostro `#15171d`, blu cobalto `#2346f5` per link e barre, grigio `#5d6372`, righe `#e9ebf0`. Barra in alto con nome e menu, filtri in un riquadro grigio chiaro, righe ariose, barre spesse su una traccia chiara; secondo livello in un riquadro chiaro con barre più tenui. Griglia a quadrati netti nei toni del cobalto.
+- **Cartografico** (viaggio delle parole): Alegreya Sans per il testo (18 px), Alegreya SC per titoli, menu e nome in maiuscoletto spaziato. Sabbia chiara `#f4eedf`, blu notte `#1c2b47`, verde oliva `#55612a`, ocra `#9c6418`, sabbia scura `#e7dcc2`. Testata a fascia blu notte con una linea ocra sotto; il «+» delle righe è un cerchietto (una tappa); barre come la barra della scala di una carta (blu notte e sabbia alternati); secondo livello con una linea ocra tratteggiata che scende dal cerchietto e barre oliva; tappe di una parola unite da tratteggi ocra con punta di freccia. Griglia in tinte ipsometriche, dalla sabbia al blu notte.
+
+### Verifica (Edge senza finestra via Playwright, server locale)
+Pagina dell'italiano con la riga «French» di «Took from» aperta (secondo livello) e il blocco «Most travelled words» aperto, a 1280 e 375 px: console pulita, nessuno scorrimento orizzontale, i caratteri caricati sono quelli voluti. Home delle tre bozze a 1280 e 375 px: nessun errore. Screenshot in `docs/screenshots/bozze/` (`tipografico-1280.png`, `tipografico-375.png`, `moderno-…`, `cartografico-…`).
+
+### Scelte fatte da solo
+- Accento del tipografico: rosso mattone (non blu inchiostro), per distinguerlo dal blu del moderno e del cartografico.
+- Il moderno usa Manrope invece di Inter (simile, ma con pesi leggeri più belli per i titoli grandi).

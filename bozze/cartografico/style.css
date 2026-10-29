@@ -1,0 +1,189 @@
+/* lexodus — draft "cartografico": the journey of words.
+   Map palette: night blue, light sand, olive green, ochre. Alegreya Sans for reading, Alegreya SC for headings in
+   spaced small capitals like the labels of a map; the header as a night-blue title band; routes drawn as thin
+   dashed lines (the second level, the arrows between the steps of a word); bars drawn as a map's scale bar;
+   the grid in hypsometric tints, from sand to night blue. No real maps. */
+:root {
+  --sand: #f4eedf;      /* light sand: the page */
+  --sand-2: #e7dcc2;    /* deeper sand: panels, empty cells */
+  --night: #1c2b47;     /* night blue: text, headings, the title band */
+  --olive: #55612a;     /* olive: second level */
+  --ochre: #9c6418;     /* ochre: routes, links (5:1 on sand) */
+  --muted: #5a5d55;     /* secondary text, 6.5:1 on sand */
+  --body: "Alegreya Sans", "Gill Sans", "Segoe UI", system-ui, sans-serif;
+  --caps: "Alegreya SC", "Alegreya Sans", Georgia, serif;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--sand); color: var(--night);
+  font: 400 18px/1.55 var(--body); font-variant-numeric: lining-nums tabular-nums;
+}
+a { color: var(--ochre); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+a:hover { text-decoration-style: dashed; }
+:focus-visible { outline: 2px dashed var(--ochre); outline-offset: 3px; }
+h1, h2, h3 { margin: 0; font-family: var(--caps); font-weight: 700; line-height: 1.15; letter-spacing: 0.12em; text-wrap: balance; }
+h1 { font-size: clamp(2.3rem, 5.5vw, 3.2rem); font-weight: 500; letter-spacing: 0.1em; }
+h2 { font-size: 1.25rem; }
+p { margin: 0; }
+.note { color: var(--muted); font-size: 0.92rem; }
+.lead { max-width: 62ch; }
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+.top, main, footer {
+  max-width: 1080px; margin: 0 auto;
+  padding-left: max(20px, env(safe-area-inset-left, 0px));
+  padding-right: max(20px, env(safe-area-inset-right, 0px));
+}
+
+/* Title band: night blue, sand letters, a dashed ochre route underneath */
+.top {
+  max-width: none; background: var(--night); color: var(--sand);
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 40px; padding-block: 20px 18px;
+  border-bottom: 3px solid var(--night); box-shadow: 0 3px 0 var(--sand), 0 5px 0 var(--ochre);
+}
+@media (min-width: 1120px) { .top { padding-left: calc((100% - 1080px) / 2 + 20px); padding-right: calc((100% - 1080px) / 2 + 20px); } }
+.brand { font-family: var(--caps); font-weight: 700; font-size: 1.6rem; letter-spacing: 0.28em; color: var(--sand); text-decoration: none; }
+nav { display: flex; flex-wrap: wrap; gap: 4px 26px; font-family: var(--caps); font-weight: 500; font-size: 1rem; letter-spacing: 0.1em; }
+nav a { color: var(--sand); text-decoration: none; }
+nav a:hover { color: #e9c27a; }
+
+main { padding-block: 40px 64px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 26px; }
+#app { display: grid; grid-template-columns: minmax(0, 1fr); gap: 22px; }
+#app > .note, #app > .lead { margin-top: -10px; }
+footer { padding-block: 22px 44px; border-top: 1px dashed var(--night); color: var(--muted); font-size: 0.88rem; }
+
+/* Language page */
+.head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 12px; }
+select { font: inherit; font-size: 0.95rem; color: var(--night); background: var(--sand); border: 1px solid var(--night); padding: 4px 8px; }
+.filters { display: flex; flex-wrap: wrap; gap: 8px 40px; padding: 12px 16px; background: var(--sand-2); }
+fieldset { border: 0; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 4px 18px; font-size: 0.95rem; }
+legend { float: left; margin-right: 12px; font-family: var(--caps); font-weight: 700; letter-spacing: 0.1em; color: var(--olive); }
+fieldset label { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
+input[type="checkbox"], input[type="radio"] { accent-color: var(--night); margin: 0; }
+
+.columns { display: grid; grid-template-columns: 1fr; gap: 48px; }
+@media (min-width: 820px) { .columns { grid-template-columns: 1fr 1fr; gap: 56px; } }
+.columns section { min-width: 0; display: grid; gap: 6px; align-content: start; }
+.columns h2 { padding-bottom: 6px; border-bottom: 2px solid var(--night); }
+
+.rows, .sub ul { list-style: none; margin: 0; padding: 0; }
+.row { padding: 12px 0; border-bottom: 1px solid #d6caa9; cursor: pointer; }
+.line { display: flex; align-items: baseline; gap: 10px; min-width: 0; }
+.line .name { font-weight: 700; color: var(--night); text-decoration: none; }
+.line a.name:hover { color: var(--ochre); }
+.line .cat { color: var(--olive); font-style: italic; font-size: 0.92rem; }
+.line .num { margin-left: auto; font-weight: 500; }
+/* The toggle as a waypoint */
+.toggle {
+  font: inherit; font-size: 0.95rem; font-weight: 700; line-height: 1; width: 1.35em; height: 1.35em; padding: 0; border: 1.5px solid var(--night); border-radius: 50%;
+  background: var(--sand); color: var(--night); cursor: pointer; flex: none; align-self: center;
+}
+.row.open .toggle { background: var(--night); color: var(--sand); }
+/* Bars as a map's scale bar: night blue and sand in turn */
+.bar { height: 6px; margin: 8px 0 0 calc(1.35em + 10px); }
+.bar span { display: block; height: 100%; border: 1px solid var(--night); background: repeating-linear-gradient(90deg, var(--night) 0 16px, var(--sand) 16px 32px); }
+.ex { margin: 6px 0 0 calc(1.35em + 10px); font-style: italic; color: var(--muted); font-size: 0.94rem; overflow-wrap: anywhere; }
+/* Second level: the route goes back one step, a dashed ochre line on the left, olive bars */
+.sub { margin: 12px 0 4px calc(0.675em - 1px); padding: 2px 0 2px calc(0.675em + 20px); border-left: 2px dashed var(--ochre); cursor: default; display: grid; gap: 6px; }
+.sub-head { font-family: var(--caps); font-size: 0.95rem; letter-spacing: 0.06em; color: var(--ochre); }
+.sub li { padding: 6px 0; }
+.sub .bar, .sub .ex { margin-left: 0; }
+.sub .bar { height: 4px; }
+.sub .bar span { border: 0; background: var(--olive); }
+.more { justify-self: start; margin-top: 8px; font: inherit; font-family: var(--caps); letter-spacing: 0.08em; color: var(--ochre); background: none; border: 0; border-bottom: 1px dashed var(--ochre); padding: 0; cursor: pointer; }
+
+.line .num a, .sub .num a { color: var(--night); text-decoration: none; border-bottom: 1px dashed var(--ochre); }
+.line .num a:hover { color: var(--ochre); }
+
+.warn { font-size: 0.94rem; padding: 8px 12px; border-left: 3px solid var(--ochre); background: var(--sand-2); max-width: 62ch; }
+.tr { font-style: normal; font-weight: 400; color: var(--muted); }
+
+/* The two blocks below the lists */
+.lang-extra { display: grid; gap: 14px; }
+details.block { border-top: 1px dashed var(--night); padding-top: 12px; }
+details.block > summary { cursor: pointer; list-style: none; display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+details.block > summary::-webkit-details-marker { display: none; }
+details.block > summary h2 { display: inline; }
+details.block > summary::before { content: "+"; color: var(--ochre); width: 1.1em; flex: none; font-weight: 700; }
+details.block[open] > summary::before { content: "\2212"; }
+details.block > *:not(summary) { margin-top: 10px; }
+details.inner > summary { cursor: pointer; color: var(--ochre); font-size: 0.94rem; }
+.rows.plain .row { cursor: default; }
+.rows.plain .bar, .rows.plain .ex { margin-left: 0; font-style: normal; }
+.rows.plain .note { margin-top: 2px; }
+.ex a.w { font-style: normal; }
+.ranked { list-style: none; margin: 0; padding: 0; }
+.ranked li { padding: 10px 0; border-bottom: 1px solid #d6caa9; }
+.ranked .line { flex-wrap: wrap; gap: 2px 10px; }
+.ranked a.w { font-weight: 700; overflow-wrap: anywhere; }
+.mean { font-size: 0.94rem; margin-top: 4px; overflow-wrap: anywhere; }
+
+/* A word's way: the steps joined by a dashed route */
+.chain { overflow-wrap: anywhere; line-height: 1.9; }
+.chain .sl { font-family: var(--caps); letter-spacing: 0.06em; color: var(--olive); font-weight: 700; }
+.chain .arr {
+  display: inline-block; width: 1.9em; height: 0; margin: 0 3px; vertical-align: middle; position: relative;
+  border-top: 1.5px dashed var(--ochre); color: transparent; font-size: 0.9em; overflow: visible;
+}
+.chain .arr::after { content: ""; position: absolute; right: -1px; top: -4.5px; border: 4px solid transparent; border-left: 6px solid var(--ochre); border-right: 0; }
+.chain .hi { background: var(--sand-2); padding: 1px 4px; }
+.chain .hi .sl { color: var(--ochre); }
+
+/* Menu */
+.menu { align-items: baseline; }
+.explore { position: relative; }
+.explore summary { list-style: none; cursor: pointer; color: var(--sand); }
+.explore summary::-webkit-details-marker { display: none; }
+.explore summary::after { content: " \25BE"; font-size: 0.8em; }
+.explore[open] summary::after { content: " \25B4"; }
+.explore ul { list-style: none; margin: 0; padding: 6px 0; position: absolute; left: -14px; top: calc(100% + 14px); z-index: 10; background: var(--sand); border: 1px solid var(--night); font-family: var(--body); letter-spacing: 0; font-size: 1rem; box-shadow: 4px 4px 0 var(--sand-2); }
+.explore li a { display: block; padding: 5px 14px; color: var(--night); }
+.explore li a:hover, .explore li a:focus-visible { background: var(--sand-2); color: var(--ochre); }
+@media (min-width: 601px) {
+  .explore ul { display: grid; grid-template-rows: repeat(4, auto); grid-auto-flow: column; width: max-content; }
+}
+@media (max-width: 600px) {
+  .top { flex-direction: column; gap: 8px; }
+  nav.menu { flex-direction: column; gap: 4px; }
+  .explore ul { position: static; border: 0; box-shadow: none; background: transparent; border-left: 1px dashed var(--sand); padding: 2px 0 2px 4px; margin-top: 4px; }
+  .explore li a { padding: 4px 10px; color: var(--sand); }
+  .explore li a:hover { background: transparent; color: #e9c27a; }
+}
+
+/* Home: the grid in hypsometric tints, sand to night blue */
+.grid-block { display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; min-width: 0; }
+.grid-block .switch { font-size: 0.98rem; }
+.grid-status { min-height: 1.6em; font-size: 0.94rem; color: var(--olive); }
+.grid-scroll { position: relative; overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 6px; }
+.grid { border-collapse: separate; border-spacing: 2px; font-size: 0.82rem; }
+.grid th { font-weight: 500; padding: 0; }
+.grid th a { text-decoration: none; color: var(--night); }
+.grid th a:hover { color: var(--ochre); text-decoration: underline; }
+.grid .col { vertical-align: bottom; height: 9.5em; width: 22px; }
+.grid .col > a, .grid .col > span { display: inline-block; }
+.grid .col span { writing-mode: vertical-rl; transform: rotate(180deg); white-space: nowrap; line-height: 22px; }
+.grid .corner { vertical-align: bottom; text-align: right; padding-right: 8px; color: var(--muted); font-weight: 400; white-space: nowrap; position: sticky; left: 0; background: var(--sand); z-index: 1; }
+.grid .rowname { text-align: right; white-space: nowrap; padding-right: 8px; position: sticky; left: 0; background: var(--sand); z-index: 1; }
+.grid td { width: 22px; height: 22px; min-width: 22px; padding: 0; }
+.grid td.zero { background: #ece4cf; }
+.grid td.self { background: var(--sand); background-image: repeating-linear-gradient(45deg, transparent 0 4px, #d6caa9 4px 5px); }
+.grid .x, .grid th.extra { border-left: 6px solid var(--sand); }
+.grid td a { display: block; height: 22px; line-height: 22px; text-align: center; font-size: 9.5px; font-weight: 500; color: #fff; text-decoration: none; }
+.grid td a:hover, .grid td a:focus-visible { outline: 2px solid var(--ochre); outline-offset: 0; }
+.t1 { background: #cdcd93; }
+.t2 { background: #a8b072; }
+.t3 { background: #6d8452; }
+.t4 { background: #3d5a5a; }
+.t5 { background: #1c2b47; }
+.legend { display: flex; flex-wrap: wrap; gap: 4px 14px; align-items: center; }
+.legend .key { display: inline-flex; align-items: center; gap: 5px; }
+.legend i { display: inline-block; width: 12px; height: 12px; }
+
+/* Surprise me */
+.surprise-line { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 12px; }
+.surprise { font: inherit; font-family: var(--caps); font-weight: 700; letter-spacing: 0.1em; padding: 6px 16px; border: 1.5px solid var(--night); background: var(--sand); color: var(--night); cursor: pointer; }
+.surprise:hover { background: var(--night); color: var(--sand); }
+.surprise:disabled { color: var(--muted); border-color: var(--muted); cursor: wait; background: var(--sand); }

@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Language — lexodus (cartographic draft)</title>
+<meta name="robots" content="noindex">
+<meta name="description" content="Which languages one language took words from, and which it gave words to, from English Wiktionary.">
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya+SC:wght@500;700&family=Alegreya+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="draft-cartografico">
+<header class="top">
+  <a class="brand" href="index.html">lexodus</a>
+  <nav aria-label="Main" class="menu">
+    <a href="../../languages.html">Languages</a>
+    <a href="../../search.html">Search</a>
+    <details class="explore">
+      <summary>Explore</summary>
+      <ul>
+        <li><a href="../../hidden.html">Hidden donors</a></li>
+        <li><a href="../../travelled.html">Most travelled words</a></li>
+        <li><a href="../../doublets.html">Doublets</a></li>
+        <li><a href="../../roundtrips.html">Round trips</a></li>
+        <li><a href="../../families.html">Word families</a></li>
+        <li><a href="../../compare.html">Compare two languages</a></li>
+        <li><a href="../../gave.html">What a language gave</a></li>
+      </ul>
+    </details>
+    <a href="../../stats.html">Statistics</a>
+    <a href="../../about.html">About</a>
+  </nav>
+</header>
+
+<main>
+  <p id="loading">Loading&hellip;</p>
+  <div id="app" hidden>
+    <div class="head">
+      <h1 id="lang-title"></h1>
+      <label class="jump"><span class="visually-hidden">Go to</span><select id="jump"></select></label>
+    </div>
+    <p id="lang-sub" class="note"></p>
+    <p id="notice" class="lead"></p>
+    <p id="romanian-note" class="warn" hidden></p>
+
+    <div id="filters" class="filters"></div>
+    <p id="scale-note" class="note" hidden></p>
+
+    <div class="columns">
+      <section id="from-block" aria-labelledby="from-title">
+        <h2 id="from-title">Took from</h2>
+        <p id="from-sum" class="note"></p>
+        <ul id="from-list" class="rows"></ul>
+        <button type="button" id="from-more" class="more" hidden></button>
+      </section>
+      <section id="to-block" aria-labelledby="to-title">
+        <h2 id="to-title">Gave to</h2>
+        <p id="to-sum" class="note"></p>
+        <ul id="to-list" class="rows"></ul>
+        <button type="button" id="to-more" class="more" hidden></button>
+      </section>
+    </div>
+    <p class="note">Click a row to see the step before: where those same words came from. Click a number for the list of its words.</p>
+
+    <div id="extra" class="lang-extra" hidden>
+      <details id="far-block" class="block">
+        <summary><h2>Farthest origins</h2> <span id="far-sum" class="note"></span></summary>
+        <p class="note">The last language each borrowed word goes back to, and the languages it came through.</p>
+        <ul id="far-list" class="rows plain"></ul>
+        <button type="button" id="far-more" class="more" hidden></button>
+        <details id="rec-block" class="inner">
+          <summary>Reconstructed origins (proto-languages and families)</summary>
+          <ul id="rec-list" class="rows plain"></ul>
+        </details>
+      </details>
+      <details id="travel-block" class="block">
+        <summary><h2 id="travel-title">Most travelled words</h2></summary>
+        <p class="note">Words whose way crosses the most languages; each opens its tree.</p>
+        <ol id="travel-list" class="ranked"></ol>
+      </details>
+    </div>
+  </div>
+</main>
+
+<footer id="site-footer"></footer>
+
+<script src="../../data/fonte.js?v=202610182213"></script>
+<script src="../../data/lingue.js?v=202610182213"></script>
+<script src="../../data/archi.js?v=202610182213"></script>
+<script src="../../data/livello2.js?v=202610182213"></script>
+<script src="../../data/coppie_elenco.js?v=202610182213"></script>
+<script src="../js/common.js"></script>
+<script src="../js/language.js"></script>
+</body>
+</html>

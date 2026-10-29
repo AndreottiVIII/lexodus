@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>lexodus — tre bozze grafiche</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,600&family=Manrope:wght@700&family=Alegreya+SC:wght@700&display=swap">
+<style>
+  :root { --ink: #16181d; --muted: #5d6270; --line: #e4e5ea; --link: #1f3a68; color-scheme: light; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0 auto; max-width: 760px; background: #fff; color: var(--ink);
+    font: 17px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    padding-block: 40px 56px;
+    padding-left: max(20px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px));
+  }
+  h1 { font-size: 1.6rem; margin: 0 0 6px; }
+  p { margin: 0; }
+  .intro { color: var(--muted); margin-bottom: 28px; max-width: 60ch; }
+  ol { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+  li { padding: 20px 0; border-bottom: 1px solid var(--line); display: grid; gap: 6px; }
+  .sample { font-size: 2rem; line-height: 1.1; }
+  .tipografico .sample { font-family: "Cormorant Garamond", Georgia, serif; font-style: italic; font-weight: 600; color: #1e1a15; }
+  .moderno .sample { font-family: "Manrope", system-ui, sans-serif; font-weight: 700; letter-spacing: -0.04em; color: #15171d; }
+  .cartografico .sample { font-family: "Alegreya SC", Georgia, serif; font-weight: 700; letter-spacing: 0.28em; color: #1c2b47; }
+  .name { font-weight: 600; }
+  .links { display: flex; flex-wrap: wrap; gap: 4px 20px; }
+  a { color: var(--link); text-underline-offset: 2px; }
+  .back { margin-top: 28px; font-size: 0.92rem; color: var(--muted); }
+</style>
+</head>
+<body>
+<h1>Tre bozze grafiche</h1>
+<p class="intro">La stessa pagina (l'italiano) e la stessa home in tre vesti diverse. I dati sono quelli veri; liste di parole, schede e alberi aprono le pagine del sito com'è oggi.</p>
+<ol>
+  <li class="tipografico">
+    <p class="sample">lexodus</p>
+    <p><span class="name">Tipografico.</span> Un dizionario stampato: carta avorio, inchiostro quasi nero, un rosso mattone, caratteri con le grazie e filetti sottili.</p>
+    <p class="links"><a href="tipografico/language.html?code=it">Pagina dell'italiano</a> <a href="tipografico/index.html">Home con la griglia</a></p>
+  </li>
+  <li class="moderno">
+    <p class="sample">lexodus</p>
+    <p><span class="name">Moderno.</span> Uno strumento web pulito: bianco, un blu acceso, titoli grandi e leggeri, molto spazio e quadrati netti.</p>
+    <p class="links"><a href="moderno/language.html?code=it">Pagina dell'italiano</a> <a href="moderno/index.html">Home con la griglia</a></p>
+  </li>
+  <li class="cartografico">
+    <p class="sample">lexodus</p>
+    <p><span class="name">Cartografico.</span> Il viaggio delle parole: fondo sabbia, blu notte, verde oliva e ocra, scritte in maiuscoletto e percorsi tratteggiati.</p>
+    <p class="links"><a href="cartografico/language.html?code=it">Pagina dell'italiano</a> <a href="cartografico/index.html">Home con la griglia</a></p>
+  </li>
+</ol>
+<p class="back">Il sito vero: <a href="../index.html">andreottiviii.github.io/lexodus</a></p>
+</body>
+</html>
