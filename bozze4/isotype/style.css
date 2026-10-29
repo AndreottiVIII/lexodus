@@ -1,0 +1,113 @@
+/* lexodus, draft "isotype": picture statistics after the Vienna method (Neurath, Arntz).
+   One sign for a word (a written sheet), repeated: numbers are counted, not measured. The sign's value is stated
+   in the key of every plate (1,000 words on the plate of the 33, 50 on a language, 1 on a word). Colour is the
+   kind of loan, with the flat inks of the Isotype plates: black borrowed, red learned Latin, blue calque, green
+   other ways. Grid: a label column and a field of sign columns (sign 15 px + 3 px (12 px on a phone), a wider gap every five);
+   baseline 24 px. One typeface: Jost, a Futura of the Isotype years. */
+:root {
+  --sign-w: 15px;
+  --sign-h: 20px;
+  --gap: 3px;
+  --line: 24px;
+  --label: 220px;
+  --black: #111;
+  --red: #c8352b;
+  --blue: #1f5aa6;
+  --green: #3f7d3a;
+  --paper: #fdfcf8;
+  --sheet: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='16' viewBox='0 0 12 16'%3E%3Cpath fill-rule='evenodd' d='M0 0H8.5L12 3.5V16H0Z M2 5.2H10V6.8H2Z M2 8.6H10V10.2H2Z M2 12H7V13.6H2Z'/%3E%3C/svg%3E");
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { margin: 0; background: var(--paper); color: var(--black);
+  font: 400 17px/var(--line) Jost, "Futura", "Century Gothic", sans-serif; font-variant-numeric: tabular-nums; }
+p, h1, h2, h3, ul, ol, dl, dd { margin: 0; padding: 0; }
+a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+a:hover { text-decoration-thickness: 2px; }
+:focus-visible { outline: 2px solid var(--black); outline-offset: 2px; }
+
+.head { display: grid; grid-template-columns: var(--label) 1fr auto; column-gap: 24px; align-items: baseline; padding: 24px 40px; border-bottom: 2px solid var(--black); max-width: 1280px; }
+.head .name { font-weight: 700; font-size: 20px; text-decoration: none; }
+.head nav a { margin-right: 18px; }
+.loading { padding: 48px 40px; }
+main { max-width: 1280px; }
+
+/* a plate: title top left, key on the right, the field below */
+.plate { padding: 48px 40px 72px; display: grid; grid-template-columns: var(--label) minmax(0, 1fr) 260px; column-gap: 24px; }
+.plate + .plate { border-top: 2px solid var(--black); }
+.plate h1, .plate h2 { grid-column: 1 / 3; font-size: 34px; line-height: 40px; font-weight: 500; letter-spacing: -0.01em; max-width: 24em; }
+.plate .sub { grid-column: 1 / 3; margin-top: 8px; max-width: 38em; }
+.plate .key { grid-column: 3; grid-row: 1 / span 2; align-self: start; border-left: 2px solid var(--black); padding-left: 16px; font-size: 15px; }
+.key .k { display: flex; align-items: center; gap: 8px; }
+.key .k + .k { margin-top: 4px; }
+.key .val { font-weight: 700; font-size: 17px; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+.field { grid-column: 1 / 4; margin-top: 48px; display: grid; grid-template-columns: var(--label) minmax(0, 1fr); column-gap: 24px; }
+.field .grp { grid-column: 1 / 3; font-weight: 700; padding-top: 24px; border-bottom: 1px solid var(--black); margin-bottom: 12px; }
+.field .grp:first-child { padding-top: 0; }
+.field .lab { padding: 4px 0 8px; }
+.field .lab a { text-decoration: none; }
+.field .lab a:hover { text-decoration: underline; }
+.field .lab .num { display: block; font-size: 15px; }
+.field .row { padding: 4px 0 8px; display: flex; flex-wrap: wrap; align-content: flex-start; gap: 12px 40px; }
+
+/* the signs */
+.signs { display: flex; flex-wrap: wrap; gap: 6px var(--gap); align-content: start; width: calc(20 * (var(--sign-w) + var(--gap)) + 3 * 5px); }
+.signs.w40 { width: calc(40 * (var(--sign-w) + var(--gap)) + 7 * 5px); }
+.signs .s:nth-child(5n) { margin-right: 5px; }
+.signs .s:nth-child(20n) { margin-right: 0; }
+.signs.w40 .s:nth-child(20n) { margin-right: 5px; }
+.signs.w40 .s:nth-child(40n) { margin-right: 0; }
+.s { display: block; width: var(--sign-w); height: var(--sign-h); background: var(--black);
+  -webkit-mask: var(--sheet) left top / var(--sign-w) var(--sign-h) no-repeat; mask: var(--sheet) left top / var(--sign-w) var(--sign-h) no-repeat; }
+.s.lat { background: var(--red); }
+.s.cal { background: var(--blue); }
+.s.oth { background: var(--green); }
+.s.inline { display: inline-block; vertical-align: -2px; }
+.block .cap { font-size: 15px; display: block; margin-bottom: 4px; }
+.block .cap b { font-weight: 700; }
+
+/* the word: places joined by arrows */
+.places { grid-column: 1 / 4; margin-top: 48px; display: flex; flex-wrap: wrap; align-items: stretch; gap: 0; }
+.place { border: 2px solid var(--black); padding: 12px 16px 14px; min-width: 200px; }
+.place .ln { font-weight: 700; display: block; }
+.place .wd { font-size: 28px; line-height: 40px; display: block; }
+.place .tr { font-size: 15px; display: block; }
+.place.here { border-width: 4px; padding: 10px 14px 12px; }
+.place .s { margin: 8px 0 0; width: 24px; height: 32px; -webkit-mask-size: 24px 32px; mask-size: 24px 32px; }
+.arrowp { width: 72px; display: grid; place-items: center; }
+.arrowp svg { width: 56px; height: 28px; }
+.arrowp span { font-size: 15px; display: block; text-align: center; }
+.gen { display: flex; flex-wrap: wrap; gap: 16px 20px; }
+.gen .one { width: 96px; font-size: 15px; line-height: 20px; }
+.gen .one .s { width: 18px; height: 24px; -webkit-mask-size: 18px 24px; mask-size: 18px 24px; margin-bottom: 4px; }
+.gen .one a { text-decoration: none; font-weight: 500; }
+.gen .one a:hover { text-decoration: underline; }
+.etym { grid-column: 1 / 3; margin-top: 24px; max-width: 36em; }
+
+.foot { border-top: 2px solid var(--black); padding: 24px 40px 48px; max-width: 1280px; font-size: 15px; }
+.foot p { max-width: 60em; }
+
+@media (max-width: 760px) {
+  :root { --label: 1fr; }
+  .head { grid-template-columns: 1fr auto; padding: 16px; row-gap: 8px; }
+  .head nav { grid-column: 1 / -1; grid-row: 2; }
+  .head nav a { margin-right: 12px; }
+  .plate { grid-template-columns: 1fr; padding: 32px 16px 48px; }
+  .plate h1, .plate h2, .plate .sub, .etym { grid-column: 1; }
+  .plate h1, .plate h2 { font-size: 26px; line-height: 32px; }
+  .plate .key { grid-column: 1; grid-row: auto; margin-top: 24px; }
+  .field { grid-column: 1; grid-template-columns: 1fr; margin-top: 32px; }
+  .field .grp { grid-column: 1; }
+  .field .lab { padding-bottom: 0; }
+  .signs.w40 { width: calc(20 * (var(--sign-w) + var(--gap)) + 3 * 5px); }
+  .signs.w40 .s:nth-child(20n) { margin-right: 0; }
+  .places { grid-column: 1; flex-direction: column; }
+  .arrowp { width: auto; height: 56px; justify-items: start; padding-left: 16px; }
+  .arrowp svg { transform: rotate(90deg); width: 40px; }
+  .loading, .foot { padding-left: 16px; padding-right: 16px; }
+}
+.field.big .bw { width: calc(20 * (var(--sign-w) + var(--gap)) + 3 * 5px); }
+.under { font-size: 15px; }
+.gen .one .s { display: block; }
+@media (max-width: 760px) { :root { --sign-w: 12px; --sign-h: 16px; } }
