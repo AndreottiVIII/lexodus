@@ -260,3 +260,8 @@ Pagina dell'italiano con la riga «French» di «Took from» aperta (secondo liv
 ### Scelte fatte da solo
 - Accento del tipografico: rosso mattone (non blu inchiostro), per distinguerlo dal blu del moderno e del cartografico.
 - Il moderno usa Manrope invece di Inter (simile, ma con pesi leggeri più belli per i titoli grandi).
+
+## 2026-10-29 — About: «How it was built, in numbers» (richiesta del coordinatore)
+- Nuova sezione in `about.html` (voce 8 dell'indice, prima di Credits), stesso stile delle altre (elenco con titoletti): fonte (dump 2/9/2026, scaricato 18/10/2026, 2,8 GB / 23,9 GB, 10.913.997 righe), filtro (circa 6,9 milioni di voci delle 33 lingue, 2.085.836 lemmi, 1.393.030 con etimologia, 385.453 con legami), lettura dei modelli e degli alberi, correzioni (ipotesi scartate, 3.906 discendenti ambigui, 50 chiavi doppie rinumerate), traslitterazione (arabo 59.069/17, russo 51.052/16, greco 26.675/55), confronto con il Wiktionary italiano (88,8%, 25.247 su 28.420), file del sito (24.231 JSON, 656 MB misurati oggi in `data/`: 22.623 file di coppia, 845 di alberi, 60 di indice), tempi (circa 3 minuti, 10 processi), cosa non si usa. Numeri presi da `rete-prestiti/JOURNAL.md` (mandati 02, 03, 05, 09, 11) e `risultati/export/README.md`, solo lettura.
+- Corretta una frase rovinata in «Known limits» (omografi): ora dice che gli alberi segnano queste parole con «one of N origins of this spelling».
+- Versione `202610291437`. Controllo con Edge senza finestra: voce nell'indice, nessuno scorrimento di lato a 375 px, console pulita.
