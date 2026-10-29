@@ -1,0 +1,147 @@
+/* lexodus, draft "specimen": a printer's specimen sheet. Red and black on white paper, registration marks and crop
+   marks, a slug line at the head. One fount per script: Bodoni Moda, Libre Caslon, Old Standard, Abril Fatface for
+   Latin; GFS Didot for Greek; Old Standard for Cyrillic; Amiri and Aref Ruqaa for Arabic script; Frank Ruhl for Hebrew. */
+:root {
+  --paper: #fbf8f1;
+  --ink: #111;
+  --grey: #57534c;
+  --red: #c4161c;
+  --rule: #d9d3c6;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html { background: #d9d5cc; }
+body { margin: 0; color: var(--ink); font: 18px/1.5 "Libre Caslon Text", Georgia, serif; background: #d9d5cc; }
+a { color: inherit; text-decoration-color: rgba(196, 22, 28, 0.5); text-underline-offset: 3px; }
+a:hover { color: var(--red); }
+.red { color: var(--red); }
+
+.head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 26px; padding: 14px 28px; background: var(--ink); color: #f3efe6; }
+.brand { color: #fff; text-decoration: none; font: 700 24px/1 "Bodoni Moda", serif; letter-spacing: 0.02em; }
+.brand span { font: italic 15px "Libre Caslon Text", serif; color: #d6cfc0; margin-left: 8px; }
+.head nav { display: flex; flex-wrap: wrap; gap: 4px 20px; font-size: 16px; }
+.head nav a { color: #f3efe6; text-decoration: none; }
+.head nav a:hover { color: #ff8f8f; }
+
+main { padding: 30px 20px 6px; }
+.sheet {
+  position: relative; max-width: 1240px; margin: 0 auto; padding: 54px 70px 64px; background: var(--paper);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2), 0 16px 40px rgba(0, 0, 0, 0.18);
+}
+/* registration marks and crop marks */
+.reg { position: absolute; width: 30px; height: 30px; fill: none; stroke: var(--ink); stroke-width: 1.2; }
+.reg.tl { left: 14px; top: 14px; } .reg.tr { right: 14px; top: 14px; } .reg.bl { left: 14px; bottom: 14px; } .reg.br { right: 14px; bottom: 14px; }
+.crop { position: absolute; width: 22px; height: 22px; }
+.crop.tl { left: 52px; top: 30px; border-left: 1px solid var(--ink); } .crop.tr { right: 52px; top: 30px; border-right: 1px solid var(--ink); }
+.crop.bl { left: 52px; bottom: 30px; border-left: 1px solid var(--ink); } .crop.br { right: 52px; bottom: 30px; border-right: 1px solid var(--ink); }
+.crop.tl::after, .crop.tr::after, .crop.bl::after, .crop.br::after { content: ""; position: absolute; width: 22px; top: 22px; border-top: 1px solid var(--ink); }
+.crop.tl::after { left: -32px; } .crop.tr::after { right: -32px; } .crop.bl::after { left: -32px; top: -1px; } .crop.br::after { right: -32px; top: -1px; }
+.slug {
+  display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; margin: 0 0 30px; padding-bottom: 8px;
+  border-bottom: 3px double var(--ink); font: italic 16px "Libre Caslon Text", serif; color: var(--grey);
+}
+.slug #slug-l { font-style: normal; letter-spacing: 0.12em; text-transform: uppercase; color: var(--red); font-size: 15px; }
+.loading { font-style: italic; color: var(--grey); }
+
+/* founts */
+.sz { font-size: calc(var(--px) * 1px); line-height: 1.02; }
+.f-bodoni { font-family: "Bodoni Moda", serif; font-weight: 500; }
+.f-bodoni-i { font-family: "Bodoni Moda", serif; font-style: italic; font-weight: 500; }
+.f-caslon { font-family: "Libre Caslon Text", serif; }
+.f-oldstd { font-family: "Old Standard TT", serif; }
+.f-fat { font-family: "Abril Fatface", serif; }
+.f-naskh { font-family: "Amiri", serif; line-height: 1.5; }
+.f-ruqaa { font-family: "Aref Ruqaa", serif; line-height: 1.5; }
+.f-hebrew { font-family: "Frank Ruhl Libre", serif; }
+.f-greek { font-family: "GFS Didot", serif; }
+.f-cyr { font-family: "Old Standard TT", serif; }
+.f-other { font-family: serif; }
+.pt { font: italic 15px "Libre Caslon Text", serif; }
+
+/* ---- home ---- */
+.title { font: 400 76px/0.98 "Bodoni Moda", serif; margin: 0 0 16px; letter-spacing: -0.01em; }
+.title .red { font-style: italic; }
+.lede { max-width: 58ch; color: var(--grey); margin: 0 0 30px; font-size: 19px; }
+.founts { list-style: none; margin: 0; padding: 0; }
+.founts li { display: grid; grid-template-columns: 40px 1fr 210px; gap: 18px; align-items: baseline; border-top: 1px solid var(--rule); padding: 10px 0 8px; }
+.founts .no { font: 15px "Libre Caslon Text", serif; color: var(--red); text-align: right; }
+.founts .line { text-decoration: none; overflow-wrap: anywhere; }
+.founts .line:hover .sz { color: var(--red); }
+.spec { font-size: 15px; line-height: 1.4; color: var(--grey); }
+.founts .spec { text-align: right; }
+
+/* the scale of bodies */
+.scale { margin-top: 38px; border-top: 3px double var(--ink); padding-top: 12px; }
+.scale-title { margin: 0 0 8px; font: 700 15px "Libre Caslon Text", serif; letter-spacing: 0.14em; text-transform: uppercase; color: var(--red); }
+.scale-title span { color: var(--grey); text-transform: none; letter-spacing: 0; font-weight: 400; font-style: italic; }
+.scale ol { list-style: none; margin: 0; padding: 0; display: flex; align-items: flex-end; gap: 22px; flex-wrap: wrap; }
+.scale li { display: grid; justify-items: center; }
+.scale .sz { font-family: "Bodoni Moda", serif; }
+.scale .th { font-size: 15px; color: var(--grey); }
+
+/* ---- language ---- */
+.kicker { margin: 0; font: 700 15px "Libre Caslon Text", serif; letter-spacing: 0.2em; text-transform: uppercase; color: var(--red); }
+.lang-top { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; align-items: end; border-bottom: 1px solid var(--ink); padding-bottom: 20px; margin-bottom: 26px; }
+.lang-name { font: 400 150px/0.9 "Bodoni Moda", serif; margin: 6px 0 4px; letter-spacing: -0.02em; overflow-wrap: anywhere; }
+.endo { margin: 0; font-size: 44px; line-height: 1.2; color: var(--red); }
+.endo .f-bodoni, .endo .f-caslon { font-style: italic; }
+.sz-line { margin: 0; display: flex; align-items: baseline; gap: 12px; }
+.sz-line .pt { color: var(--grey); }
+.note { font-size: 15px; color: var(--grey); font-style: italic; margin: 8px 0 0; }
+.columns { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; }
+.col-title { font: 700 16px "Libre Caslon Text", serif; letter-spacing: 0.16em; text-transform: uppercase; margin: 0 0 6px; padding-bottom: 6px; border-bottom: 1px solid var(--ink); }
+.fall { list-style: none; margin: 0; padding: 0; }
+.fall li { display: grid; grid-template-columns: 28px 1fr; column-gap: 10px; align-items: baseline; padding: 4px 0; border-bottom: 1px solid var(--rule); }
+.fall .pt { font-style: normal; font-size: 15px; text-align: right; }
+.fall .line { text-decoration: none; overflow-wrap: anywhere; }
+.fall .line:hover { color: var(--red); }
+.fall .spec { grid-column: 2; }
+.fall .spec a { color: var(--ink); font-style: italic; }
+.rest { font-size: 15px; color: var(--grey); line-height: 1.5; margin: 10px 0 0; }
+.rest a { color: var(--ink); }
+.jump { display: inline-flex; gap: 10px; align-items: center; margin-top: 24px; font-size: 16px; color: var(--grey); }
+.jump select { font: 16px "Libre Caslon Text", serif; padding: 4px 6px; background: var(--paper); border: 1px solid var(--ink); }
+
+/* ---- word ---- */
+.proof { margin: 6px 0 30px; }
+.stop { display: grid; grid-template-columns: 200px 1fr; column-gap: 28px; align-items: center; border-top: 1px solid var(--rule); padding: 6px 0; }
+.stop .spec-l { margin: 0; display: grid; gap: 2px; font-size: 15px; color: var(--grey); line-height: 1.35; }
+.stop .spec-l a { font: 700 17px "Libre Caslon Text", serif; color: var(--ink); text-decoration: none; }
+.stop .spec-l .no { font-size: 15px; letter-spacing: 0.1em; }
+.stop .spec-l .tr { font-style: italic; color: var(--ink); font-size: 17px; }
+.stop .sample { margin: 0; line-height: 1.12; overflow-wrap: anywhere; }
+.stop .sample[dir="rtl"] { text-align: left; }
+.stop .how { grid-column: 2; margin: -6px 0 0; font: italic 16px "Libre Caslon Text", serif; }
+.stop.here { border-top: 3px double var(--ink); }
+.stop.here .sample { color: var(--ink); letter-spacing: -0.02em; line-height: 1; padding-bottom: 14px; }
+.stop.here .spec-l a { color: var(--red); }
+.lower { border-top: 3px double var(--ink); padding-top: 14px; grid-template-columns: 2fr 1fr; }
+.desc { display: flex; flex-wrap: wrap; gap: 6px 22px; align-items: baseline; margin-top: 10px; }
+.cast { display: inline-grid; justify-items: start; text-decoration: none; }
+.cast:hover .sz { color: var(--red); }
+.cast .cap { font: italic 15px "Libre Caslon Text", serif; color: var(--grey); }
+.ety { margin: 0; font-size: 19px; line-height: 1.55; }
+
+.footer { max-width: 1100px; margin: 18px auto 30px; padding: 0 20px; color: var(--grey); font-size: 15px; text-align: center; }
+
+@media (max-width: 860px) {
+  main { padding: 14px 8px 4px; }
+  .head { padding: 12px 16px; }
+  .sheet { padding: 44px 22px 52px; }
+  .crop { display: none; }
+  .reg { width: 22px; height: 22px; }
+  .reg.tl, .reg.bl { left: 6px; } .reg.tr, .reg.br { right: 6px; }
+  .reg.tl, .reg.tr { top: 6px; } .reg.bl, .reg.br { bottom: 6px; }
+  .sz { font-size: max(15px, calc(var(--px) * 0.6px)); }
+  .title { font-size: 46px; }
+  .founts li { grid-template-columns: 28px 1fr; }
+  .founts .spec { grid-column: 2; text-align: left; }
+  .lang-top, .columns, .lower { grid-template-columns: 1fr; }
+  .brand span, #slug-r { display: none; }
+  .slug { margin-bottom: 16px; }
+  .lang-name { font-size: 70px; }
+  .endo { font-size: 30px; }
+  .stop { grid-template-columns: 1fr; }
+  .stop .how { grid-column: 1; }
+  .stop.here .sample { font-size: 104px; }
+}
