@@ -1,0 +1,116 @@
+/* lexodus, draft "gazzetta": the front page of a 19th-century gazette. Black on newsprint, one colour (vermilion) for
+   the rules only. Playfair Display for the masthead and headlines, Oswald as the condensed display for decks,
+   Old Standard TT for the text. */
+:root {
+  --paper: #f1ecdf;
+  --ink: #141210;
+  --grey: #4b463e;
+  --rule: #a3201a;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html { background: #c9c3b5; }
+body { margin: 0; color: var(--ink); font: 16px/1.42 "Old Standard TT", Georgia, serif; background: #c9c3b5; }
+a { color: inherit; text-decoration: none; }
+a:hover { text-decoration: underline; text-decoration-color: var(--rule); }
+.paper {
+  max-width: 1260px; margin: 18px auto; padding: 20px 34px 10px; background: var(--paper);
+  background-image: radial-gradient(rgba(0, 0, 0, 0.035) 1px, transparent 1.2px); background-size: 4px 4px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+
+/* masthead */
+.mast { text-align: center; border-bottom: 6px double var(--rule); padding-bottom: 6px; margin-bottom: 14px; }
+.ears { display: flex; justify-content: space-between; margin: 0; font: 600 15px "Oswald", sans-serif; text-transform: uppercase; letter-spacing: 0.08em; }
+.ears span { border: 1px solid var(--rule); padding: 4px 10px; }
+.title { display: block; font: 900 74px/1 "Playfair Display", serif; letter-spacing: 0.06em; margin: 2px 0 2px; }
+.mast.big .title { font-size: 128px; letter-spacing: 0.08em; margin-top: -10px; }
+.motto { margin: 0 0 6px; font: italic 17px "Old Standard TT", serif; }
+.dateline {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 2px 0; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule);
+  padding: 4px 0; font: 600 15px "Oswald", sans-serif; text-transform: uppercase; letter-spacing: 0.08em;
+}
+.dateline a { padding: 0 16px; border-left: 1px solid var(--rule); }
+.dateline a:first-child { border-left: 0; }
+.loading { text-align: center; font-style: italic; }
+
+/* the page grid: six narrow columns with vermilion rules */
+.front, .lpage, .wpage { display: grid; grid-template-columns: repeat(6, 1fr); gap: 0; }
+.front > *, .lpage > *, .wpage > * { padding: 0 14px 14px; border-left: 1px solid var(--rule); }
+.front .lead { grid-column: 1 / 5; border-left: 0; padding-left: 0; }
+.front .bourse { grid-column: 5 / 7; grid-row: 1 / 3; padding-right: 0; }
+.front .briefs { grid-column: 1 / 5; border-left: 0; padding-left: 0; border-top: 3px double var(--rule); padding-top: 10px; }
+.lpage .lead { grid-column: 1 / 5; border-left: 0; padding-left: 0; }
+.lpage .bourse { grid-column: 5 / 7; grid-row: 1 / 3; padding-right: 0; }
+.lpage .dispatch { grid-row: 2; border-top: 3px double var(--rule); padding-top: 10px; }
+.lpage .dispatch:nth-of-type(1) { grid-column: 1 / 3; border-left: 0; padding-left: 0; }
+.lpage .dispatch:nth-of-type(2) { grid-column: 3 / 5; }
+.lpage .shipping { grid-column: 1 / 7; border-left: 0; padding: 10px 0 14px; border-top: 3px double var(--rule); }
+.wpage .story { grid-column: 1 / 5; border-left: 0; padding-left: 0; }
+.wpage .telegrams { grid-column: 5 / 7; grid-row: 1 / 3; padding-right: 0; }
+.wpage .corr { grid-column: 1 / 5; border-left: 0; padding-left: 0; border-top: 3px double var(--rule); padding-top: 10px; }
+
+/* headlines in decreasing bodies */
+.kicker { margin: 0 0 4px; text-align: center; font: 600 17px "Oswald", sans-serif; text-transform: uppercase; letter-spacing: 0.18em; }
+.hl { margin: 0 0 8px; text-align: center; font: 900 50px/1.02 "Playfair Display", serif; text-transform: uppercase; letter-spacing: 0.01em; }
+.deck { margin: 4px auto; text-align: center; max-width: 720px; }
+.deck.d1 { font: 600 25px/1.15 "Oswald", sans-serif; text-transform: uppercase; letter-spacing: 0.02em; }
+.deck.d2 { font: italic 700 21px/1.25 "Playfair Display", serif; }
+.deck.d3 { font: 16px/1.35 "Old Standard TT", serif; text-transform: uppercase; letter-spacing: 0.08em; }
+hr.dash { width: 90px; border: 0; border-top: 1px solid var(--rule); margin: 6px auto; }
+.body { columns: 3; column-gap: 26px; column-rule: 1px solid var(--rule); margin-top: 12px; border-top: 1px solid var(--rule); padding-top: 10px; text-align: justify; hyphens: auto; }
+.body p, .col-text p, .brief-cols p { margin: 0 0 6px; text-indent: 1.2em; }
+.body p:first-child { text-indent: 0; }
+.body p:first-child::first-letter { float: left; font: 900 52px/0.82 "Playfair Display", serif; margin: 4px 6px 0 0; }
+.dl { font-variant: small-caps; font-weight: 700; letter-spacing: 0.03em; }
+.sect { margin: 0 0 4px; text-align: center; font: 600 19px "Oswald", sans-serif; text-transform: uppercase; letter-spacing: 0.12em; border-bottom: 1px solid var(--rule); padding-bottom: 4px; }
+.sect.small { font-size: 16px; margin-top: 14px; }
+.sub { margin: 0 0 8px; text-align: center; font-style: italic; font-size: 15px; color: var(--grey); }
+.brief-cols { columns: 4; column-gap: 24px; column-rule: 1px solid var(--rule); text-align: justify; hyphens: auto; }
+.brief-cols p { text-indent: 0; break-inside: avoid; }
+.col-text { columns: 1; text-align: justify; hyphens: auto; }
+.col-text p { text-indent: 0; }
+.shipping .col-text { columns: 3; column-gap: 26px; column-rule: 1px solid var(--rule); }
+.shipping .col-text p { break-inside: avoid; }
+.telegrams .col-text p { text-indent: 0; margin-bottom: 4px; }
+
+/* the stock table */
+.exchange { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums lining-nums; font-size: 15px; }
+.exchange th { font: 600 15px "Oswald", sans-serif; text-transform: uppercase; letter-spacing: 0.06em; text-align: left; border-bottom: 1px solid var(--ink); padding: 2px 3px; }
+.exchange td { padding: 1px 3px; border-bottom: 1px dotted #aaa294; }
+.exchange .num { text-align: right; white-space: nowrap; }
+.exchange .down { color: var(--grey); }
+.timetable td { vertical-align: top; }
+
+/* advertisement */
+.advert { padding-top: 22px; }
+.advert > * { margin: 0; }
+.advert { text-align: center; }
+.advert .ad-top { font: 600 15px "Oswald", sans-serif; letter-spacing: 0.2em; text-transform: uppercase; border: 1px solid var(--ink); border-bottom: 0; padding: 6px; outline: 3px double var(--rule); outline-offset: 3px; }
+.advert .ad-big { font: 900 32px/1 "Playfair Display", serif; padding: 8px 6px; border-left: 1px solid var(--ink); border-right: 1px solid var(--ink); }
+.advert .ad-txt { font-size: 16px; padding: 4px 12px 8px; border-left: 1px solid var(--ink); border-right: 1px solid var(--ink); }
+.advert .ad-go { font: italic 17px "Old Standard TT", serif; padding: 4px 6px 10px; border: 1px solid var(--ink); border-top: 0; }
+.ety { margin: 0 0 6px; font-size: 17px; font-style: italic; text-align: justify; }
+.section-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 18px; justify-content: space-between; margin: 0 0 10px; padding-bottom: 6px; border-bottom: 3px double var(--rule); font: 600 18px "Oswald", sans-serif; text-transform: uppercase; letter-spacing: 0.14em; }
+#sh-name { font: 900 30px "Playfair Display", serif; letter-spacing: 0.04em; }
+.jump { font: italic 15px "Old Standard TT", serif; text-transform: none; letter-spacing: 0; }
+.jump select { font: 15px "Old Standard TT", serif; background: var(--paper); border: 1px solid var(--ink); }
+
+.footer { margin: 10px 0 0; padding: 8px 0 4px; border-top: 1px solid var(--rule); font-size: 15px; color: var(--grey); text-align: center; }
+
+@media (max-width: 1000px) {
+  .front, .lpage, .wpage { grid-template-columns: 1fr; }
+  .front > *, .lpage > *, .wpage > * { grid-column: 1 !important; grid-row: auto !important; border-left: 0; padding: 0 0 14px; }
+  .bourse, .telegrams, .dispatch, .shipping, .corr { border-top: 3px double var(--rule) !important; padding-top: 10px !important; }
+  .body { columns: 2; }
+  .brief-cols, .shipping .col-text { columns: 2; }
+}
+@media (max-width: 640px) {
+  .paper { margin: 0; padding: 12px 14px 8px; }
+  .title, .mast.big .title { font-size: 46px; letter-spacing: 0.04em; margin: 4px 0; }
+  .ears { font-size: 15px; }
+  .hl { font-size: 32px; }
+  .deck.d1 { font-size: 20px; }
+  .body, .brief-cols, .shipping .col-text { columns: 1; }
+  .dateline a { padding: 0 8px; }
+}
