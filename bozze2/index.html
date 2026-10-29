@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>lexodus — sei bozze divergenti</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<style>
+  :root { --ink: #16181d; --muted: #5d6270; --line: #e4e5ea; --link: #1f3a68; color-scheme: light; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0 auto; max-width: 1100px; background: #fff; color: var(--ink);
+    font: 17px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    padding: 40px max(20px, env(safe-area-inset-left, 0px)) 56px;
+  }
+  h1 { font-size: 1.6rem; margin: 0 0 6px; }
+  p { margin: 0; }
+  .intro { color: var(--muted); margin-bottom: 28px; max-width: 70ch; }
+  ol { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 30px 26px; }
+  li { display: grid; gap: 8px; align-content: start; }
+  .shots { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .shots img { display: block; width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; border: 1px solid var(--line); }
+  .name { font-weight: 700; font-size: 1.15rem; }
+  .links { display: flex; flex-wrap: wrap; gap: 4px 16px; }
+  a { color: var(--link); text-underline-offset: 2px; }
+  .back { margin-top: 34px; font-size: 0.92rem; color: var(--muted); }
+</style>
+</head>
+<body>
+<h1>Sei bozze divergenti</h1>
+<p class="intro">Ogni bozza è un oggetto del mondo reale che il sito "è", spinto fino in fondo: cambia la struttura delle pagine, non solo il colore. Dati veri (italiano e caffè), funzionano anche sul telefono. Sotto ogni idea: la pagina dell'italiano e la scheda di caffè, nelle foto quadrate. Il sito vero non cambia.</p>
+<ol>
+  <li>
+    <span class="name">1. Passaporto</span>
+    <p>Ogni parola è un viaggiatore: la scheda è un passaporto con un timbro per ogni lingua attraversata; la pagina lingua è il registro della dogana, entrate e uscite scritte a mano; la home è l'ufficio passaporti.</p>
+    <span class="shots"><img src="../docs/screenshots/bozze2/passaporto-lingua.png" alt="Passaporto: registro della dogana dell'italiano" loading="lazy"><img src="../docs/screenshots/bozze2/passaporto-parola.png" alt="Passaporto: caffè" loading="lazy"></span>
+    <p class="links"><a href="passaporto/index.html">Home</a> <a href="passaporto/language.html?code=it">Italiano</a> <a href="passaporto/word.html?lang=it&amp;w=caff%C3%A8&amp;n=1&amp;from=ota">Caffè</a></p>
+  </li>
+  <li>
+    <span class="name">2. Tavola periodica</span>
+    <p>Le 33 lingue come elementi, raggruppate per famiglia; il numero atomico è il numero di voci. Una parola è una formula: caffè = Ar → Ota → It. La pagina lingua è la scheda dell'elemento.</p>
+    <span class="shots"><img src="../docs/screenshots/bozze2/tavola-lingua.png" alt="Tavola: scheda dell'italiano" loading="lazy"><img src="../docs/screenshots/bozze2/tavola-parola.png" alt="Tavola: caffè come formula" loading="lazy"></span>
+    <p class="links"><a href="tavola/index.html">Home</a> <a href="tavola/language.html?code=it">Italiano</a> <a href="tavola/word.html?lang=it&amp;w=caff%C3%A8&amp;n=1&amp;from=ota">Caffè</a></p>
+  </li>
+  <li>
+    <span class="name">3. Schedario</span>
+    <p>Un mobile di legno con un cassetto per lingua; il cassetto aperto è pieno di schede con la linguetta, scritte a macchina, con note a penna rossa e blu. Caffè è una scheda di catalogo.</p>
+    <span class="shots"><img src="../docs/screenshots/bozze2/schedario-lingua.png" alt="Schedario: cassetti dell'italiano" loading="lazy"><img src="../docs/screenshots/bozze2/schedario-parola.png" alt="Schedario: scheda di caffè" loading="lazy"></span>
+    <p class="links"><a href="schedario/index.html">Home</a> <a href="schedario/language.html?code=it">Italiano</a> <a href="schedario/word.html?lang=it&amp;w=caff%C3%A8&amp;n=1&amp;from=ota">Caffè</a></p>
+  </li>
+  <li>
+    <span class="name">4. Metropolitana</span>
+    <p>Le lingue sono stazioni, le famiglie sono linee con angoli a 45°. Caffè è un viaggio con un cambio di linea; l'albero è la rete di linee della parola; la pagina lingua ha arrivi e partenze.</p>
+    <span class="shots"><img src="../docs/screenshots/bozze2/metro-lingua.png" alt="Metro: stazione Italian" loading="lazy"><img src="../docs/screenshots/bozze2/metro-parola.png" alt="Metro: viaggio di caffè" loading="lazy"></span>
+    <p class="links"><a href="metro/index.html">Home</a> <a href="metro/language.html?code=it">Italiano</a> <a href="metro/word.html?lang=it&amp;w=caff%C3%A8&amp;n=1&amp;from=ota">Caffè</a> <a href="metro/tree.html?lang=it&amp;w=caff%C3%A8&amp;n=1">Albero</a></p>
+  </li>
+  <li>
+    <span class="name">5. Mercato</span>
+    <p>Le parole sono merci: casse di legno con scritte a stencil, cartellini appesi con lo spago (da / a / via), timbri IMPORT ed EXPORT; al posto del prezzo, il numero di parole.</p>
+    <span class="shots"><img src="../docs/screenshots/bozze2/mercato-lingua.png" alt="Mercato: import ed export dell'italiano" loading="lazy"><img src="../docs/screenshots/bozze2/mercato-parola.png" alt="Mercato: cartellino di caffè" loading="lazy"></span>
+    <p class="links"><a href="mercato/index.html">Home</a> <a href="mercato/language.html?code=it">Italiano</a> <a href="mercato/word.html?lang=it&amp;w=caff%C3%A8&amp;n=1&amp;from=ota">Caffè</a></p>
+  </li>
+  <li>
+    <span class="name">6. Pixel</span>
+    <p>Un videogioco anni '80 a 16 colori: la home è la mappa del mondo con 33 regni, la pagina lingua ha barre tipo "HP", caffè è un oggetto con il diario della missione e l'albero delle abilità.</p>
+    <span class="shots"><img src="../docs/screenshots/bozze2/pixel-lingua.png" alt="Pixel: regno italiano" loading="lazy"><img src="../docs/screenshots/bozze2/pixel-parola.png" alt="Pixel: oggetto caffè" loading="lazy"></span>
+    <p class="links"><a href="pixel/index.html">Home</a> <a href="pixel/language.html?code=it">Italiano</a> <a href="pixel/word.html?lang=it&amp;w=caff%C3%A8&amp;n=1&amp;from=ota">Caffè</a> <a href="pixel/tree.html?lang=it&amp;w=caff%C3%A8&amp;n=1">Albero</a></p>
+  </li>
+</ol>
+<p class="back">Le tre bozze precedenti: <a href="../bozze/index.html">bozze/</a>. Il sito vero: <a href="../index.html">andreottiviii.github.io/lexodus</a></p>
+</body>
+</html>
