@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Theme of a word — lexodus (score draft)</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600;1,700&family=Noto+Music&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body data-page="word">
+<header class="head">
+  <a class="brand" href="index.html">lexodus</a>
+  <nav aria-label="Main">
+    <a href="index.html">Full score</a>
+    <a href="language.html?code=it">Italian</a>
+    <a href="word.html?lang=it&amp;w=caff%C3%A8&amp;n=1&amp;from=ota">Theme: caffè</a>
+    <a href="tree.html?lang=it&amp;w=caff%C3%A8&amp;n=1">Variations on caffè</a>
+    <a href="../index.html">All drafts</a>
+    <a href="../../index.html">Real site</a>
+  </nav>
+</header>
+<main>
+<div class="sheet">
+<p id="loading" class="loading">Tuning&hellip;</p>
+<div id="app" hidden>
+<div class="titles">
+  <h1 class="work" id="work"></h1>
+  <p class="subtitle" id="subtitle"></p>
+  <p class="composer" id="composer"></p>
+</div>
+<p class="tempo" id="tempo"></p>
+<div id="theme" class="score"></div>
+<p class="legend">Each note is the first letter of the word read as a note name (A to G; the other letters wrap round). The slur is the way the word went; above it, how it passed.</p>
+<div class="notes-cols">
+  <section aria-labelledby="pn"><h2 class="movement small" id="pn">Programme note</h2><blockquote id="ety" class="ety"></blockquote><p><a id="wikt" href="#">The entry in the Wiktionary</a></p></section>
+  <section aria-labelledby="vv"><h2 class="movement small" id="vv">Variations</h2><p id="var-sum" class="var-sum"></p><ol id="vars" class="vars"></ol><p><a id="tree-link" href="#">The full score of the variations</a></p></section>
+</div>
+</div>
+</div>
+</main>
+<p class="footer">Data: English Wiktionary, extracted by <a href="https://kaikki.org/">Wiktextract / kaikki.org</a>, downloaded 18 October 2026, licence <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>. Draft “score”: not the real site. Staves and notes are drawn by hand in SVG.</p>
+
+<script src="../js/dati.js"></script>
+<script src="js/pagine.js"></script>
+</body>
+</html>

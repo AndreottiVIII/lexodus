@@ -1,0 +1,96 @@
+/* lexodus, draft "partitura": an engraved score on ivory paper. Black ink, one red for the indications (borrowed,
+   learned Latin, calque, as "dolce" or "rit." would be written). Cormorant Garamond for titles and lyrics,
+   Noto Music for the clef and the rests; everything else is drawn in SVG. */
+:root {
+  --paper: #f8f2e2;
+  --ink: #17140f;
+  --grey: #5b5446;
+  --red: #b0261c;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html { background: #d8d0bd; }
+body { margin: 0; color: var(--ink); font: 500 19px/1.5 "Cormorant Garamond", Georgia, serif; background: #d8d0bd; }
+a { color: inherit; text-underline-offset: 3px; text-decoration-color: rgba(176, 38, 28, 0.5); }
+a:hover { color: var(--red); }
+
+.head { display: flex; flex-wrap: wrap; gap: 6px 26px; align-items: baseline; padding: 12px 28px; background: var(--ink); }
+.brand { color: var(--paper); font: italic 700 28px/1 "Cormorant Garamond", serif; text-decoration: none; }
+.head nav { display: flex; flex-wrap: wrap; gap: 4px 22px; font-size: 18px; font-weight: 600; letter-spacing: 0.02em; }
+.head nav a { color: #e9e1cd; text-decoration: none; }
+.head nav a:hover { color: #fff; }
+
+main { padding: 26px 18px 4px; }
+.sheet { max-width: 1200px; margin: 0 auto; padding: 36px 50px 44px; background: var(--paper); box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), 0 14px 34px rgba(40, 30, 10, 0.25); }
+.loading { font-style: italic; color: var(--grey); text-align: center; }
+
+.titles { display: grid; grid-template-columns: 1fr; text-align: center; margin-bottom: 8px; }
+.work { margin: 0; font: 700 50px/1.1 "Cormorant Garamond", serif; letter-spacing: 0.01em; }
+.subtitle { margin: 4px 0 0; font-style: italic; font-size: 22px; color: var(--grey); }
+.composer { margin: 4px 0 0; text-align: right; font-size: 19px; font-variant: small-caps; letter-spacing: 0.05em; }
+.tempo { margin: 0 0 4px; font-size: 22px; font-weight: 700; }
+.tempo .mm { font-weight: 600; margin-left: 10px; }
+.movement { margin: 22px 0 0; font: 700 24px "Cormorant Garamond", serif; }
+.movement span { font-variant: small-caps; letter-spacing: 0.06em; }
+.movement i { font-weight: 600; color: var(--grey); font-size: 21px; }
+.movement.small { font-size: 21px; margin: 0 0 6px; border-bottom: 1px solid var(--ink); }
+.legend { font-size: 18px; color: var(--grey); font-style: italic; margin: 10px 0 0; }
+.tacet { font-size: 18px; margin: 4px 0 0; line-height: 1.45; }
+.tacet a { font-style: italic; }
+.jump { font-style: normal; color: var(--ink); margin-left: 6px; white-space: nowrap; }
+.jump select { font: 600 17px "Cormorant Garamond", serif; background: var(--paper); border: 1px solid var(--ink); padding: 2px 4px; }
+
+/* engraving */
+.score { width: 100%; }
+.score svg { display: block; }
+.score-wrap { overflow-x: auto; }
+.sl { stroke: var(--ink); stroke-width: 1; }
+.ledger { stroke: var(--ink); stroke-width: 1.3; }
+.bl { stroke: var(--ink); stroke-width: 1.3; }
+.bl.thin { stroke-width: 0.8; stroke-dasharray: 2 3; opacity: 0.5; }
+rect { fill: var(--ink); }
+rect.hit { fill: transparent; }
+.sysline { stroke: var(--ink); stroke-width: 2; }
+.bracket { fill: none; stroke: var(--ink); stroke-width: 3.2; stroke-linecap: square; }
+.nh { fill: var(--ink); }
+.nh.red { fill: var(--red); }
+.stem { stroke: var(--ink); stroke-width: 1.3; }
+.here .stem { stroke: var(--red); }
+.clef { font: 41px "Noto Music", serif; fill: var(--ink); }
+.rest { font: 30px "Noto Music", serif; fill: var(--ink); opacity: 0.75; }
+.slur { fill: none; stroke: var(--ink); stroke-width: 1.8; }
+.inst { font: italic 600 18px "Cormorant Garamond", serif; fill: var(--ink); }
+.inst.small { font-size: 17px; }
+.section { font: 700 15px "Cormorant Garamond", serif; letter-spacing: 0.12em; text-transform: uppercase; fill: var(--grey); }
+.fig { font: italic 600 15px "Cormorant Garamond", serif; fill: var(--grey); }
+.dyn { font: italic 700 18px "Cormorant Garamond", serif; fill: var(--ink); }
+.lyr { font: 600 17px "Cormorant Garamond", serif; fill: var(--ink); }
+.lyr.big { font-size: 26px; font-style: italic; }
+.lyr.tr { font-size: 17px; font-style: italic; fill: var(--grey); }
+.pname { font: 700 15px "Cormorant Garamond", serif; fill: var(--grey); }
+.expr { font: italic 700 18px "Cormorant Garamond", serif; fill: var(--red); }
+.stf:hover .inst, a.n:hover .lyr { fill: var(--red); }
+a.n:hover .nh { fill: var(--red); }
+
+.notes-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 18px; }
+.ety { margin: 0 0 6px; font-size: 21px; font-style: italic; }
+.var-sum { margin: 0 0 4px; font-style: italic; color: var(--grey); }
+.vars { list-style: none; margin: 0 0 6px; padding: 0; columns: 2; column-gap: 24px; font-size: 19px; line-height: 1.35; }
+.vars li { break-inside: avoid; padding-left: calc(var(--d, 0) * 14px); }
+.vars .nt { color: var(--red); }
+.vars .vl { color: var(--grey); font-size: 17px; }
+.vars .more { font-style: italic; color: var(--grey); }
+
+.footer { max-width: 1100px; margin: 18px auto 30px; padding: 0 20px; color: #4a4232; font-size: 15px; text-align: center; }
+
+@media (max-width: 760px) {
+  main { padding: 12px 6px 4px; }
+  .head { padding: 12px 16px; }
+  .sheet { padding: 24px 14px 30px; }
+  .work { font-size: 36px; }
+  .subtitle { font-size: 18px; }
+  .composer { font-size: 16px; text-align: center; }
+  .tempo { font-size: 19px; }
+  .notes-cols { grid-template-columns: 1fr; gap: 16px; }
+  .vars { columns: 1; }
+}
