@@ -1,0 +1,89 @@
+/* lexodus, draft "orario": the Italian railway timetable (the Orario generale and the station posters).
+   Grid: a running head and dense tables set on a 22 px line; the page is a sheet of 12 columns (gutter 16 px),
+   tables take the whole measure, titles hang in the first three columns. Ruled like the Orario: a heavy rule
+   under the column heads, a hairline between rows, a vertical rule between columns.
+   One typeface: Barlow Condensed, a condensed grotesque like those of the FS tables. One colour: the yellow of
+   the departure posters in Italian stations, only on the departures sheet. */
+:root {
+  --line: 22px;
+  --gut: 16px;
+  --m: 32px;
+  --yellow: #ffd100;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { margin: 0; background: #fff; color: #000; font: 400 17px/var(--line) "Barlow Condensed", "Arial Narrow", sans-serif; font-variant-numeric: tabular-nums lining-nums; }
+p, h1, h2, h3, table { margin: 0; }
+a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: 2px; }
+:focus-visible { outline: 2px solid #000; outline-offset: 1px; }
+b { font-weight: 700; }
+
+/* running head: quadro, nav, page */
+.run { display: grid; grid-template-columns: 1fr auto 1fr; gap: 0 var(--gut); padding: 11px var(--m); border-bottom: 3px double #000; align-items: baseline; }
+.run .q { font-weight: 700; font-size: 20px; }
+.run .pg { text-align: right; font-weight: 700; font-size: 20px; }
+.loading { padding: 44px var(--m); }
+
+.sheet { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gut); padding: 33px var(--m) 44px; }
+.sheet.yellow { background: var(--yellow); }
+.sheet > * { grid-column: 1 / -1; }
+.sheet .hd { grid-column: 1 / 4; }
+.sheet .hd h1, .sheet .hd h2 { font-size: 64px; line-height: 66px; font-weight: 700; text-transform: uppercase; letter-spacing: 0; }
+.sheet .hd .en { display: block; font-size: 28px; line-height: 33px; font-weight: 500; text-transform: uppercase; }
+.sheet .intro { grid-column: 4 / 10; align-self: end; }
+.sheet .stamp { grid-column: 10 / 13; align-self: end; text-align: right; }
+.sheet .stamp b { display: block; font-size: 44px; line-height: 44px; }
+.sheet .tbl { margin-top: 22px; overflow-x: auto; }
+
+/* the tables */
+table { border-collapse: collapse; width: 100%; font-size: 17px; line-height: var(--line); }
+thead th { font-weight: 500; font-size: 15px; line-height: 18px; text-align: left; vertical-align: bottom; padding: 4px 6px 4px; border-bottom: 3px solid #000; border-top: 1px solid #000; }
+thead th .it { display: block; font-weight: 700; font-size: 17px; text-transform: uppercase; }
+tbody td { padding: 0 6px; border-bottom: 1px solid #000; vertical-align: top; }
+tbody td + td, thead th + th { border-left: 1px solid #000; }
+td.n, th.n { text-align: right; white-space: nowrap; }
+td.train { font-weight: 700; font-size: 20px; text-align: right; white-space: nowrap; width: 5em; }
+td.st { font-weight: 700; text-transform: uppercase; white-space: nowrap; }
+td.st.small { font-weight: 500; text-transform: none; }
+td.via { font-size: 17px; }
+td.via .sep { padding: 0 4px; }
+td.note { width: 3.5em; text-align: center; white-space: nowrap; }
+td.stops { font-size: 17px; }
+tr.me td { font-weight: 700; }
+tr.me td.st { text-decoration: underline; text-decoration-thickness: 2px; }
+.sym { font-size: 17px; }
+
+/* the general index and the summary table */
+.mx table { font-size: 15px; line-height: 20px; }
+.mx td, .mx th { padding: 0 3px; }
+.mx tbody td.n { font-size: 15px; }
+.mx th.v { writing-mode: vertical-rl; transform: rotate(180deg); text-align: left; height: 80px; padding: 3px 0; font-size: 15px; font-weight: 500; }
+.mx td.l { white-space: nowrap; font-weight: 700; }
+.mx tr.me td { background: none; font-weight: 700; }
+
+/* the train of a word */
+.train-head { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gut); }
+.ar { font-size: 17px; }
+td.form { white-space: nowrap; }
+
+.foot { border-top: 3px double #000; padding: 22px var(--m) 44px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gut); }
+.foot .legend { grid-column: 1 / 7; }
+.foot .legend h3 { font-size: 17px; font-weight: 700; text-transform: uppercase; }
+.foot .legend p { margin: 0; }
+.foot .src { grid-column: 8 / 13; font-size: 15px; line-height: 20px; }
+
+@media (max-width: 760px) {
+  :root { --m: 14px; --gut: 10px; }
+  .run { grid-template-columns: 1fr auto; }
+  .run nav { grid-column: 1 / -1; grid-row: 2; font-size: 17px; }
+  .sheet .hd, .sheet .intro, .sheet .stamp { grid-column: 1 / -1; }
+  .sheet .hd h1, .sheet .hd h2 { font-size: 48px; line-height: 50px; }
+  .sheet .intro { margin-top: 11px; }
+  .sheet .stamp { text-align: left; margin-top: 11px; }
+  .hide-s { display: none; }
+  td.train { font-size: 18px; width: auto; }
+  td.st { white-space: normal; }
+  .foot .legend, .foot .src { grid-column: 1 / -1; }
+  .foot .src { margin-top: 22px; }
+}
