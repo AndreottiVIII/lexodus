@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>lexodus — network map (draft)</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body data-page="home">
+<header class="top">
+  <a class="brand" href="index.html"><svg viewBox="0 0 34 34" aria-hidden="true"><rect x="1" y="1" width="32" height="32" rx="7" fill="#fff"/><path d="M7 25 V9 L17 19 L27 9 V25" fill="none" stroke="#0b2a6f" stroke-width="4" stroke-linejoin="round"/></svg>lexodus</a>
+  <nav aria-label="Main">
+    <a href="index.html">Network map</a>
+    <a href="language.html?code=it">Italian station</a>
+    <a href="word.html?lang=it&amp;w=caff%C3%A8&amp;n=1&amp;from=ota">Journey: caffè</a>
+    <a href="tree.html?lang=it&amp;w=caff%C3%A8&amp;n=1">Network: caffè</a>
+    <a href="../index.html">All drafts</a>
+    <a href="../../index.html">Real site</a>
+  </nav>
+</header>
+<main>
+<p id="loading">Mind the gap&hellip; loading</p>
+<div id="app" hidden>
+  <h1>The word network</h1>
+  <p class="lead">33 languages as stations, one line per family. Pick a station to see which lines bring words in and which take them away, or ride a single word: <a href="word.html?lang=it&amp;w=caff%C3%A8&amp;n=1&amp;from=ota">caffè</a>, from Arabic, changing at Ottoman Turkish.</p>
+  <div id="map" class="map-wrap"></div>
+  <p class="note phone-only">Swipe the map sideways to see it all.</p>
+  <ul id="key" class="key"></ul>
+</div>
+</main>
+<p class="footer">Data: English Wiktionary, extracted by <a href="https://kaikki.org/">Wiktextract / kaikki.org</a>, downloaded 18 October 2026, licence <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>. Draft “metro”: not the real site.</p>
+<script src="../../data/lingue.js"></script>
+<script src="../js/dati.js"></script>
+<script src="js/pagine.js"></script>
+</body>
+</html>

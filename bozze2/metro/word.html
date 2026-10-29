@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Journey — lexodus (metro draft)</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body data-page="word">
+<header class="top">
+  <a class="brand" href="index.html"><svg viewBox="0 0 34 34" aria-hidden="true"><rect x="1" y="1" width="32" height="32" rx="7" fill="#fff"/><path d="M7 25 V9 L17 19 L27 9 V25" fill="none" stroke="#0b2a6f" stroke-width="4" stroke-linejoin="round"/></svg>lexodus</a>
+  <nav aria-label="Main">
+    <a href="index.html">Network map</a>
+    <a href="language.html?code=it">Italian station</a>
+    <a href="word.html?lang=it&amp;w=caff%C3%A8&amp;n=1&amp;from=ota">Journey: caffè</a>
+    <a href="tree.html?lang=it&amp;w=caff%C3%A8&amp;n=1">Network: caffè</a>
+    <a href="../index.html">All drafts</a>
+    <a href="../../index.html">Real site</a>
+  </nav>
+</header>
+<main>
+<p id="loading">Mind the gap&hellip; loading</p>
+<div id="app" hidden>
+  <h1 id="w"></h1>
+  <p id="meta" class="meta"></p>
+  <div id="strip" class="strip"></div>
+  <p class="note">Line colour = family of the language the word arrives in; a black ring = change of line. Under each section, how the word passed on.</p>
+  <a id="tree" class="cta" href="#">See the whole network of this word</a>
+  <div class="grid2">
+    <section aria-labelledby="c-title">
+      <h2 id="c-title">Connections: then taken by</h2>
+      <p id="conn-sum" class="note"></p>
+      <ul id="conn" class="conn"></ul>
+    </section>
+    <section aria-labelledby="e-title">
+      <h2 id="e-title">Etymology in Wiktionary</h2>
+      <blockquote id="ety" class="ety"></blockquote>
+      <p><a id="wikt" href="#">Read the entry on en.wiktionary.org</a></p>
+    </section>
+  </div>
+</div>
+</main>
+<p class="footer">Data: English Wiktionary, extracted by <a href="https://kaikki.org/">Wiktextract / kaikki.org</a>, downloaded 18 October 2026, licence <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>. Draft “metro”: not the real site.</p>
+
+<script src="../js/dati.js"></script>
+<script src="js/pagine.js"></script>
+</body>
+</html>

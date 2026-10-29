@@ -1,0 +1,101 @@
+/* lexodus, draft "metro" (mandate 16): a metro map. Languages are stations, families are lines, a word is a
+   journey with changes. All drawings are SVG made by hand in js/pagine.js, no library. */
+:root {
+  --ink: #10131a;
+  --muted: #4a5160;
+  --paper: #ffffff;
+  --rule: #d9dde3;
+  --sign: #0b2a6f;
+  --l-romance: #dc241f;
+  --l-germanic: #0019a8;
+  --l-slavic: #00782a;
+  --l-baltic: #f2c200;
+  --l-uralic: #9b0056;
+  --l-semitic: #b36305;
+  --l-turkic: #e86a9a;
+  --l-other: #00a4a7;
+  --l-world: #868f98;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 400 17px/1.45 "Jost", "Futura", "Century Gothic", sans-serif; }
+a { color: inherit; }
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.top { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 24px; padding: 10px 24px; background: var(--sign); color: #fff; }
+.top .brand { display: inline-flex; align-items: center; gap: 10px; font-weight: 600; font-size: 24px; text-decoration: none; letter-spacing: .02em; }
+.top .brand svg { width: 34px; height: 34px; }
+.top nav { display: flex; flex-wrap: wrap; gap: 2px 20px; font-weight: 500; font-size: 17px; }
+.top nav a { text-decoration: none; }
+.top nav a:hover { text-decoration: underline; }
+main { max-width: 1200px; margin: 0 auto; padding: 20px 24px 36px; }
+.footer { max-width: 1200px; margin: 0 auto; padding: 0 24px 28px; color: var(--muted); font-size: 15px; }
+h1 { font-weight: 600; font-size: 40px; line-height: 1.05; margin: 0 0 6px; letter-spacing: -.01em; }
+.lead { color: var(--muted); max-width: 70ch; margin: 0 0 14px; }
+.note { color: var(--muted); font-size: 15px; }
+
+/* the map */
+.map-wrap { border: 2px solid var(--ink); border-radius: 4px; padding: 6px; overflow-x: auto; }
+.map { display: block; width: 100%; height: auto; min-width: 760px; }
+.map text { font-family: "Jost", sans-serif; }
+.map a:hover text { text-decoration: underline; }
+.map a:focus-visible circle.st { stroke-width: 9; }
+.key { display: flex; flex-wrap: wrap; gap: 6px 22px; list-style: none; padding: 0; margin: 14px 0 0; font-size: 16px; }
+.key i { display: inline-block; width: 34px; height: 7px; border-radius: 4px; background: var(--c); vertical-align: middle; margin-right: 8px; }
+
+/* station: the name board and the two panels */
+.board { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 28px; margin: 4px 0 18px; }
+.plate { flex: none; display: inline-flex; align-items: center; gap: 14px; background: var(--sign); color: #fff; border-radius: 6px; padding: 10px 22px; box-shadow: inset 0 0 0 3px var(--sign), inset 0 0 0 5px #fff; }
+.plate b { font-weight: 600; font-size: 38px; letter-spacing: .05em; text-transform: uppercase; line-height: 1.1; }
+.plate i { width: 18px; height: 46px; border-radius: 9px; background: var(--c); box-shadow: 0 0 0 2px #fff; }
+.board .info { flex: 1 1 320px; }
+.board .info p { margin: 0; }
+.board select { font: 500 16px "Jost", sans-serif; padding: 6px 8px; border: 2px solid var(--ink); border-radius: 3px; background: #fff; }
+.panels { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; }
+.panel { border: 2px solid var(--ink); border-radius: 4px; overflow: hidden; }
+.panel h2 { margin: 0; background: var(--ink); color: #fff; font-weight: 500; font-size: 22px; padding: 8px 14px; display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+.panel h2 small { font-size: 15px; font-weight: 400; opacity: .85; }
+.trains { list-style: none; margin: 0; padding: 0; }
+.trains li { display: grid; grid-template-columns: 12px 1fr auto; gap: 2px 12px; padding: 8px 14px 8px 0; border-bottom: 1px solid var(--rule); align-items: start; }
+.trains li::before { content: ""; grid-row: 1 / span 2; align-self: stretch; background: var(--c); }
+.trains .dest { font-weight: 500; font-size: 19px; text-decoration: none; }
+.trains .dest:hover { text-decoration: underline; }
+.trains .line { font-size: 15px; color: var(--muted); }
+.trains .cnt { font-weight: 600; font-variant-numeric: tabular-nums; font-size: 19px; text-align: right; }
+.trains .ex { grid-column: 2 / span 2; font-size: 15px; color: var(--muted); }
+.trains .ex a { color: var(--ink); }
+.more { margin: 10px 14px 12px; font: 500 16px "Jost", sans-serif; border: 2px solid var(--ink); background: #fff; border-radius: 20px; padding: 5px 16px; cursor: pointer; }
+.more:hover { background: var(--ink); color: #fff; }
+
+/* word: the line diagram over the doors */
+.strip { border: 2px solid var(--ink); border-radius: 4px; padding: 10px 6px 4px; overflow-x: auto; margin: 10px 0 8px; }
+.strip svg { display: block; width: 100%; height: auto; min-width: 560px; }
+.strip text { font-family: "Jost", sans-serif; }
+.meta { color: var(--muted); margin: 0 0 6px; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; margin-top: 18px; }
+.grid2 h2 { font-weight: 600; font-size: 22px; margin: 0 0 8px; border-bottom: 2px solid var(--ink); padding-bottom: 4px; }
+.conn { list-style: none; margin: 0; padding: 0; }
+.conn li { display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: baseline; padding: 6px 0; border-bottom: 1px solid var(--rule); }
+.bullet { display: inline-block; min-width: 54px; padding: 1px 8px; border-radius: 12px; background: var(--c); color: #fff; font-size: 15px; font-weight: 600; text-align: center; }
+.bullet.dark { color: var(--ink); }
+.conn a { font-weight: 500; }
+.ety { margin: 0; border-left: 6px solid var(--sign); padding: 2px 0 2px 12px; }
+.cta { display: inline-block; margin-top: 10px; background: var(--sign); color: #fff; padding: 8px 16px; border-radius: 22px; text-decoration: none; font-weight: 500; }
+.cta:hover { background: #000; }
+
+/* tree: the network of one word */
+.tree-wrap { border: 2px solid var(--ink); border-radius: 4px; padding: 8px; overflow-x: auto; }
+.tree-wrap svg { display: block; height: auto; }
+.tree-wrap text { font-family: "Jost", sans-serif; }
+
+@media (max-width: 760px) {
+  main { padding: 14px 12px 28px; }
+  .top { padding: 8px 12px; gap: 4px 14px; }
+  .top .brand { font-size: 20px; }
+  .top nav { font-size: 15px; gap: 2px 12px; }
+  h1 { font-size: 30px; }
+  .plate b { font-size: 28px; }
+  .panels, .grid2 { grid-template-columns: 1fr; }
+  .map { min-width: 700px; }
+}
+.phone-only { display: none; }
+@media (max-width: 760px) { .phone-only { display: block; margin: 6px 0 0; } .strip svg { min-width: 0; } }
