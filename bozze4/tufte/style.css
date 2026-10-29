@@ -1,0 +1,115 @@
+/* lexodus, draft "tufte": a scientific monograph in the manner of Edward Tufte's books.
+   Grid: the page is 12 columns; the text column takes the first 7 (after a left margin), the side notes the last
+   4, one column of air between them; full-width figures take all 12. Vertical rhythm on a 7 px unit: text
+   19/28 (4 units), notes and captions 15/21 (3 units), every space a whole number of units.
+   One typeface: EB Garamond, an old-style face of the family Tufte's books are set in (old-style figures in the
+   text, tabular lining figures in tables, true small capitals). One colour for the data: a dull brick red. */
+:root {
+  --u: 7px;
+  --line: 28px;
+  --paper: #fffff8;
+  --ink: #111;
+  --data: #a0473a;
+  --pad: 6%;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--paper); color: var(--ink);
+  font: 400 19px/var(--line) "EB Garamond", Garamond, Georgia, serif; font-variant-numeric: oldstyle-nums proportional-nums;
+  font-kerning: normal; font-variant-ligatures: common-ligatures; }
+p, h1, h2, h3, ol, ul, figure, table { margin: 0; padding: 0; }
+a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: 3px; text-decoration-color: #777; }
+a:hover { text-decoration-color: var(--ink); }
+:focus-visible { outline: 1px solid var(--ink); outline-offset: 2px; }
+.sc { font-variant-caps: all-small-caps; letter-spacing: 0.04em; font-variant-numeric: oldstyle-nums; }
+
+.runhead { display: grid; grid-template-columns: 1fr auto 1fr; gap: 0 2em; padding: calc(var(--u) * 3) var(--pad); font-size: 15px; line-height: 21px; align-items: baseline; }
+.runhead .rh-l { font-style: italic; }
+.runhead .rh-r { text-align: right; font-variant-numeric: oldstyle-nums; }
+.runhead nav a { text-decoration: none; }
+.runhead nav a:hover { text-decoration: underline; }
+.loading { padding: var(--line) var(--pad); }
+
+article { padding: calc(var(--u) * 8) var(--pad) calc(var(--u) * 12); max-width: 1440px; position: relative; }
+/* the text column: 7 of 12 columns; notes hang in the last 4 */
+.col { width: 58.33%; }
+h1 { font-weight: 400; font-style: italic; font-size: 56px; line-height: 63px; margin-bottom: calc(var(--u) * 2); width: 58.33%; }
+.subtitle { font-style: italic; font-size: 25px; line-height: 35px; margin-bottom: calc(var(--u) * 8); width: 58.33%; }
+h2 { font-weight: 400; font-style: italic; font-size: 30px; line-height: 35px; margin: calc(var(--u) * 8) 0 calc(var(--u) * 3); width: 58.33%; }
+article p { width: 58.33%; margin-bottom: var(--line); hyphens: auto; }
+.newthought { font-variant-caps: all-small-caps; letter-spacing: 0.05em; font-size: 1.12em; }
+
+/* side notes: numbered, floated into the margin */
+article { counter-reset: sn; }
+.snref { counter-increment: sn; }
+.snref::after { content: counter(sn); font-size: 0.7em; vertical-align: 0.5em; line-height: 0; padding-left: 1px; font-variant-numeric: lining-nums; }
+.sn, .mn { float: right; clear: right; margin-right: -71.4%; width: 57.1%; margin-top: 0; margin-bottom: calc(var(--u) * 3);
+  font-size: 15px; line-height: 21px; position: relative; vertical-align: baseline; }
+.sn::before { content: counter(sn) " "; font-variant-numeric: lining-nums; }
+.sn .sp, .mn .sp { display: inline-block; }
+
+/* sparklines: word-sized */
+.spark { display: inline-block; vertical-align: -2px; height: 14px; }
+.spark rect { fill: var(--data); }
+.spark .dot { fill: var(--data); }
+.spark line { stroke: var(--data); stroke-width: 1; }
+.spark .base { stroke: #999; stroke-width: 0.6; }
+
+/* tables: one rule above, one below, nothing else */
+.tbl { width: 58.33%; margin-bottom: var(--line); }
+table { border-collapse: collapse; width: 100%; font-size: 17px; line-height: var(--line); font-variant-numeric: lining-nums tabular-nums; border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink); }
+th { font-weight: 400; font-style: italic; text-align: left; padding: calc(var(--u)) 10px 0 0; }
+td { padding: 0 10px 0 0; vertical-align: baseline; }
+th.n, td.n { text-align: right; }
+td.bar { width: 28%; padding-right: 0; }
+td.bar span { display: block; height: 3px; background: var(--data); margin-top: 1px; }
+tbody tr:last-child td { padding-bottom: var(--u); }
+.caption { font-size: 15px; line-height: 21px; }
+.tbl .caption { margin-top: var(--u); }
+.tbl .caption b, figure .caption b { font-weight: 400; font-variant-caps: all-small-caps; letter-spacing: 0.04em; }
+
+/* figures */
+figure { margin: calc(var(--u) * 2) 0 var(--line); }
+figure.full { width: 100%; }
+figure.full .caption { width: 58.33%; margin-top: calc(var(--u) * 2); }
+.mult { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: calc(var(--u) * 4) calc(var(--u) * 4); }
+.panel { font-size: 15px; line-height: 21px; }
+.panel .t { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0 0.4em; margin-bottom: 0; min-height: 42px; align-content: flex-start; }
+.panel .fk { white-space: nowrap; }
+.panel .t a { text-decoration: none; }
+.panel .t a:hover { text-decoration: underline; }
+.panel .t i { font-style: normal; font-variant-numeric: oldstyle-nums; }
+.panel svg { display: block; width: 100%; height: auto; overflow: visible; }
+.panel svg rect { fill: var(--data); }
+.panel svg .own { fill: var(--ink); }
+.tree { overflow-x: auto; }
+.tree svg { display: block; overflow: visible; }
+.tree svg path { fill: none; stroke: var(--data); stroke-width: 1; }
+.tree svg text { font: 15px "EB Garamond", serif; fill: var(--ink); }
+.tree svg text.it { font-style: italic; }
+.tree svg text.here { font-weight: 600; }
+.tree svg circle { fill: var(--data); }
+.epigraph { font-style: italic; }
+.ar { font-style: normal; }
+.colophon { padding: 0 var(--pad) calc(var(--u) * 8); font-size: 15px; line-height: 21px; }
+.colophon p { width: 58.33%; }
+
+@media (max-width: 860px) {
+  :root { --pad: 16px; }
+  .runhead { grid-template-columns: 1fr auto; }
+  .runhead nav { grid-column: 1 / -1; grid-row: 2; margin-top: var(--u); }
+  .col, h1, h2, .subtitle, article p, .tbl, figure.full .caption, .colophon p { width: 100%; }
+  h1 { font-size: 44px; line-height: 49px; }
+  .sn, .mn { float: none; display: block; width: auto; margin: calc(var(--u) * 1) 0 calc(var(--u) * 2) 1.2em; }
+  .mult { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: calc(var(--u) * 3); }
+  td.bar { width: 22%; }
+  .hide-s { display: none; }
+}
+.sn + .snref::after { content: "," counter(sn); }
+article .panel p { width: auto; margin: 0; }
+.outline, .outline ul { list-style: none; margin: 0; padding: 0; font-size: 17px; line-height: 28px; }
+.outline ul { padding-left: 14px; margin-left: 4px; border-left: 1px solid var(--data); }
+.outline li.here { font-weight: 600; }
+@media (max-width: 860px) { .sn + .snref::after { content: counter(sn); } }
