@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A volume — lexodus (Library of Babel draft)</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Cinzel:wght@500;600;700&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body data-page="word">
+<header class="head">
+  <a class="brand" href="index.html"><svg viewBox="0 0 40 46" aria-hidden="true"><path d="M20 2 L38 12.5 V33.5 L20 44 L2 33.5 V12.5 Z" fill="none" stroke="currentColor" stroke-width="3"/></svg>lexodus</a>
+  <nav aria-label="Main">
+    <a href="index.html">The galleries</a>
+    <a href="language.html?code=it">Hall of Italian</a>
+    <a href="word.html?lang=it&amp;w=caff%C3%A8&amp;n=1&amp;from=ota">Volume: caffè</a>
+    <a href="tree.html?lang=it&amp;w=caff%C3%A8&amp;n=1">Copies of caffè</a>
+    <a href="../index.html">All drafts</a>
+    <a href="../../index.html">Real site</a>
+  </nav>
+</header>
+<main>
+<p id="loading" class="loading">Walking the galleries&hellip;</p>
+<div id="app" hidden>
+<div class="desk">
+  <div class="book">
+    <section class="pg pg-l">
+      <p class="pg-head" id="head-l"></p>
+      <p class="kicker">Volume</p>
+      <h1 id="w" class="vol-title"></h1>
+      <p id="meaning" class="meaning"></p>
+      <h2 class="small-title">Where it is shelved, and where it stood before</h2>
+      <ol id="shelfmarks" class="shelfmarks"></ol>
+      <p class="pg-no">i</p>
+    </section>
+    <section class="pg pg-r">
+      <p class="pg-head" id="head-r"></p>
+      <h2 class="small-title">The note on the flyleaf</h2>
+      <blockquote id="ety" class="ety"></blockquote>
+      <p class="wikt"><a id="wikt" href="#">The entry in the Wiktionary</a></p>
+      <h2 class="small-title" id="copies-title">Copies in other halls</h2>
+      <ul id="copies" class="copies"></ul>
+      <p class="more"><a id="tree-link" href="#">All the copies, hall by hall</a></p>
+      <p class="pg-no">ii</p>
+    </section>
+  </div>
+</div>
+</div>
+</main>
+<p class="footer">Data: English Wiktionary, extracted by <a href="https://kaikki.org/">Wiktextract / kaikki.org</a>, downloaded 18 October 2026, licence <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>. Draft “Library of Babel”, after Jorge Luis Borges: not the real site.</p>
+
+<script src="../js/dati.js"></script>
+<script src="js/pagine.js"></script>
+</body>
+</html>
