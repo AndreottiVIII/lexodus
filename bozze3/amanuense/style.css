@@ -1,0 +1,233 @@
+/* lexodus, draft "amanuense": a page of a medieval manuscript. Parchment, iron-gall ink, vermilion rubrics,
+   ultramarine and gold for the initials; Alegreya (a calligraphic book face) for the text, Uncial Antiqua for the
+   versals. Ruled lines every 30 px, as the scribe pricked and ruled the leaf before writing. */
+:root {
+  --vellum: #f0e3c4;
+  --vellum-2: #e6d4ac;
+  --ink: #2a1c10;
+  --ink-2: #4b3521;
+  --red: #a1231a;
+  --blue: #1d3c88;
+  --gold: #c89a34;
+  --gold-hi: #f2d98a;
+  --rule: rgba(122, 82, 40, 0.16);
+  --lh: 30px;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html { background: #5b4330; }
+body {
+  margin: 0; color: var(--ink);
+  font: 19px/var(--lh) "Alegreya", Georgia, serif;
+  font-variant-numeric: oldstyle-nums;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(0, 0, 0, 0) 40%, rgba(40, 22, 8, 0.45) 100%),
+    #5b4330;
+  min-height: 100vh;
+}
+a { color: inherit; text-decoration-color: rgba(161, 35, 26, 0.55); text-underline-offset: 3px; }
+a:hover { color: var(--red); }
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.red { color: var(--red); }
+
+/* ---- the top: a strip of tooled leather ---- */
+.head {
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 26px; padding: 14px 28px 12px;
+  color: #f0dfb8; background: linear-gradient(#3a2618, #2c1c10); border-bottom: 3px double var(--gold);
+}
+.brand { font: 30px/1 "Uncial Antiqua", serif; color: #f6e7c4; text-decoration: none; letter-spacing: 0.02em; }
+.brand .ini { color: var(--gold-hi); }
+.head nav { display: flex; flex-wrap: wrap; gap: 4px 20px; font: 500 17px/1.4 "Alegreya SC", serif; letter-spacing: 0.04em; }
+.head nav a { color: #f0dfb8; text-decoration: none; }
+.head nav a:hover { color: var(--gold-hi); text-decoration: underline; }
+
+main { padding: 34px 20px 10px; }
+.loading { color: #f0dfb8; text-align: center; font-style: italic; }
+
+/* ---- the leaf of parchment ---- */
+.leaf {
+  position: relative; max-width: 1240px; margin: 0 auto; padding: 46px 64px 70px;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.012 0.02' numOctaves='4' seed='7'/%3E%3CfeColorMatrix values='0 0 0 0 0.45 0 0 0 0 0.3 0 0 0 0 0.12 0 0 0 0.23 0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E"),
+    radial-gradient(ellipse at 30% 20%, rgba(255, 250, 230, 0.55), rgba(255, 250, 230, 0) 60%),
+    radial-gradient(ellipse at 50% 50%, var(--vellum) 55%, var(--vellum-2) 100%);
+  box-shadow: 0 2px 0 #c8b07c, 0 18px 50px rgba(0, 0, 0, 0.45);
+  border-radius: 3px 6px 4px 3px;
+}
+/* prickings down the outer edges, where the scribe ruled the leaf */
+.leaf::before, .leaf::after {
+  content: ""; position: absolute; top: 60px; bottom: 60px; width: 4px;
+  background: radial-gradient(circle, rgba(70, 45, 20, 0.45) 1.3px, transparent 1.8px) 0 0 / 4px var(--lh) repeat-y;
+}
+.leaf::before { left: 22px; }
+.leaf::after { right: 22px; }
+
+.runhead {
+  display: grid; grid-template-columns: 1fr auto 1fr; align-items: baseline; gap: 12px;
+  border-bottom: 1px solid var(--rule); padding-bottom: 6px; margin-bottom: var(--lh);
+  font: 500 17px/1.4 "Alegreya SC", serif; color: var(--ink-2);
+}
+.runtitle { color: var(--red); font-size: 21px; letter-spacing: 0.12em; text-align: center; }
+.jump { justify-self: end; }
+.jump select {
+  font: italic 16px "Alegreya", serif; color: var(--ink); background: transparent; border: 0; border-bottom: 1px dotted var(--ink-2);
+  padding: 2px 4px; max-width: 220px;
+}
+.rubric { color: var(--red); font: 500 22px/var(--lh) "Alegreya SC", serif; letter-spacing: 0.03em; margin: 0 0 calc(var(--lh) / 2); }
+.rubric.title { font-size: 28px; line-height: 1.25; text-align: center; margin-bottom: var(--lh); }
+.rubric.title i { font-family: "Alegreya", serif; font-style: italic; }
+h2.rubric { font-size: 22px; }
+
+/* ruled text block: a faint line under every line of writing */
+.opening, .tx, .run {
+  background-image: repeating-linear-gradient(to bottom, transparent 0, transparent calc(var(--lh) - 1px), var(--rule) calc(var(--lh) - 1px), var(--rule) var(--lh));
+}
+p { margin: 0 0 var(--lh); }
+.opening { font-size: 21px; margin: 0 auto var(--lh); max-width: 980px; }
+.opening.small { font-size: 18px; text-align: center; background: none; font-style: italic; color: var(--ink-2); }
+
+/* versals: the opening initial, painted on gold */
+.illum {
+  float: left; margin: 4px 14px 0 0; width: 96px; height: 96px; display: grid; place-items: center;
+  font: 74px/1 "Uncial Antiqua", serif; color: var(--blue);
+  background:
+    radial-gradient(circle at 30% 25%, var(--gold-hi), var(--gold) 55%, #9b7120 100%);
+  border: 3px solid var(--red); outline: 2px solid var(--gold); outline-offset: 3px;
+  box-shadow: inset 0 0 0 4px rgba(255, 240, 200, 0.35);
+}
+.illum.big { width: 132px; height: 132px; font-size: 104px; }
+.illum.huge { width: 124px; height: 124px; font-size: 100px; margin-bottom: 8px; }
+
+/* ---- two columns, each with its own outer margin for the glosses ---- */
+.cols { display: grid; grid-template-columns: 1fr 1fr; gap: 0 48px; position: relative; }
+.cols::before { content: ""; position: absolute; left: 50%; top: 0; bottom: var(--lh); border-left: 1px solid var(--rule); }
+.glossed { display: grid; column-gap: 18px; align-items: start; }
+.glossed.left { grid-template-columns: 150px 1fr; }
+.glossed.right { grid-template-columns: 1fr 150px; }
+.glossed.right .gl { order: 2; }
+.glossed.right .gl, .glossed.right .tx { grid-row: auto; }
+.glossed.right .gl { grid-column: 2; }
+.glossed.right .tx { grid-column: 1; }
+.glossed.left .gl { grid-column: 1; text-align: right; }
+.glossed.left .tx { grid-column: 2; }
+.pair { display: contents; }
+.glossed .tx p { margin-bottom: calc(var(--lh) / 2); }
+.glossed { grid-auto-flow: dense; }
+.col-a h2.rubric { margin-left: 168px; }
+.col-b h2.rubric { margin-right: 168px; }
+.gl {
+  font: italic 15px/1.45 "Alegreya", serif; color: var(--ink-2); padding-top: 5px;
+  font-variant-numeric: oldstyle-nums; overflow-wrap: anywhere;
+}
+.gl .gc { display: block; }
+.gl .mk { color: var(--red); font-style: normal; font-weight: 700; margin-right: 4px; }
+.gl .ab { font-style: normal; font-family: "Alegreya SC", serif; color: var(--red); }
+sup.mk { color: var(--red); font-weight: 700; font-size: 15px; line-height: 0; margin-left: 1px; }
+.pil { color: var(--red); margin-right: 4px; }
+.lname { font-family: "Alegreya SC", serif; font-weight: 500; color: var(--red); text-decoration: none; }
+.lname:hover { text-decoration: underline; }
+.tx a i { color: var(--ink); }
+.term { font-style: italic; }
+.tr { color: var(--ink-2); }
+.run a { font-family: "Alegreya SC", serif; }
+.far { margin-top: calc(var(--lh) / 2); border-top: 1px solid var(--rule); padding-top: calc(var(--lh) / 2); }
+.far .glossed.wide { grid-template-columns: 1fr 380px; max-width: 1040px; }
+.word-title { font-size: 34px; font-style: italic; font-weight: 500; letter-spacing: 0.01em; }
+q { font-style: italic; quotes: "“" "”"; }
+
+/* the catchword at the foot of the leaf */
+.catch { position: absolute; right: 70px; bottom: 22px; margin: 0; font: italic 18px/1 "Alegreya", serif; }
+.catch a { display: inline-block; padding: 6px 12px 7px; border: 1px solid rgba(161, 35, 26, 0.55); border-radius: 50% / 60%; text-decoration: none; color: var(--red); }
+
+/* ---- home: the illuminated table ---- */
+.leaf-home { max-width: 1180px; }
+.incipit { max-width: 900px; margin: 0 auto var(--lh); }
+.incipit .rubric { font-size: 30px; line-height: 1.2; margin-bottom: 12px; }
+.incipit .first { font-size: 21px; }
+.frame {
+  position: relative; padding: 34px; margin-top: 8px;
+  border: 14px solid transparent;
+  border-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='84' height='84' viewBox='0 0 84 84'%3E%3Crect width='84' height='84' fill='%231d3c88'/%3E%3Crect x='3' y='3' width='78' height='78' fill='none' stroke='%23c89a34' stroke-width='2'/%3E%3Cpath d='M0 42 C14 30 28 54 42 42 S70 30 84 42' fill='none' stroke='%23f2d98a' stroke-width='2.4'/%3E%3Cpath d='M42 0 C30 14 54 28 42 42 S30 70 42 84' fill='none' stroke='%23f2d98a' stroke-width='2.4'/%3E%3Ccircle cx='21' cy='37' r='3.2' fill='%23a1231a'/%3E%3Ccircle cx='63' cy='47' r='3.2' fill='%23a1231a'/%3E%3Ccircle cx='37' cy='63' r='3.2' fill='%23a1231a'/%3E%3Ccircle cx='47' cy='21' r='3.2' fill='%23a1231a'/%3E%3C/svg%3E") 28 round;
+  background: rgba(255, 248, 228, 0.35);
+  box-shadow: 0 0 0 3px var(--gold), inset 0 0 0 1px var(--gold);
+}
+.table { columns: 2; column-gap: 48px; column-rule: 1px solid var(--rule); }
+.fam { margin-bottom: 18px; }
+.fam h2.rubric { break-after: avoid; }
+.fam li { break-inside: avoid; }
+.fam h2.rubric { font-size: 20px; margin: 0 0 6px; }
+.fam ul { list-style: none; margin: 0; padding: 0; }
+.fam li a {
+  display: grid; grid-template-columns: 56px 1fr auto; grid-template-rows: auto auto; column-gap: 10px; align-items: baseline;
+  text-decoration: none; padding: 4px 0 6px; border-bottom: 1px solid var(--rule);
+}
+.fam li a:hover .nm { color: var(--red); }
+.cap { grid-row: span 2; align-self: center; font: 46px/1 "Uncial Antiqua", serif; text-align: center; }
+.cap.red { color: var(--red); }
+.cap.blue { color: var(--blue); }
+.nm { font: 500 24px/1.2 "Alegreya SC", serif; }
+.fo { font: italic 16px/1 "Alegreya", serif; color: var(--ink-2); }
+.tk { grid-column: 2 / 4; font-size: 16px; line-height: 1.3; color: var(--ink-2); }
+.explicit { text-align: center; margin: var(--lh) 0 0; font: italic 20px/1.4 "Alegreya", serif; }
+
+/* ---- stemma ---- */
+.leaf-wide { max-width: 1400px; }
+.stemma-wrap { overflow-x: auto; margin: 0 -60px var(--lh); padding: 0 8px; position: relative; z-index: 1; }
+.stemma svg { display: block; margin: 0 auto; }
+.stemma .lines path { fill: none; stroke: var(--ink); stroke-width: 1.4; stroke-linecap: round; }
+.stemma text { font: 16px "Alegreya", serif; fill: var(--ink); }
+.stemma .sg { font: 700 21px "Alegreya", serif; fill: var(--red); }
+.stemma .lost .sg { fill: var(--blue); font-style: italic; }
+.stemma .ln { font-family: "Alegreya SC", serif; fill: var(--ink-2); }
+.stemma .wd { font-style: italic; }
+.stemma .here .wd { font-weight: 700; fill: var(--red); }
+.sigla { columns: 3; column-gap: 40px; list-style: none; padding: 0; margin: 0 0 var(--lh); font-size: 17px; line-height: 1.6; }
+.sigla li { break-inside: avoid; }
+.sigla .sg { display: inline-block; min-width: 1.6em; font-weight: 700; color: var(--red); }
+.sigla .sg.lost { color: var(--blue); font-style: italic; }
+.sigla a { text-decoration: none; }
+.sigla .how { font-style: italic; color: var(--ink-2); font-size: 15px; }
+
+.footer { max-width: 1100px; margin: 18px auto 30px; padding: 0 20px; color: #e9d6ae; font-size: 15px; line-height: 1.5; text-align: center; }
+.footer a { color: #f6e7c4; }
+
+/* ---- small screens: one column, glosses under the paragraph they gloss ---- */
+@media (max-width: 860px) {
+  body { font-size: 18px; }
+  main { padding: 16px 8px 6px; }
+  .head { padding: 12px 16px; }
+  .leaf { padding: 26px 22px 64px; }
+  .leaf::before, .leaf::after { display: none; }
+  .runhead { grid-template-columns: 1fr auto; }
+  .runhead .jump { grid-column: 1 / -1; justify-self: start; }
+  .cols { grid-template-columns: 1fr; }
+  .cols::before { display: none; }
+  .glossed.left, .glossed.right, .far .glossed.wide { grid-template-columns: 1fr; }
+  .pair { display: flex; flex-direction: column-reverse; }
+  .glossed .gl { text-align: left !important; padding: 0 0 0 14px; border-left: 2px solid rgba(161, 35, 26, 0.4); margin: -8px 0 16px; }
+  .col-a h2.rubric, .col-b h2.rubric { margin-left: 0; margin-right: 0; }
+  .table { columns: 1; }
+  .frame { padding: 16px; border-width: 10px; }
+  .illum { width: 76px; height: 76px; font-size: 58px; }
+  .illum.big, .illum.huge { width: 96px; height: 96px; font-size: 78px; }
+  .word-title { font-size: 28px; }
+  .rubric.title { font-size: 24px; }
+  .sigla { columns: 1; }
+  .catch { right: 26px; }
+}
+
+/* the way, drawn: roundels of gold joined by a vermilion line */
+.way { margin: 0 0 var(--lh); padding: 0; display: grid; justify-items: start; }
+.way .stop { display: grid; grid-template-columns: 64px 1fr; grid-template-rows: auto auto; column-gap: 14px; align-items: center; }
+.way .orb {
+  grid-row: span 2; width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center;
+  font: 26px/1 "Uncial Antiqua", serif; color: var(--blue);
+  background: radial-gradient(circle at 32% 28%, var(--gold-hi), var(--gold) 60%, #9b7120);
+  border: 2px solid var(--red); box-shadow: 0 0 0 3px var(--vellum), 0 0 0 4px var(--gold);
+}
+.way .here .orb { color: var(--red); border-color: var(--blue); }
+.way .sw { font-size: 26px; line-height: 1.2; }
+.way .sw .tr { font-size: 19px; }
+.way .here .sw .term { color: var(--red); font-weight: 700; }
+.way .how { margin-left: 31px; border-left: 2px solid var(--red); padding: 8px 0 8px 46px; font-style: italic; color: var(--red); font-size: 17px; line-height: 1.3; }
+.tx .way { background: none; }
