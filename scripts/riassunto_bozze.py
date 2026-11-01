@@ -35,6 +35,14 @@ SERIE = [
         ("orario", "Orario ferroviario", "Orario generale FS: quadri numerati, arrivi su bianco e partenze sul giallo, note ◆ † ✱ con legenda.", "lingua"),
         ("tufte", "Tufte", "Monografia: EB Garamond, note a margine, sparkline nel testo, 33 small multiples in home.", "lingua"),
     ]),
+    ("bozze5", "Serie 5 (1 novembre): mondi che fanno quello che fanno le parole (solo italiano e caffè)", [
+        ("escher", "Escher", "Tre gravità per preso/dato/origini, scale di Penrose per le parole andate e tornate, caffè come Metamorfosi lettera per lettera.", "lingua"),
+        ("piranesi", "Piranesi", "Carceri: un arco per origine lontana, passerelle per le lingue di passaggio, catene per le etimologie incerte; caffè scende nel buio.", "lingua"),
+        ("celeste", "Carta celeste", "Cellarius: le parole sono stelle tirate dalle lingue che le hanno prese; caffè è una carta con l'arabo al polo.", "lingua"),
+        ("isolario", "Isolario", "Bordone: ogni lingua un'isola, un porto per lingua di provenienza, rotte punteggiate; il portolano di caffè.", "lingua"),
+        ("sentieri", "Sentieri che si biforcano", "Borges: un giardino di siepi, porte d'ingresso e d'uscita, doppioni che si ricongiungono, bivi per le origini incerte.", "lingua"),
+        ("babele", "Torre di Babele", "Bruegel: 33 piani per famiglia, la roccia delle lingue antiche, caffè sale e scende lungo la rampa.", "lingua"),
+    ]),
 ]
 
 css = """
@@ -46,7 +54,7 @@ figcaption{margin-top:6px} b{display:block} small{color:#555} a{color:#1a3e8a}
 p.note{color:#444;margin:4px 0 0}
 """
 parts = [f"<!doctype html><html lang='it'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><meta name='robots' content='noindex'><title>lexodus — tutte le bozze</title><style>{css}</style></head><body>",
-         "<h1>lexodus — tutte le bozze di veste grafica</h1><p class='note'>21 bozze in quattro serie. Ogni foto è la pagina dell'italiano; i link aprono la bozza online con scheda parola e telefono. Nessuna è ancora scelta.</p>"]
+         "<h1>lexodus — tutte le bozze di veste grafica</h1><p class='note'>27 bozze in cinque serie. Ogni foto è la pagina dell'italiano; i link aprono la bozza online con la scheda parola (e, fino alla serie 4, il telefono). Nessuna è ancora scelta.</p>"]
 n = 0
 for cartella, titolo, voci in SERIE:
     parts.append(f"<h2>{html.escape(titolo)}</h2><div class='g'>")
