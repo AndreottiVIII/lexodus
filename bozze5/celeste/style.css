@@ -1,0 +1,63 @@
+/* lexodus, draft "celeste" (bozze5, mandate 21): a world that does what words do, after the star charts of Andreas
+   Cellarius, Harmonia Macrocosmica (Amsterdam, Janssonius, 1660). Words are stars; a language is a constellation, drawn
+   with the lines between its stars; the road of a word is a line from constellation to constellation.
+   Grid: 12 columns, gutter 24 px, margin 40 px; vertical rhythm 26 px (text 18/26). The plate takes columns 1-8, the
+   cartouche and the catalogue columns 9-12.
+   Type: Cormorant Garamond and Cormorant SC, a Garamond: the roman and italic of the Dutch printers of the 1660s were
+   Garamond's and Granjon's.
+   Colour: ivory paper; the plates in night blue with engraved lines, gold for stars and the lines between them. No
+   gradients, no glow: stars are drawn as engraved star shapes. */
+:root {
+  --night: #0f1d38;
+  --gold: #d6aa4c;
+  --ivory: #f2ead6;
+  --ink: #0f1d38;
+  --line: 26px;
+  --gut: 24px;
+  --m: 40px;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--ivory); color: var(--ink);
+  font: 500 18px/var(--line) "Cormorant Garamond", Garamond, Georgia, serif; font-variant-numeric: lining-nums tabular-nums; }
+h1, h2, h3, p, ol, ul, figure, table, dl, dd, dt { margin: 0; padding: 0; }
+a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.sc { font-family: "Cormorant SC", "Cormorant Garamond", Georgia, serif; }
+
+.top { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gut); padding: 13px var(--m); background: var(--night); color: var(--ivory); align-items: baseline; }
+.top .name { grid-column: 1 / 4; font-style: italic; font-size: 24px; text-decoration: none; }
+.top nav { grid-column: 9 / 13; }
+.loading { padding: var(--line) var(--m); }
+
+.sheet { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gut); padding: var(--line) var(--m) calc(var(--line) * 2); align-items: start; }
+.plate { grid-column: 1 / 9; background: var(--night); padding: 8px; border: 3px double var(--night); }
+.plate .box { overflow-x: auto; }
+.plate svg { display: block; }
+.side { grid-column: 9 / 13; }
+.cartouche { border: 3px double var(--ink); padding: 13px 16px 16px; }
+.cartouche .over { font-family: "Cormorant SC", Georgia, serif; font-size: 18px; border-bottom: 1px solid var(--ink); }
+h1 { font-family: "Cormorant SC", Georgia, serif; font-weight: 600; font-size: 54px; line-height: 65px; }
+h1 i { font-family: "Cormorant Garamond", Georgia, serif; font-weight: 500; }
+.cartouche p { margin-top: 13px; }
+.cat { margin-top: var(--line); width: 100%; border-collapse: collapse; }
+.cat caption { text-align: left; font-family: "Cormorant SC", Georgia, serif; font-size: 20px; border-bottom: 2px solid var(--ink); }
+.cat th { font-weight: 500; font-family: "Cormorant SC", Georgia, serif; text-align: left; border-bottom: 1px solid var(--ink); padding-right: 8px; }
+.cat td { border-bottom: 1px dotted var(--ink); padding-right: 8px; vertical-align: baseline; }
+.cat td.n, .cat th.n { text-align: right; }
+.cat i { font-weight: 500; }
+.under { grid-column: 1 / 9; margin-top: 13px; }
+.under p + p { margin-top: 13px; }
+svg text { font-family: "Cormorant Garamond", Georgia, serif; fill: var(--ivory); }
+svg .scx { font-family: "Cormorant SC", Georgia, serif; }
+.foot { padding: var(--line) var(--m); background: var(--night); color: var(--ivory); }
+
+@media (max-width: 760px) {
+  :root { --m: 16px; }
+  .top, .sheet { grid-template-columns: minmax(0, 1fr); }
+  .top .name, .top nav, .plate, .side, .under { grid-column: 1 / -1; }
+  .side { margin-top: var(--line); }
+  h1 { font-size: 40px; line-height: 52px; }
+}
