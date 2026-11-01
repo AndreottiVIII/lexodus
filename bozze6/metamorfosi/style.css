@@ -1,0 +1,76 @@
+/* lexodus, draft "metamorfosi" (bozze6, mandate 22): M. C. Escher, "Metamorphosis II" (woodcut, 1939-40), carried
+   out with the data. The rule of the print: a strip read from left to right in which a word written in a grid of
+   squares becomes a chequerboard, the squares bend into animals (birds, fish, lizards) and the animals straighten
+   back into squares and letters. Here the strip of caffè goes from qahwa to kahvi along the longest road of its
+   tree, and the strip of Italian takes in, from the left, the languages it took from and lets out, on the right,
+   those it gave to. Wanted: the strip scrolls sideways; on the telephone it runs down the page.
+   Grid: 12 columns, gutter 24 px, margin 40 px; vertical rhythm 26 px (text 17/26, every space a multiple of 13).
+   The strip takes all 12 columns (and more, scrolling); the lists take 6 and 6 underneath.
+   Type: IM Fell DW Pica and its small capitals, the pica roman cut by the Dutch founder Peter de Walpergen for
+   Bishop Fell at the end of the 17th century, as in the Escher draft this one grows from; the letters in the squares
+   are the same face, one letter to a square as in the grid of the print.
+   Colour: black and white only, as in the woodcut. Sharp corners everywhere. */
+:root {
+  --ink: #111;
+  --paper: #fff;
+  --line: 26px;
+  --half: 13px;
+  --gut: 24px;
+  --m: 40px;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--paper); color: var(--ink);
+  font: 400 17px/var(--line) "IM Fell DW Pica", Georgia, serif; font-kerning: normal; }
+h1, h2, h3, p, ol, ul, figure, dl, dd { margin: 0; padding: 0; }
+a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.sc { font-family: "IM Fell DW Pica SC", "IM Fell DW Pica", Georgia, serif; }
+
+.top { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gut);
+  padding: var(--half) var(--m); border-bottom: 1px solid var(--ink); align-items: baseline; }
+.top .name { grid-column: 1 / 4; font-style: italic; font-size: 22px; text-decoration: none; }
+.top nav { grid-column: 8 / 13; }
+.loading { padding: var(--line) var(--m); }
+
+.sheet { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gut);
+  padding: var(--line) var(--m) calc(var(--line) * 2); align-items: start; }
+.title { grid-column: 1 / 7; }
+h1 { font-weight: 400; font-size: 66px; line-height: 78px; letter-spacing: -0.01em; }
+h1 i { font-size: 40px; }
+.lede { grid-column: 7 / 13; align-self: end; padding-bottom: var(--half); }
+.lede p + p { margin-top: var(--half); }
+.plate { margin-top: var(--line); }
+.plate.wide { grid-column: 1 / 13; }
+.plate.half { grid-column: 1 / 7; }
+.plate.half2 { grid-column: 7 / 13; }
+.cap { display: flex; gap: 12px; align-items: baseline; border-top: 2px solid var(--ink); padding-top: 6px; margin-bottom: var(--half); }
+.cap .no { font-family: "IM Fell DW Pica SC", Georgia, serif; }
+.cap h2 { font-weight: 400; font-style: italic; font-size: 24px; line-height: var(--line); }
+.note { margin-top: var(--half); max-width: 46em; }
+.box { overflow-x: auto; }
+.strip { overflow-x: auto; border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink); }
+svg { display: block; }
+svg text { font-family: "IM Fell DW Pica", Georgia, serif; }
+svg .scx { font-family: "IM Fell DW Pica SC", "IM Fell DW Pica", Georgia, serif; }
+.tbl { width: 100%; border-collapse: collapse; margin-top: var(--half); font-variant-numeric: tabular-nums; }
+.tbl th, .tbl td { text-align: left; padding: 0 12px 0 0; border-bottom: 1px solid var(--ink); line-height: var(--line); vertical-align: baseline; }
+.tbl th { font-weight: 400; font-family: "IM Fell DW Pica SC", Georgia, serif; }
+.tbl td.n, .tbl th.n { text-align: right; }
+.tbl td.ex { font-style: italic; }
+.quote { font-style: italic; }
+.gens { columns: 2; column-gap: var(--gut); margin-top: var(--half); }
+.gens li { list-style: none; break-inside: avoid; }
+.gens li.g { font-family: "IM Fell DW Pica SC", Georgia, serif; padding-top: var(--half); }
+.foot { padding: var(--line) var(--m); border-top: 1px solid var(--ink); }
+.foot p { max-width: 60em; }
+
+@media (max-width: 760px) {
+  :root { --m: 16px; }
+  .top, .sheet { grid-template-columns: minmax(0, 1fr); }
+  .top .name, .top nav, .title, .lede, .plate.wide, .plate.half, .plate.half2 { grid-column: 1 / -1; }
+  h1 { font-size: 44px; line-height: 52px; }
+  .gens { columns: 1; }
+}
