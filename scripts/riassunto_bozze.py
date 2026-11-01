@@ -43,6 +43,11 @@ SERIE = [
         ("sentieri", "Sentieri che si biforcano", "Borges: un giardino di siepi, porte d'ingresso e d'uscita, doppioni che si ricongiungono, bivi per le origini incerte.", "lingua"),
         ("babele", "Torre di Babele", "Bruegel: 33 piani per famiglia, la roccia delle lingue antiche, caffè sale e scende lungo la rampa.", "lingua"),
     ]),
+    ("bozze6", "Serie 6 (1 novembre): tre stampe di Escher eseguite con i dati (solo italiano e caffè)", [
+        ("giorno-notte", "Giorno e notte", "I campi delle lingue diventano uccelli bianchi e neri: entrano sulla notte quelle da cui ha preso, escono sul giorno quelle a cui ha dato.", "lingua"),
+        ("limite-cerchio", "Limite del cerchio", "Disco di Poincaré: angeli per le lingue da cui ha preso, diavoli per quelle a cui ha dato, le tappe lontane verso il bordo.", "lingua"),
+        ("metamorfosi", "Metamorfosi", "Striscia di quadrati: le parole diventano uccelli, pesci e lucertole e tornano parole lungo la strada di caffè.", "lingua"),
+    ]),
 ]
 
 css = """
@@ -54,7 +59,7 @@ figcaption{margin-top:6px} b{display:block} small{color:#555} a{color:#1a3e8a}
 p.note{color:#444;margin:4px 0 0}
 """
 parts = [f"<!doctype html><html lang='it'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><meta name='robots' content='noindex'><title>lexodus — tutte le bozze</title><style>{css}</style></head><body>",
-         "<h1>lexodus — tutte le bozze di veste grafica</h1><p class='note'>27 bozze in cinque serie. Ogni foto è la pagina dell'italiano; i link aprono la bozza online con la scheda parola (e, fino alla serie 4, il telefono). Nessuna è ancora scelta.</p>"]
+         "<h1>lexodus — tutte le bozze di veste grafica</h1><p class='note'>30 bozze in sei serie. Ogni foto è la pagina dell'italiano; i link aprono la bozza online con la scheda parola (e, fino alla serie 4, il telefono). Le serie 5 e 6 hanno un indice proprio: <a href='../bozze5/index.html'>bozze 5</a>, <a href='../bozze6/index.html'>bozze 6</a>. Nessuna è ancora scelta.</p>"]
 n = 0
 for cartella, titolo, voci in SERIE:
     parts.append(f"<h2>{html.escape(titolo)}</h2><div class='g'>")
