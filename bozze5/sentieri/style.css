@@ -1,0 +1,58 @@
+/* lexodus, draft "sentieri" (bozze5, mandate 21): a world that does what words do, after Jorge Luis Borges,
+   "El jardín de senderos que se bifurcan" (1941). A language is a garden of hedges seen from above: the gates on the
+   west are the languages it took words from, the gates on the east those it gave words to; a fork is a word with
+   more than one origin proposed; two paths that part and meet again are doublets. The word page is the labyrinth of
+   one word, its road marked.
+   Grid: 12 columns, gutter 24 px, margin 40 px; vertical rhythm 26 px (text 18/26); the plan is drawn on a square
+   grid of 26 px, the same unit as the line. Text in columns 1-6 and 8-12, the plan across all 12.
+   Type: Old Standard TT, a revival of the "modern" roman of late nineteenth-century books, the face of the
+   Spanish-language editions of Borges's time.
+   Colour: the dark green of a clipped hedge and the white of lime and gravel; ink for the text and for the road. */
+:root {
+  --green: #1d3b26;
+  --lime: #f4f1e6;
+  --ink: #121a14;
+  --line: 26px;
+  --gut: 24px;
+  --m: 40px;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--lime); color: var(--ink); font: 400 18px/var(--line) "Old Standard TT", "Times New Roman", serif; font-variant-numeric: lining-nums; }
+h1, h2, p, ol, ul, figure, table { margin: 0; padding: 0; }
+a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+
+.top { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gut); padding: 13px var(--m); background: var(--green); color: var(--lime); align-items: baseline; }
+.top .name { grid-column: 1 / 3; font-style: italic; font-size: 22px; text-decoration: none; }
+.top nav { grid-column: 8 / 13; }
+.loading { padding: var(--line) var(--m); }
+
+.sheet { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gut); padding: var(--line) var(--m) calc(var(--line) * 2); align-items: start; }
+.title { grid-column: 1 / 7; }
+.title .over { font-style: italic; }
+h1 { font-weight: 400; font-size: 52px; line-height: 65px; }
+.lede { grid-column: 8 / 13; align-self: end; }
+.lede p + p { margin-top: 13px; }
+.plan { grid-column: 1 / 13; margin-top: var(--line); }
+.plan .box { overflow-x: auto; }
+.plan svg { display: block; }
+.key { grid-column: 1 / 13; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gut); margin-top: var(--line); }
+.key section { grid-column: span 6; }
+.key section.r { grid-column: 8 / 13; }
+.key h2 { font-weight: 700; font-size: 18px; border-bottom: 2px solid var(--ink); }
+.key ol { list-style: none; }
+.key li { border-bottom: 1px solid var(--ink); padding: 0; display: grid; grid-template-columns: 34px 1fr; }
+.key li b { font-weight: 700; }
+.note { grid-column: 1 / 13; margin-top: 13px; font-style: italic; }
+svg text { font-family: "Old Standard TT", "Times New Roman", serif; fill: var(--ink); }
+.foot { padding: var(--line) var(--m); background: var(--green); color: var(--lime); }
+
+@media (max-width: 760px) {
+  :root { --m: 16px; }
+  .top, .sheet, .key { grid-template-columns: minmax(0, 1fr); }
+  .top .name, .top nav, .title, .lede, .key section, .key section.r { grid-column: 1 / -1; }
+  h1 { font-size: 38px; line-height: 52px; }
+}
