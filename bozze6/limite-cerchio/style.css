@@ -1,0 +1,85 @@
+/* lexodus, draft "limite-cerchio" (bozze6, mandate 22): M. C. Escher, "Circle Limit IV (Heaven and Hell)" (woodcut,
+   1960), carried out with the data. The rule of the print: the hyperbolic plane drawn in a disc (Poincare's model);
+   angels and devils of one outline fill it, six meeting at their feet, four at their wing tips and four at their
+   heads; every figure is as large as any other in the plane, so in the disc they shrink without end towards the rim.
+   Here the angels are the languages Italian took from and the devils those it gave to: the first ring holds the
+   direct languages, each next ring the stop before (or after), and the far origins and proto-languages go to the rim.
+   Grid: 12 columns, gutter 24 px, margin 40 px; vertical rhythm 26 px (text 17/26, every space a multiple of 13).
+   The disc takes columns 1-7, the key of its figures columns 8-12.
+   Type: Old Standard TT and its italic, a revival of the Modern faces of late nineteenth- and twentieth-century
+   scientific printing: the kind of page on which Escher met H. S. M. Coxeter's hyperbolic figure in 1957 and
+   from which the Circle Limits came. One family; small capitals are not used because the face has none.
+   Colour: black and white only, as in the woodcut; the one tone (Italian itself, at the centre) is cross-hatching.
+   Sharp corners everywhere. */
+:root {
+  --ink: #111;
+  --paper: #fff;
+  --line: 26px;
+  --half: 13px;
+  --gut: 24px;
+  --m: 40px;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--paper); color: var(--ink);
+  font: 400 17px/var(--line) "Old Standard TT", Georgia, serif; font-variant-numeric: lining-nums; font-kerning: normal; }
+h1, h2, h3, p, ol, ul, figure, dl, dd { margin: 0; padding: 0; }
+a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.sc { text-transform: uppercase; letter-spacing: 0.05em; font-size: 15px; }
+
+.top { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gut);
+  padding: var(--half) var(--m); border-bottom: 1px solid var(--ink); align-items: baseline; }
+.top .name { grid-column: 1 / 4; font-style: italic; font-size: 22px; text-decoration: none; }
+.top nav { grid-column: 8 / 13; }
+.loading { padding: var(--line) var(--m); }
+
+.sheet { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gut);
+  padding: var(--line) var(--m) calc(var(--line) * 2); align-items: start; }
+.title { grid-column: 1 / 8; }
+h1 { font-weight: 400; font-size: 62px; line-height: 78px; letter-spacing: -0.01em; }
+h1 i { font-size: 40px; }
+.lede { grid-column: 8 / 13; align-self: end; padding-bottom: var(--half); }
+.lede p + p { margin-top: var(--half); }
+.plate { margin-top: var(--line); }
+.plate.wide { grid-column: 1 / 13; }
+.plate.disc { grid-column: 1 / 8; }
+.plate.key { grid-column: 8 / 13; grid-row: span 2; }
+.plate.key2 { grid-column: 1 / 8; }
+.key ol, .key2 ol { list-style: none; margin-top: var(--half); }
+.key li { padding-left: 36px; text-indent: -36px; }
+.key li.br { margin-top: var(--half); }
+.key .k { display: inline-block; width: 36px; text-indent: 0; font-variant-numeric: tabular-nums; }
+.key .kb, .key2 .kb { margin-top: var(--half); }
+.key .dv, .key2 .dv { background: var(--ink); color: var(--paper); padding: 0 4px; }
+.plate.half { grid-column: 1 / 7; }
+.plate.half2 { grid-column: 7 / 13; }
+.cap { display: flex; gap: 12px; align-items: baseline; border-top: 2px solid var(--ink); padding-top: 6px; margin-bottom: var(--half); }
+.cap .no { text-transform: uppercase; letter-spacing: 0.05em; font-size: 15px; }
+.cap h2 { font-weight: 400; font-style: italic; font-size: 24px; line-height: var(--line); }
+.note { margin-top: var(--half); max-width: 46em; }
+.box { overflow-x: auto; }
+svg { display: block; }
+svg text { font-family: "Old Standard TT", Georgia, serif; }
+svg .scx { text-transform: uppercase; letter-spacing: 0.05em; }
+.tbl { width: 100%; border-collapse: collapse; margin-top: var(--half); font-variant-numeric: tabular-nums; }
+.tbl th, .tbl td { text-align: left; padding: 0 12px 0 0; border-bottom: 1px solid var(--ink); line-height: var(--line); vertical-align: baseline; }
+.tbl th { font-weight: 400; text-transform: uppercase; letter-spacing: 0.05em; font-size: 15px; }
+.tbl td.n, .tbl th.n { text-align: right; }
+.tbl td.ex { font-style: italic; }
+.quote { font-style: italic; }
+.gens { columns: 2; column-gap: var(--gut); margin-top: var(--half); }
+.gens li { list-style: none; break-inside: avoid; }
+.gens li.g { text-transform: uppercase; letter-spacing: 0.05em; font-size: 15px; padding-top: var(--half); }
+.foot { padding: var(--line) var(--m); border-top: 1px solid var(--ink); }
+.foot p { max-width: 60em; }
+
+@media (max-width: 760px) {
+  :root { --m: 16px; }
+  .top, .sheet { grid-template-columns: minmax(0, 1fr); }
+  .top .name, .top nav, .title, .lede, .plate.wide, .plate.half, .plate.half2, .plate.disc, .plate.key, .plate.key2 { grid-column: 1 / -1; grid-row: auto; }
+  h1 { font-size: 44px; line-height: 52px; }
+  .gens { columns: 1; }
+}
