@@ -1,0 +1,61 @@
+/* lexodus, draft "isolario" (bozze5, mandate 21): a world that does what words do, after the island books of the
+   sixteenth century (Benedetto Bordone, Isolario, Venice 1528; Cristoforo Buondelmonti before him). Every language is
+   an island; the words reach it by dotted sea routes from other islands; the text runs in a column beside the plate.
+   The islands are invented, laid out by family (Germanic to the north, Romance to the west, Turkic to the east...).
+   Grid: 12 columns, gutter 24 px, margin 40 px; vertical rhythm 26 px (text 18/26). The plate takes columns 1-8, the
+   text column 9-12, as in the isolario where the description stands beside the woodcut.
+   Type: Cardo, after the roman that Francesco Griffo cut for Aldus Manutius (Venice, 1495).
+   Colour: the black of a woodcut on ivory, and a red for the rubrics and for the routes going out (the second colour
+   of Venetian printing). The sea is cut in small waves; the islands keep the white of the paper. */
+:root {
+  --ink: #221b14;
+  --paper: #f3ead3;
+  --red: #a3301c;
+  --line: 26px;
+  --gut: 24px;
+  --m: 40px;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 400 18px/var(--line) Cardo, "Palatino Linotype", Georgia, serif; font-variant-numeric: lining-nums; }
+h1, h2, p, ol, ul, figure, table { margin: 0; padding: 0; }
+a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+
+.top { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gut); padding: 13px var(--m); border-bottom: 1px solid var(--ink); align-items: baseline; }
+.top .name { grid-column: 1 / 3; font-style: italic; font-size: 22px; text-decoration: none; }
+.top nav { grid-column: 9 / 13; }
+.loading { padding: var(--line) var(--m); }
+
+.sheet { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gut); padding: var(--line) var(--m) calc(var(--line) * 2); align-items: start; }
+.plate { grid-column: 1 / 9; }
+.plate .box { overflow-x: auto; border: 2px solid var(--ink); outline: 1px solid var(--ink); outline-offset: 3px; }
+.plate svg { display: block; }
+.text { grid-column: 9 / 13; text-align: justify; hyphens: auto; }
+.text h1 { font-weight: 700; font-size: 34px; line-height: 39px; text-align: left; text-transform: uppercase; letter-spacing: 0.04em; }
+.text .rub { color: var(--red); }
+.text p { margin-top: 13px; }
+.text .ini::first-letter { float: left; font-size: 62px; line-height: 52px; padding: 4px 8px 0 0; font-weight: 700; color: var(--red); }
+.text h2 { font-weight: 400; font-style: italic; font-size: 20px; color: var(--red); margin-top: var(--line); }
+.text ol { list-style: none; margin-top: 6px; text-align: left; }
+.text li { display: flex; justify-content: space-between; gap: 10px; border-bottom: 1px dotted var(--ink); }
+.port { grid-column: 1 / 13; margin-top: var(--line); }
+.port h2 { font-weight: 700; font-size: 26px; line-height: var(--line); text-transform: uppercase; letter-spacing: 0.04em; }
+.port h2 span { color: var(--red); }
+.port table { width: 100%; border-collapse: collapse; margin-top: 13px; font-variant-numeric: tabular-nums lining-nums; }
+.port th { text-align: left; font-weight: 400; font-style: italic; color: var(--red); border-bottom: 2px solid var(--ink); padding-right: 12px; }
+.port td { border-bottom: 1px solid var(--ink); padding: 0 12px 0 0; vertical-align: baseline; }
+.port td.n, .port th.n { text-align: right; }
+.under { grid-column: 1 / 9; margin-top: 13px; font-style: italic; }
+svg text { font-family: Cardo, Georgia, serif; fill: var(--ink); }
+.foot { padding: var(--line) var(--m); border-top: 1px solid var(--ink); }
+
+@media (max-width: 760px) {
+  :root { --m: 16px; }
+  .top, .sheet { grid-template-columns: minmax(0, 1fr); }
+  .top .name, .top nav, .plate, .text, .port, .under { grid-column: 1 / -1; }
+  .text { margin-top: var(--line); text-align: left; }
+}
+.port small { font-size: 15px; font-style: italic; }
